@@ -2,6 +2,7 @@ package emergencies
 
 import (
 	"encoding/json"
+	"flavioltonon/hmv/api/presenter"
 	"net/http"
 )
 
@@ -18,7 +19,7 @@ func (c *Controller) createEmergency(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	b, err := json.Marshal(emergency)
+	b, err := json.Marshal(presenter.NewEmergency(emergency))
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

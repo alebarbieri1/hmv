@@ -17,21 +17,9 @@ func NewEmergencyForm(hasChestPain, hasHeadache *bool) EmergencyForm {
 	return f
 }
 
-func (f EmergencyForm) HasChestPain() bool {
-	if f.hasChestPain == nil {
-		return false
-	}
+func (f EmergencyForm) HasChestPain() *bool { return f.hasChestPain }
 
-	return *f.hasChestPain
-}
-
-func (f EmergencyForm) HasHeadache() bool {
-	if f.hasHeadache == nil {
-		return false
-	}
-
-	return *f.hasHeadache
-}
+func (f EmergencyForm) HasHeadache() *bool { return f.hasHeadache }
 
 func (f EmergencyForm) Priority() EmergencyPriority { return f.priority }
 

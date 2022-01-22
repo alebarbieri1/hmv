@@ -23,9 +23,3 @@ func (c *Controller) SetRoutes(parent *mux.Router) {
 	parent.HandleFunc("", c.createEmergency).Methods(http.MethodPost)
 	parent.HandleFunc("", c.listEmergencies).Methods(http.MethodGet)
 }
-
-func (c *Controller) NewRouter() http.Handler {
-	router := mux.NewRouter()
-	c.SetRoutes(router)
-	return router
-}
