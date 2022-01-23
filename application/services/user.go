@@ -1,6 +1,7 @@
 package services
 
 import (
+	"flavioltonon/hmv/application"
 	"flavioltonon/hmv/domain/entity"
 	"flavioltonon/hmv/domain/repositories"
 )
@@ -32,7 +33,7 @@ func (s *UserService) CreateUser(username, password string) (*entity.User, error
 		return nil, err
 	}
 
-	return nil, entity.ErrUsernameAlreadyInUse
+	return nil, application.ErrUsernameAlreadyInUse
 }
 
 func (s *UserService) FindUser(userID string) (*entity.User, error) {

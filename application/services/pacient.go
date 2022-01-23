@@ -1,6 +1,7 @@
 package services
 
 import (
+	"flavioltonon/hmv/application"
 	"flavioltonon/hmv/domain/entity"
 	"flavioltonon/hmv/domain/repositories"
 )
@@ -32,7 +33,7 @@ func (s *PacientService) CreatePacient(userID string) (*entity.Pacient, error) {
 		return nil, err
 	}
 
-	return nil, entity.ErrUserAlreadyIsAPacient
+	return nil, application.ErrUserAlreadyIsAPacient
 }
 
 func (s *PacientService) FindPacientByUserID(userID string) (*entity.Pacient, error) {

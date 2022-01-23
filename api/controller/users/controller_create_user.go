@@ -3,7 +3,8 @@ package users
 import (
 	"encoding/json"
 	"flavioltonon/hmv/api/presenter"
-	"flavioltonon/hmv/domain/entity"
+	"flavioltonon/hmv/application"
+	"flavioltonon/hmv/infrastructure/logging"
 	"flavioltonon/hmv/infrastructure/response"
 	"net/http"
 )
@@ -11,18 +12,21 @@ import (
 func (c *Controller) createUser(w http.ResponseWriter, r *http.Request) {
 	payload, err := c.newCreateUserRequestPayload(r)
 	if err != nil {
-		c.drivers.Presenter.Present(w, response.BadRequest(err.Error()))
+		c.drivers.Logger.Info(application.ErrMsgFailedToValidateRequest, logging.Error(err))
+		c.drivers.Presenter.Present(w, response.BadRequest(application.ErrMsgFailedToValidateRequest, err))
 		return
 	}
 
 	user, err := c.usecases.Users.CreateUser(payload.Username, payload.Password)
-	if err == entity.ErrUsernameAlreadyInUse {
-		c.drivers.Presenter.Present(w, response.BadRequest(err.Error()))
+	if err == application.ErrUsernameAlreadyInUse {
+		c.drivers.Logger.Info(application.ErrMsgFailedToCreateUser, logging.Error(err))
+		c.drivers.Presenter.Present(w, response.BadRequest(application.ErrMsgFailedToCreateUser, err))
 		return
 	}
 
 	if err != nil {
-		c.drivers.Presenter.Present(w, response.InternalServerError(err.Error()))
+		c.drivers.Logger.Error(application.ErrMsgFailedToCreateUser, err)
+		c.drivers.Presenter.Present(w, response.InternalServerError(application.ErrMsgFailedToCreateUser, err))
 		return
 	}
 

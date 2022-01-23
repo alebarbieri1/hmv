@@ -1,20 +1,37 @@
 package services
 
 import (
+	"flavioltonon/hmv/application"
 	"flavioltonon/hmv/domain/entity"
 	"flavioltonon/hmv/domain/repositories"
 )
 
 type EmergencyService struct {
 	emergencies repositories.EmergenciesRepository
+	pacients    repositories.PacientsRepository
 }
 
-func NewEmergencyService(repository repositories.EmergenciesRepository) (*EmergencyService, error) {
-	return &EmergencyService{emergencies: repository}, nil
+func NewEmergencyService(
+	emergencies repositories.EmergenciesRepository,
+	pacients repositories.PacientsRepository,
+) (*EmergencyService, error) {
+	return &EmergencyService{
+		emergencies: emergencies,
+		pacients:    pacients,
+	}, nil
 }
 
-func (s *EmergencyService) CreateEmergency(pacientID string) (*entity.Emergency, error) {
-	emergency, err := entity.NewEmergency(pacientID)
+func (s *EmergencyService) CreateEmergency(userID string) (*entity.Emergency, error) {
+	pacient, err := s.pacients.FindPacientByUserID(userID)
+	if err == entity.ErrNotFound {
+		return nil, application.ErrUserMustBeAPacient
+	}
+
+	if err != nil {
+		return nil, err
+	}
+
+	emergency, err := pacient.CreateEmergency()
 	if err != nil {
 		return nil, err
 	}

@@ -2,7 +2,7 @@ package pacients
 
 import (
 	"flavioltonon/hmv/application/usecases"
-	"flavioltonon/hmv/infrastructure/presenter"
+	"flavioltonon/hmv/infrastructure/drivers"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -10,7 +10,7 @@ import (
 
 type Controller struct {
 	usecases *Usecases
-	drivers  *Drivers
+	drivers  *drivers.Drivers
 }
 
 type Usecases struct {
@@ -18,11 +18,7 @@ type Usecases struct {
 	Pacients       usecases.PacientUsecase
 }
 
-type Drivers struct {
-	Presenter presenter.Presenter
-}
-
-func NewController(usecases *Usecases, drivers *Drivers) *Controller {
+func NewController(usecases *Usecases, drivers *drivers.Drivers) *Controller {
 	return &Controller{usecases: usecases, drivers: drivers}
 }
 

@@ -3,7 +3,9 @@ package api
 import (
 	"flavioltonon/hmv/api/controller"
 	"flavioltonon/hmv/infrastructure/drivers"
+	"flavioltonon/hmv/infrastructure/repository"
 	"flavioltonon/hmv/infrastructure/settings"
+	"fmt"
 	"net/http"
 )
 
@@ -20,12 +22,17 @@ func NewServer() (*Server, error) {
 		return nil, err
 	}
 
+	repositories, err := repository.NewRepositories()
+	if err != nil {
+		return nil, err
+	}
+
 	drivers, err := drivers.New(settings)
 	if err != nil {
 		return nil, err
 	}
 
-	controller, err := controller.New(drivers)
+	controller, err := controller.New(repositories, drivers)
 	if err != nil {
 		return nil, err
 	}
@@ -41,9 +48,11 @@ func NewServer() (*Server, error) {
 }
 
 func (s *Server) Start() error {
+	s.drivers.Logger.Info(fmt.Sprintf("server listening and serving at %s", s.settings.Server.Address))
 	return s.core.ListenAndServe()
 }
 
 func (s *Server) Stop() error {
+	s.drivers.Logger.Info("server shutting down")
 	return nil
 }

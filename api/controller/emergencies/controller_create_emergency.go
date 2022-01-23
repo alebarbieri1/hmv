@@ -2,38 +2,24 @@ package emergencies
 
 import (
 	"flavioltonon/hmv/api/presenter"
-	"flavioltonon/hmv/domain/entity"
+	"flavioltonon/hmv/application"
+	"flavioltonon/hmv/infrastructure/logging"
 	"flavioltonon/hmv/infrastructure/response"
 	"net/http"
 )
 
 func (c *Controller) createEmergency(w http.ResponseWriter, r *http.Request) {
-	username, password, hasCredentials := r.BasicAuth()
-	if !hasCredentials {
-		c.drivers.Presenter.Present(w, response.Unauthorized("basic authentication is required"))
-		return
-	}
-
-	user, err := c.usecases.Authentication.AuthenticateUser(username, password)
+	user, err := c.usecases.Authentication.AuthenticateUserFromRequest(r)
 	if err != nil {
-		c.drivers.Presenter.Present(w, response.Unauthorized(err.Error()))
+		c.drivers.Logger.Info(application.ErrMsgFailedToAuthenticateUser, logging.Error(err))
+		c.drivers.Presenter.Present(w, response.Unauthorized(application.ErrMsgFailedToAuthenticateUser, err))
 		return
 	}
 
-	pacient, err := c.usecases.Pacients.FindPacientByUserID(user.ID)
-	if err == entity.ErrNotFound {
-		c.drivers.Presenter.Present(w, response.Unauthorized("user must be a pacient"))
-		return
-	}
-
+	emergency, err := c.usecases.Emergencies.CreateEmergency(user.ID)
 	if err != nil {
-		c.drivers.Presenter.Present(w, response.InternalServerError(err.Error()))
-		return
-	}
-
-	emergency, err := c.usecases.Emergencies.CreateEmergency(pacient.ID)
-	if err != nil {
-		c.drivers.Presenter.Present(w, response.InternalServerError(err.Error()))
+		c.drivers.Logger.Error(application.ErrMsgFailedToCreateEmergency, err)
+		c.drivers.Presenter.Present(w, response.InternalServerError(application.ErrMsgFailedToCreateEmergency, err))
 		return
 	}
 

@@ -22,8 +22,9 @@ func (p *JSONPresenter) Present(w http.ResponseWriter, response response.Respons
 		return err
 	}
 
-	w.WriteHeader(response.StatusCode())
 	w.Header().Set("Content-Type", "application/json")
+
+	w.WriteHeader(response.StatusCode())
 
 	if _, err := w.Write(b); err != nil {
 		return err

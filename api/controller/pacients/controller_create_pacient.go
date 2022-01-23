@@ -3,32 +3,30 @@ package pacients
 import (
 	"encoding/json"
 	"flavioltonon/hmv/api/presenter"
-	"flavioltonon/hmv/domain/entity"
+	"flavioltonon/hmv/application"
+	"flavioltonon/hmv/infrastructure/logging"
 	"flavioltonon/hmv/infrastructure/response"
 	"net/http"
 )
 
 func (c *Controller) createPacient(w http.ResponseWriter, r *http.Request) {
-	username, password, hasCredentials := r.BasicAuth()
-	if !hasCredentials {
-		c.drivers.Presenter.Present(w, response.Unauthorized("basic authentication is required"))
-		return
-	}
-
-	user, err := c.usecases.Authentication.AuthenticateUser(username, password)
+	user, err := c.usecases.Authentication.AuthenticateUserFromRequest(r)
 	if err != nil {
-		c.drivers.Presenter.Present(w, response.Unauthorized(err.Error()))
+		c.drivers.Logger.Info(application.ErrMsgFailedToAuthenticateUser, logging.Error(err))
+		c.drivers.Presenter.Present(w, response.Unauthorized(application.ErrMsgFailedToAuthenticateUser, err))
 		return
 	}
 
 	pacient, err := c.usecases.Pacients.CreatePacient(user.ID)
-	if err == entity.ErrUserAlreadyIsAPacient {
-		c.drivers.Presenter.Present(w, response.BadRequest(err.Error()))
+	if err == application.ErrUserAlreadyIsAPacient {
+		c.drivers.Logger.Info(application.ErrMsgFailedToCreatePacient, logging.Error(err))
+		c.drivers.Presenter.Present(w, response.BadRequest(application.ErrMsgFailedToCreatePacient, err))
 		return
 	}
 
 	if err != nil {
-		c.drivers.Presenter.Present(w, response.InternalServerError(err.Error()))
+		c.drivers.Logger.Error(application.ErrMsgFailedToCreatePacient, err)
+		c.drivers.Presenter.Present(w, response.InternalServerError(application.ErrMsgFailedToCreatePacient, err))
 		return
 	}
 

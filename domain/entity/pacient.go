@@ -42,3 +42,7 @@ func (p *Pacient) Validate() error {
 		ozzo.Field(&p.UpdatedAt, ozzo.Required, ozzo.Max(now)),
 	)
 }
+
+func (p *Pacient) CreateEmergency() (*Emergency, error) {
+	return NewEmergency(p.ID)
+}

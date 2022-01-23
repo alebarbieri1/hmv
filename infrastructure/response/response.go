@@ -2,6 +2,7 @@ package response
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 )
 
@@ -53,29 +54,29 @@ func (e ErrorResponse) MarshalJSON() ([]byte, error) {
 	})
 }
 
-func Error(statusCode int, message string) Response {
+func Error(statusCode int, message string, err error) Response {
 	return ErrorResponse{
 		statusCode: statusCode,
-		message:    message,
+		message:    fmt.Sprintf("%s: %v", message, err),
 	}
 }
 
-func BadRequest(message string) Response {
-	return Error(http.StatusBadRequest, message)
+func BadRequest(message string, err error) Response {
+	return Error(http.StatusBadRequest, message, err)
 }
 
-func NotFound(message string) Response {
-	return Error(http.StatusNotFound, message)
+func NotFound(message string, err error) Response {
+	return Error(http.StatusNotFound, message, err)
 }
 
-func InternalServerError(message string) Response {
-	return Error(http.StatusInternalServerError, message)
+func InternalServerError(message string, err error) Response {
+	return Error(http.StatusInternalServerError, message, err)
 }
 
-func Forbidden(message string) Response {
-	return Error(http.StatusForbidden, message)
+func Forbidden(message string, err error) Response {
+	return Error(http.StatusForbidden, message, err)
 }
 
-func Unauthorized(message string) Response {
-	return Error(http.StatusUnauthorized, message)
+func Unauthorized(message string, err error) Response {
+	return Error(http.StatusUnauthorized, message, err)
 }
