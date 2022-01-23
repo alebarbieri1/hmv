@@ -12,15 +12,15 @@ import (
 
 type Emergency struct {
 	ID        string
-	UserID    string
+	PacientID string
 	Form      valueobject.EmergencyForm
 	CreatedAt time.Time
 }
 
-func NewEmergency(userID string) (*Emergency, error) {
+func NewEmergency(pacientID string) (*Emergency, error) {
 	e := &Emergency{
 		ID:        uuid.NewString(),
-		UserID:    userID,
+		PacientID: pacientID,
 		CreatedAt: time.Now(),
 	}
 
@@ -33,7 +33,7 @@ func NewEmergency(userID string) (*Emergency, error) {
 
 func (e *Emergency) Validate() error {
 	return ozzo.ValidateStruct(e,
-		ozzo.Field(&e.UserID, ozzo.Required, is.UUIDv4),
+		ozzo.Field(&e.PacientID, ozzo.Required, is.UUIDv4),
 	)
 }
 

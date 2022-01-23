@@ -6,7 +6,7 @@ import (
 
 type Emergency struct {
 	ID        string         `json:"_id"`
-	UserID    string         `json:"user_id"`
+	PacientID string         `json:"pacient_id"`
 	Form      *EmergencyForm `json:"form,omitempty"`
 	CreatedAt string         `json:"created_at"`
 }
@@ -14,7 +14,7 @@ type Emergency struct {
 func NewEmergency(e *entity.Emergency) *Emergency {
 	return &Emergency{
 		ID:        e.ID,
-		UserID:    e.UserID,
+		PacientID: e.PacientID,
 		Form:      NewEmergencyForm(e.Form),
 		CreatedAt: e.CreatedAt.Format("02/01/2006 - 15:04:05h"),
 	}

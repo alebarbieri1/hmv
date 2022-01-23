@@ -13,8 +13,8 @@ func NewEmergencyService(repository repositories.EmergenciesRepository) (*Emerge
 	return &EmergencyService{emergencies: repository}, nil
 }
 
-func (s *EmergencyService) CreateEmergency(userID string) (*entity.Emergency, error) {
-	emergency, err := entity.NewEmergency(userID)
+func (s *EmergencyService) CreateEmergency(pacientID string) (*entity.Emergency, error) {
+	emergency, err := entity.NewEmergency(pacientID)
 	if err != nil {
 		return nil, err
 	}
@@ -28,4 +28,8 @@ func (s *EmergencyService) CreateEmergency(userID string) (*entity.Emergency, er
 
 func (s *EmergencyService) ListEmergencies() ([]*entity.Emergency, error) {
 	return s.emergencies.ListEmergencies()
+}
+
+func (s *EmergencyService) ListEmergenciesByPacientID(pacientID string) ([]*entity.Emergency, error) {
+	return s.emergencies.ListEmergenciesByPacientID(pacientID)
 }

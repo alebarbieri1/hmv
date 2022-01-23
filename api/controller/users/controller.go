@@ -1,4 +1,4 @@
-package emergencies
+package users
 
 import (
 	"flavioltonon/hmv/application/usecases"
@@ -14,9 +14,7 @@ type Controller struct {
 }
 
 type Usecases struct {
-	Authentication usecases.AuthenticationUsecase
-	Emergencies    usecases.EmergencyUsecase
-	Pacients       usecases.PacientUsecase
+	Users usecases.UserUsecase
 }
 
 type Drivers struct {
@@ -28,6 +26,5 @@ func NewController(usecases *Usecases, drivers *Drivers) *Controller {
 }
 
 func (c *Controller) SetRoutes(parent *mux.Router) {
-	parent.HandleFunc("", c.createEmergency).Methods(http.MethodPost)
-	parent.HandleFunc("", c.listEmergencies).Methods(http.MethodGet)
+	parent.HandleFunc("", c.createUser).Methods(http.MethodPost)
 }
