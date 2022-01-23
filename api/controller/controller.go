@@ -8,7 +8,6 @@ import (
 	"flavioltonon/hmv/api/controller/users"
 	"flavioltonon/hmv/application/services"
 	"flavioltonon/hmv/infrastructure/drivers"
-	"flavioltonon/hmv/infrastructure/logging"
 	"flavioltonon/hmv/infrastructure/middleware"
 	"flavioltonon/hmv/infrastructure/repository"
 
@@ -78,7 +77,8 @@ func (c *Controller) NewRouter() http.Handler {
 	c.pacients.SetRoutes(router.PathPrefix("/pacients").Subrouter())
 	c.users.SetRoutes(router.PathPrefix("/users").Subrouter())
 	return alice.New(
+		middleware.ResponseWrapper(),
 		middleware.RequestID(),
-		logging.Middleware(c.drivers.Logger),
+		middleware.Logging(c.drivers.Logger),
 	).Then(router)
 }

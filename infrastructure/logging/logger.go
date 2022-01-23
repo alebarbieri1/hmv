@@ -1,5 +1,7 @@
 package logging
 
+import "strconv"
+
 type Logger interface {
 	Debug(message string, fields ...field)
 	Info(message string, fields ...field)
@@ -11,10 +13,17 @@ type field struct {
 	Value interface{}
 }
 
-func Field(name, value string) field {
+func String(name, value string) field {
 	return field{
 		Name:  name,
 		Value: value,
+	}
+}
+
+func Int(name string, value int) field {
+	return field{
+		Name:  name,
+		Value: strconv.Itoa(value),
 	}
 }
 

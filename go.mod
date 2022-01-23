@@ -12,6 +12,7 @@ require (
 require (
 	github.com/asaskevich/govalidator v0.0.0-20200108200545-475eaeb16496 // indirect
 	github.com/justinas/alice v1.2.0 // indirect
+	github.com/urfave/negroni v1.0.0 // indirect
 	go.uber.org/atomic v1.7.0 // indirect
 	go.uber.org/multierr v1.6.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
