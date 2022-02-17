@@ -9,7 +9,6 @@ import (
 	"flavioltonon/hmv/application/services"
 	"flavioltonon/hmv/infrastructure/drivers"
 	"flavioltonon/hmv/infrastructure/middleware"
-	"flavioltonon/hmv/infrastructure/repository"
 
 	"github.com/gorilla/mux"
 	"github.com/justinas/alice"
@@ -24,23 +23,23 @@ type Controller struct {
 }
 
 // New creates a new Controller with a given set of Drivers
-func New(repositories *repository.Repositories, drivers *drivers.Drivers) (*Controller, error) {
-	authenticationService, err := services.NewAuthenticationService(repositories.Users)
+func New(drivers *drivers.Drivers) (*Controller, error) {
+	authenticationService, err := services.NewAuthenticationService(drivers.Repositories.Users, drivers.Logger)
 	if err != nil {
 		return nil, err
 	}
 
-	emergenciesService, err := services.NewEmergencyService(repositories.Emergencies, repositories.Pacients)
+	emergenciesService, err := services.NewEmergencyService(drivers.Repositories.Emergencies, drivers.Repositories.Pacients, drivers.Logger)
 	if err != nil {
 		return nil, err
 	}
 
-	pacientsService, err := services.NewPacientService(repositories.Pacients)
+	pacientsService, err := services.NewPacientService(drivers.Repositories.Pacients, drivers.Logger)
 	if err != nil {
 		return nil, err
 	}
 
-	usersService, err := services.NewUserService(repositories.Users)
+	usersService, err := services.NewUserService(drivers.Repositories.Users, drivers.Logger)
 	if err != nil {
 		return nil, err
 	}

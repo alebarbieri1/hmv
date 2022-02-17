@@ -1,9 +1,10 @@
 package users
 
 import (
+	"net/http"
+
 	"flavioltonon/hmv/application/usecases"
 	"flavioltonon/hmv/infrastructure/drivers"
-	"net/http"
 
 	"github.com/gorilla/mux"
 )

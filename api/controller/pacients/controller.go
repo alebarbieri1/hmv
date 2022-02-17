@@ -1,9 +1,10 @@
 package pacients
 
 import (
+	"net/http"
+
 	"flavioltonon/hmv/application/usecases"
 	"flavioltonon/hmv/infrastructure/drivers"
-	"net/http"
 
 	"github.com/gorilla/mux"
 )
@@ -24,4 +25,5 @@ func NewController(usecases *Usecases, drivers *drivers.Drivers) *Controller {
 
 func (c *Controller) SetRoutes(parent *mux.Router) {
 	parent.HandleFunc("", c.createPacient).Methods(http.MethodPost)
+	parent.HandleFunc("/emergency-contacts", c.updateEmergencyContact).Methods(http.MethodPut)
 }

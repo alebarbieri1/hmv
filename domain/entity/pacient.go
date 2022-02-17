@@ -1,6 +1,7 @@
 package entity
 
 import (
+	"flavioltonon/hmv/domain/valueobject"
 	"time"
 
 	ozzo "github.com/go-ozzo/ozzo-validation/v4"
@@ -9,10 +10,11 @@ import (
 )
 
 type Pacient struct {
-	ID        string
-	UserID    string
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	ID               string
+	UserID           string
+	EmergencyContact valueobject.EmergencyContact
+	CreatedAt        time.Time
+	UpdatedAt        time.Time
 }
 
 func NewPacient(userID string) (*Pacient, error) {
@@ -43,6 +45,8 @@ func (p *Pacient) Validate() error {
 	)
 }
 
-func (p *Pacient) CreateEmergency() (*Emergency, error) {
-	return NewEmergency(p.ID)
+func (p *Pacient) UpdateEmergencyContact(emergencyContact valueobject.EmergencyContact) error {
+	p.EmergencyContact = emergencyContact
+	p.UpdatedAt = time.Now()
+	return p.Validate()
 }

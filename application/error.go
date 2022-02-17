@@ -3,6 +3,7 @@ package application
 import "errors"
 
 var (
+	ErrInternalError               = errors.New("internal error")
 	ErrBasicAuthenticationRequired = errors.New("basic authentication required")
 	ErrUserMustBeAPacient          = errors.New("user must be a pacient")
 	ErrUserAlreadyIsAPacient       = errors.New("user already is a pacient")
@@ -13,11 +14,17 @@ var (
 )
 
 const (
-	ErrMsgFailedToValidateRequest  = "failed to validate request"
-	ErrMsgFailedToAuthenticateUser = "failed to authenticate user"
-	ErrMsgFailedToCreateEmergency  = "failed to create emergency"
-	ErrMsgFailedToListEmergencies  = "failed to list emergencies"
-	ErrMsgFailedToCreatePacient    = "failed to create pacient"
-	ErrMsgFailedToFindPacient      = "failed to find pacient"
-	ErrMsgFailedToCreateUser       = "failed to create user"
+	UserCreated              = "user created"
+	UserAuthenticated        = "user authenticated"
+	EmergencyCreated         = "emergency created"
+	PacientCreated           = "pacient created"
+	PacientUpdated           = "pacient updated"
+	FailedToValidateRequest  = "failed to validate request"
+	FailedToAuthenticateUser = "failed to authenticate user"
+	FailedToCreateEmergency  = "failed to create emergency"
+	FailedToListEmergencies  = "failed to list emergencies"
+	FailedToCreatePacient    = "failed to create pacient"
+	FailedToUpdatePacient    = "failed to update pacient"
+	FailedToFindPacient      = "failed to find pacient"
+	FailedToCreateUser       = "failed to create user"
 )

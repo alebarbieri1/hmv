@@ -2,32 +2,36 @@ package memory
 
 import (
 	"flavioltonon/hmv/domain/entity"
+	"flavioltonon/hmv/domain/valueobject"
 	"sync"
 	"time"
 )
 
 type Pacient struct {
-	ID        string
-	UserID    string
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	ID               string
+	UserID           string
+	EmergencyContact valueobject.EmergencyContact
+	CreatedAt        time.Time
+	UpdatedAt        time.Time
 }
 
 func NewPacient(e *entity.Pacient) *Pacient {
 	return &Pacient{
-		ID:        e.ID,
-		UserID:    e.UserID,
-		CreatedAt: e.CreatedAt,
-		UpdatedAt: e.UpdatedAt,
+		ID:               e.ID,
+		UserID:           e.UserID,
+		EmergencyContact: e.EmergencyContact,
+		CreatedAt:        e.CreatedAt,
+		UpdatedAt:        e.UpdatedAt,
 	}
 }
 
 func (u *Pacient) toEntity() *entity.Pacient {
 	return &entity.Pacient{
-		ID:        u.ID,
-		UserID:    u.UserID,
-		CreatedAt: u.CreatedAt,
-		UpdatedAt: u.UpdatedAt,
+		ID:               u.ID,
+		UserID:           u.UserID,
+		EmergencyContact: u.EmergencyContact,
+		CreatedAt:        u.CreatedAt,
+		UpdatedAt:        u.UpdatedAt,
 	}
 }
 
@@ -58,4 +62,11 @@ func (r *PacientsRepository) FindPacientByUserID(userID string) (*entity.Pacient
 	}
 
 	return nil, entity.ErrNotFound
+}
+
+func (r *PacientsRepository) UpdatePacient(pacient *entity.Pacient) error {
+	r.mu.Lock()
+	r.pacients[pacient.ID] = NewPacient(pacient)
+	r.mu.Unlock()
+	return nil
 }

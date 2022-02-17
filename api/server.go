@@ -11,18 +11,14 @@ import (
 
 // Server is the API server
 type Server struct {
-	core     *http.Server
-	drivers  *drivers.Drivers
-	settings *settings.Settings
+	core         *http.Server
+	repositories *repository.Repositories
+	drivers      *drivers.Drivers
+	settings     *settings.Settings
 }
 
 func NewServer() (*Server, error) {
 	settings, err := settings.New()
-	if err != nil {
-		return nil, err
-	}
-
-	repositories, err := repository.NewRepositories()
 	if err != nil {
 		return nil, err
 	}
@@ -32,7 +28,7 @@ func NewServer() (*Server, error) {
 		return nil, err
 	}
 
-	controller, err := controller.New(repositories, drivers)
+	controller, err := controller.New(drivers)
 	if err != nil {
 		return nil, err
 	}

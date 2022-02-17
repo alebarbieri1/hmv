@@ -17,7 +17,10 @@ func NewZapLogger(settings *Settings) (Logger, error) {
 		newLogger = zap.NewDevelopment
 	}
 
-	logger, err := newLogger(zap.AddCaller(), zap.AddCallerSkip(1))
+	logger, err := newLogger(
+		zap.AddCaller(),
+		zap.AddCallerSkip(1),
+	)
 	if err != nil {
 		return nil, err
 	}
