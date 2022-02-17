@@ -12,6 +12,7 @@ type Emergency struct {
 	PacientID string
 	Form      valueobject.EmergencyForm
 	CreatedAt time.Time
+	UpdatedAt time.Time
 }
 
 func NewEmergency(e *entity.Emergency) *Emergency {
@@ -20,6 +21,7 @@ func NewEmergency(e *entity.Emergency) *Emergency {
 		PacientID: e.PacientID,
 		Form:      e.Form,
 		CreatedAt: e.CreatedAt,
+		UpdatedAt: e.UpdatedAt,
 	}
 }
 
@@ -29,6 +31,7 @@ func (e *Emergency) toEntity() *entity.Emergency {
 		PacientID: e.PacientID,
 		Form:      e.Form,
 		CreatedAt: e.CreatedAt,
+		UpdatedAt: e.UpdatedAt,
 	}
 }
 
