@@ -1,13 +1,12 @@
-package emergencies
+package pacients
 
 import (
-	"net/http"
-
 	"flavioltonon/hmv/api/presenter"
 	"flavioltonon/hmv/application"
 	"flavioltonon/hmv/domain/entity"
 	"flavioltonon/hmv/infrastructure/logging"
 	"flavioltonon/hmv/infrastructure/response"
+	"net/http"
 )
 
 func (c *Controller) listEmergencies(w http.ResponseWriter, r *http.Request) {

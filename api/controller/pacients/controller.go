@@ -16,6 +16,7 @@ type Controller struct {
 
 type Usecases struct {
 	Authentication usecases.AuthenticationUsecase
+	Emergencies    usecases.EmergencyUsecase
 	Pacients       usecases.PacientUsecase
 }
 
@@ -26,4 +27,6 @@ func NewController(usecases *Usecases, drivers *drivers.Drivers) *Controller {
 func (c *Controller) SetRoutes(parent *mux.Router) {
 	parent.HandleFunc("", c.createPacient).Methods(http.MethodPost)
 	parent.HandleFunc("/emergency-contacts", c.updateEmergencyContact).Methods(http.MethodPut)
+	parent.HandleFunc("/emergencies", c.listEmergencies).Methods(http.MethodGet)
+	parent.HandleFunc("/emergencies", c.createEmergency).Methods(http.MethodPost)
 }

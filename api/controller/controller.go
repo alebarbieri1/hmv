@@ -3,7 +3,6 @@ package controller
 import (
 	"net/http"
 
-	"flavioltonon/hmv/api/controller/emergencies"
 	"flavioltonon/hmv/api/controller/pacients"
 	"flavioltonon/hmv/api/controller/users"
 	"flavioltonon/hmv/application/services"
@@ -16,10 +15,9 @@ import (
 
 // Controller is the application controller
 type Controller struct {
-	emergencies *emergencies.Controller
-	pacients    *pacients.Controller
-	users       *users.Controller
-	drivers     *drivers.Drivers
+	pacients *pacients.Controller
+	users    *users.Controller
+	drivers  *drivers.Drivers
 }
 
 // New creates a new Controller with a given set of Drivers
@@ -45,17 +43,10 @@ func New(drivers *drivers.Drivers) (*Controller, error) {
 	}
 
 	return &Controller{
-		emergencies: emergencies.NewController(
-			&emergencies.Usecases{
-				Authentication: authenticationService,
-				Emergencies:    emergenciesService,
-				Pacients:       pacientsService,
-			},
-			drivers,
-		),
 		pacients: pacients.NewController(
 			&pacients.Usecases{
 				Authentication: authenticationService,
+				Emergencies:    emergenciesService,
 				Pacients:       pacientsService,
 			},
 			drivers,
@@ -72,7 +63,6 @@ func New(drivers *drivers.Drivers) (*Controller, error) {
 
 func (c *Controller) NewRouter() http.Handler {
 	router := mux.NewRouter()
-	c.emergencies.SetRoutes(router.PathPrefix("/emergencies").Subrouter())
 	c.pacients.SetRoutes(router.PathPrefix("/pacients").Subrouter())
 	c.users.SetRoutes(router.PathPrefix("/users").Subrouter())
 	return alice.New(

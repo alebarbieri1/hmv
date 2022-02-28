@@ -1,4 +1,4 @@
-package emergencies
+package pacients
 
 import (
 	"net/http"
