@@ -5,12 +5,13 @@ import (
 
 	"flavioltonon/hmv/api/presenter"
 	"flavioltonon/hmv/application"
+	"flavioltonon/hmv/domain/entity"
 	"flavioltonon/hmv/infrastructure/logging"
 	"flavioltonon/hmv/infrastructure/response"
 )
 
 func (c *Controller) createEmergency(w http.ResponseWriter, r *http.Request) {
-	user, err := c.usecases.Authentication.AuthenticateUserFromRequest(r)
+	user, err := entity.NewUserFromRequest(r)
 	if err != nil {
 		c.drivers.Logger.Info(application.FailedToAuthenticateUser, logging.Error(err))
 		c.drivers.Presenter.Present(w, response.Unauthorized(application.FailedToAuthenticateUser, err))

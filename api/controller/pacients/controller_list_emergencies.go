@@ -10,7 +10,7 @@ import (
 )
 
 func (c *Controller) listEmergencies(w http.ResponseWriter, r *http.Request) {
-	user, err := c.usecases.Authentication.AuthenticateUserFromRequest(r)
+	user, err := entity.NewUserFromRequest(r)
 	if err != nil {
 		c.drivers.Logger.Info(application.FailedToAuthenticateUser, logging.Error(err))
 		c.drivers.Presenter.Present(w, response.Unauthorized(application.FailedToAuthenticateUser, err))

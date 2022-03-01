@@ -5,6 +5,7 @@ import (
 
 	"flavioltonon/hmv/application/usecases"
 	"flavioltonon/hmv/infrastructure/drivers"
+	"flavioltonon/hmv/infrastructure/middleware"
 
 	"github.com/gorilla/mux"
 )
@@ -25,6 +26,12 @@ func NewController(usecases *Usecases, drivers *drivers.Drivers) *Controller {
 }
 
 func (c *Controller) SetRoutes(parent *mux.Router) {
+	parent.Use(mux.MiddlewareFunc(middleware.Authentication(
+		c.usecases.Authentication,
+		c.drivers.Logger,
+		c.drivers.Presenter,
+	)))
+
 	parent.HandleFunc("", c.createPacient).Methods(http.MethodPost)
 	parent.HandleFunc("/emergency-contacts", c.updateEmergencyContact).Methods(http.MethodPut)
 	parent.HandleFunc("/emergencies", c.listEmergencies).Methods(http.MethodGet)
