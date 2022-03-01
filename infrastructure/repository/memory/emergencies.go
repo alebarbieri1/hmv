@@ -13,6 +13,7 @@ type Emergency struct {
 	Form      valueobject.EmergencyForm
 	CreatedAt time.Time
 	UpdatedAt time.Time
+	Status    valueobject.EmergencyStatus
 }
 
 func NewEmergency(e *entity.Emergency) *Emergency {
@@ -22,6 +23,7 @@ func NewEmergency(e *entity.Emergency) *Emergency {
 		Form:      e.Form,
 		CreatedAt: e.CreatedAt,
 		UpdatedAt: e.UpdatedAt,
+		Status:    e.Status,
 	}
 }
 
@@ -32,6 +34,7 @@ func (e *Emergency) toEntity() *entity.Emergency {
 		Form:      e.Form,
 		CreatedAt: e.CreatedAt,
 		UpdatedAt: e.UpdatedAt,
+		Status:    e.Status,
 	}
 }
 
@@ -57,6 +60,24 @@ func (r *EmergenciesRepository) ListEmergencies() ([]*entity.Emergency, error) {
 	r.mu.Lock()
 
 	for _, emergency := range r.emergencies {
+		emergencies = append(emergencies, emergency.toEntity())
+	}
+
+	r.mu.Unlock()
+
+	return emergencies, nil
+}
+
+func (r *EmergenciesRepository) ListEmergenciesByStatus(status valueobject.EmergencyStatus) ([]*entity.Emergency, error) {
+	emergencies := make([]*entity.Emergency, 0, len(r.emergencies))
+
+	r.mu.Lock()
+
+	for _, emergency := range r.emergencies {
+		if emergency.Status != status {
+			continue
+		}
+
 		emergencies = append(emergencies, emergency.toEntity())
 	}
 

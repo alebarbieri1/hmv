@@ -4,6 +4,7 @@ import (
 	"flavioltonon/hmv/application"
 	"flavioltonon/hmv/domain/entity"
 	"flavioltonon/hmv/domain/repositories"
+	"flavioltonon/hmv/domain/valueobject"
 	"flavioltonon/hmv/infrastructure/logging"
 )
 
@@ -62,6 +63,10 @@ func (s *EmergencyService) CreateEmergency(userID string) (*entity.Emergency, er
 
 func (s *EmergencyService) ListEmergencies() ([]*entity.Emergency, error) {
 	return s.emergencies.ListEmergencies()
+}
+
+func (s *EmergencyService) ListEmergenciesByStatus(status valueobject.EmergencyStatus) ([]*entity.Emergency, error) {
+	return s.emergencies.ListEmergenciesByStatus(status)
 }
 
 func (s *EmergencyService) ListEmergenciesByPacientID(pacientID string) ([]*entity.Emergency, error) {

@@ -16,6 +16,7 @@ type Emergency struct {
 	Form      valueobject.EmergencyForm
 	CreatedAt time.Time
 	UpdatedAt time.Time
+	Status    valueobject.EmergencyStatus
 }
 
 func NewEmergency(pacientID string) (*Emergency, error) {
@@ -26,6 +27,7 @@ func NewEmergency(pacientID string) (*Emergency, error) {
 		PacientID: pacientID,
 		CreatedAt: now,
 		UpdatedAt: now,
+		Status:    valueobject.Triage_EmergencyStatus,
 	}
 
 	if err := e.Validate(); err != nil {
@@ -43,9 +45,12 @@ func (e *Emergency) Validate() error {
 		ozzo.Field(&e.PacientID, ozzo.Required, is.UUIDv4),
 		ozzo.Field(&e.CreatedAt, ozzo.Required, ozzo.Max(now)),
 		ozzo.Field(&e.UpdatedAt, ozzo.Required, ozzo.Max(now)),
+		ozzo.Field(&e.Status, ozzo.Required),
 	)
 }
 
 func (e *Emergency) UpdateForm(form valueobject.EmergencyForm) { e.Form = form }
+
+func (e *Emergency) UpdateStatus(status valueobject.EmergencyStatus) { e.Status = status }
 
 func (e *Emergency) Priority() valueobject.EmergencyPriority { return e.Form.Priority() }
