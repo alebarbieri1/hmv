@@ -15,8 +15,12 @@ type PacientService struct {
 	logger   logging.Logger
 }
 
-func NewPacientService(repository repositories.PacientsRepository, logger logging.Logger) (*PacientService, error) {
-	return &PacientService{pacients: repository, logger: logger}, nil
+func NewPacientService(
+	pacients repositories.PacientsRepository,
+	users repositories.UsersRepository,
+	logger logging.Logger,
+) (*PacientService, error) {
+	return &PacientService{pacients: pacients, users: users, logger: logger}, nil
 }
 
 func (s *PacientService) CreatePacient(userID string) (*entity.Pacient, error) {

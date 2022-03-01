@@ -29,7 +29,11 @@ func New(drivers *drivers.Drivers) (*Controller, error) {
 		return nil, err
 	}
 
-	analystsService, err := services.NewAnalystService(drivers.Repositories.Analysts, drivers.Logger)
+	analystsService, err := services.NewAnalystService(
+		drivers.Repositories.Analysts,
+		drivers.Repositories.Users,
+		drivers.Logger,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -39,7 +43,11 @@ func New(drivers *drivers.Drivers) (*Controller, error) {
 		return nil, err
 	}
 
-	pacientsService, err := services.NewPacientService(drivers.Repositories.Pacients, drivers.Logger)
+	pacientsService, err := services.NewPacientService(
+		drivers.Repositories.Pacients,
+		drivers.Repositories.Users,
+		drivers.Logger,
+	)
 	if err != nil {
 		return nil, err
 	}

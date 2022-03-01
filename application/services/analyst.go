@@ -14,8 +14,12 @@ type AnalystService struct {
 	logger   logging.Logger
 }
 
-func NewAnalystService(repository repositories.AnalystsRepository, logger logging.Logger) (*AnalystService, error) {
-	return &AnalystService{analysts: repository, logger: logger}, nil
+func NewAnalystService(
+	analysts repositories.AnalystsRepository,
+	users repositories.UsersRepository,
+	logger logging.Logger,
+) (*AnalystService, error) {
+	return &AnalystService{analysts: analysts, users: users, logger: logger}, nil
 }
 
 func (s *AnalystService) CreateAnalyst(userID string) (*entity.Analyst, error) {
