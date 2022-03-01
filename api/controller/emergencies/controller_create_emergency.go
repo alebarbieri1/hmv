@@ -1,4 +1,4 @@
-package pacients
+package emergencies
 
 import (
 	"net/http"
@@ -18,13 +18,7 @@ func (c *Controller) createEmergency(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if !user.IsPacient() {
-		c.drivers.Logger.Info(application.FailedToCreateEmergency, logging.Error(application.ErrUserMustBeAPacient))
-		c.drivers.Presenter.Present(w, response.Forbidden(application.FailedToCreateEmergency, application.ErrUserMustBeAPacient))
-		return
-	}
-
-	emergency, err := c.usecases.Emergencies.CreateEmergency(user.ID)
+	emergency, err := c.usecases.Emergencies.CreateEmergency(user)
 	if err != nil {
 		c.drivers.Logger.Error(application.FailedToCreateEmergency, err)
 		c.drivers.Presenter.Present(w, response.InternalServerError(application.FailedToCreateEmergency, err))

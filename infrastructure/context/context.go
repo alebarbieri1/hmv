@@ -13,8 +13,8 @@ type Context struct {
 	context.Context
 }
 
-func New() *Context {
-	return &Context{Context: context.Background()}
+func New(source context.Context) *Context {
+	return &Context{Context: source}
 }
 
 func Parse(input context.Context) (*Context, error) {

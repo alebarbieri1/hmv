@@ -26,13 +26,22 @@ func NewEmergencyService(
 	}, nil
 }
 
-func (s *EmergencyService) CreateEmergency(userID string) (*entity.Emergency, error) {
-	pacient, err := s.pacients.FindPacientByUserID(userID)
+func (s *EmergencyService) CreateEmergency(user *entity.User) (*entity.Emergency, error) {
+	if !user.IsPacient() {
+		s.logger.Info(
+			application.FailedToCreateEmergency,
+			logging.Error(application.ErrUserMustBeAPacient),
+			logging.String("user_id", user.ID),
+		)
+		return nil, application.ErrUserMustBeAPacient
+	}
+
+	pacient, err := s.pacients.FindPacientByUserID(user.ID)
 	if err == entity.ErrNotFound {
 		s.logger.Info(
 			application.FailedToCreateEmergency,
 			logging.Error(application.ErrUserMustBeAPacient),
-			logging.String("user_id", userID),
+			logging.String("user_id", user.ID),
 		)
 		return nil, application.ErrUserMustBeAPacient
 	}
@@ -56,7 +65,7 @@ func (s *EmergencyService) CreateEmergency(userID string) (*entity.Emergency, er
 	s.logger.Debug(
 		application.EmergencyCreated,
 		logging.String("emergency_id", emergency.ID),
-		logging.String("user_id", userID),
+		logging.String("user_id", user.ID),
 	)
 	return emergency, nil
 }
@@ -69,6 +78,6 @@ func (s *EmergencyService) ListEmergenciesByStatus(status valueobject.EmergencyS
 	return s.emergencies.ListEmergenciesByStatus(status)
 }
 
-func (s *EmergencyService) ListEmergenciesByPacientID(pacientID string) ([]*entity.Emergency, error) {
-	return s.emergencies.ListEmergenciesByPacientID(pacientID)
+func (s *EmergencyService) ListEmergenciesByPacient(pacient *entity.Pacient) ([]*entity.Emergency, error) {
+	return s.emergencies.ListEmergenciesByPacientID(pacient.ID)
 }

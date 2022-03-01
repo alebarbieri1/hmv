@@ -1,4 +1,4 @@
-package pacients
+package emergencies
 
 import (
 	"net/http"
@@ -32,7 +32,6 @@ func (c *Controller) SetRoutes(parent *mux.Router) {
 		c.drivers.Presenter,
 	)))
 
-	parent.HandleFunc("", c.createPacient).Methods(http.MethodPost)
-	parent.HandleFunc("/{pacient_id}", c.findPacient).Methods(http.MethodGet)
-	parent.HandleFunc("/{pacient_id}/emergency-contacts", c.updateEmergencyContact).Methods(http.MethodPut)
+	parent.HandleFunc("", c.createEmergency).Methods(http.MethodPost)
+	parent.HandleFunc("", c.listEmergencies).Methods(http.MethodGet)
 }

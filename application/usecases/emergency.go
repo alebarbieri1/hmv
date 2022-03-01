@@ -6,8 +6,8 @@ import (
 )
 
 type EmergencyUsecase interface {
-	CreateEmergency(userID string) (*entity.Emergency, error)
+	CreateEmergency(user *entity.User) (*entity.Emergency, error)
 	ListEmergencies() ([]*entity.Emergency, error)
 	ListEmergenciesByStatus(status valueobject.EmergencyStatus) ([]*entity.Emergency, error)
-	ListEmergenciesByPacientID(pacientID string) ([]*entity.Emergency, error)
+	ListEmergenciesByPacient(pacient *entity.Pacient) ([]*entity.Emergency, error)
 }

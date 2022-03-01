@@ -10,6 +10,7 @@ type Emergency struct {
 	Form      *EmergencyForm `json:"form,omitempty"`
 	CreatedAt string         `json:"created_at"`
 	UpdatedAt string         `json:"updated_at"`
+	Status    string         `json:"emergency_status"`
 }
 
 func NewEmergency(e *entity.Emergency) *Emergency {
@@ -19,6 +20,7 @@ func NewEmergency(e *entity.Emergency) *Emergency {
 		Form:      NewEmergencyForm(e.Form),
 		CreatedAt: e.CreatedAt.Format("02/01/2006 - 15:04:05h"),
 		UpdatedAt: e.UpdatedAt.Format("02/01/2006 - 15:04:05h"),
+		Status:    e.Status.String(),
 	}
 }
 

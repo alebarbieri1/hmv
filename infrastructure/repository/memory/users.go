@@ -2,35 +2,39 @@ package memory
 
 import (
 	"flavioltonon/hmv/domain/entity"
+	"flavioltonon/hmv/domain/valueobject"
 	"sync"
 	"time"
 )
 
 type User struct {
-	ID        string
-	Username  string
-	Password  string
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	ID          string
+	Username    string
+	Password    string
+	ProfileKind valueobject.ProfileKind
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
 }
 
 func NewUser(e *entity.User) *User {
 	return &User{
-		ID:        e.ID,
-		Username:  e.Username,
-		Password:  e.Password,
-		CreatedAt: e.CreatedAt,
-		UpdatedAt: e.UpdatedAt,
+		ID:          e.ID,
+		Username:    e.Username,
+		Password:    e.Password,
+		ProfileKind: e.ProfileKind,
+		CreatedAt:   e.CreatedAt,
+		UpdatedAt:   e.UpdatedAt,
 	}
 }
 
 func (u *User) toEntity() *entity.User {
 	return &entity.User{
-		ID:        u.ID,
-		Username:  u.Username,
-		Password:  u.Password,
-		CreatedAt: u.CreatedAt,
-		UpdatedAt: u.UpdatedAt,
+		ID:          u.ID,
+		Username:    u.Username,
+		Password:    u.Password,
+		ProfileKind: u.ProfileKind,
+		CreatedAt:   u.CreatedAt,
+		UpdatedAt:   u.UpdatedAt,
 	}
 }
 

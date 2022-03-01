@@ -5,7 +5,6 @@ import (
 	"flavioltonon/hmv/domain/entity"
 	"flavioltonon/hmv/domain/repositories"
 	"flavioltonon/hmv/domain/valueobject"
-	"flavioltonon/hmv/infrastructure/errors"
 	"flavioltonon/hmv/infrastructure/logging"
 )
 
@@ -23,28 +22,34 @@ func NewPacientService(
 	return &PacientService{pacients: pacients, users: users, logger: logger}, nil
 }
 
-func (s *PacientService) CreatePacient(userID string) (*entity.Pacient, error) {
-	user, err := s.users.FindUserByID(userID)
-	if err != nil {
-		s.logger.Info(application.FailedToFindUser, logging.Error(err))
-		return nil, err
-	}
-
+func (s *PacientService) CreatePacient(user *entity.User) (*entity.Pacient, error) {
 	// If the user does not have the input profile yet, we save it to its data
-	if err := user.AddProfile(valueobject.PacientProfile); err == nil {
+	if err := user.SetProfileKind(valueobject.Pacient_ProfileKind); err == nil {
+		s.logger.Debug(
+			application.UserCanBeUpdated,
+			logging.String("user_id", user.ID),
+			logging.Stringer("profile", valueobject.Pacient_ProfileKind),
+		)
+
 		if err := s.users.UpdateUser(user); err != nil {
 			s.logger.Error(application.FailedToUpdateUser, err)
 			return nil, application.ErrInternalError
 		}
+
+		s.logger.Debug(
+			application.UserUpdated,
+			logging.String("user_id", user.ID),
+			logging.Stringer("profile", valueobject.Pacient_ProfileKind),
+		)
 	}
 
 	// No matter if the user is set with an pacient profile or not - at this point we can simply try to find its
 	// data:
 	// - If it is not found, we should created it;
 	// - If we find it, we should return an error to the user
-	_, err = s.pacients.FindPacientByUserID(userID)
+	_, err := s.pacients.FindPacientByUserID(user.ID)
 	if err == entity.ErrNotFound {
-		pacient, err := entity.NewPacient(userID)
+		pacient, err := entity.NewPacient(user.ID)
 		if err != nil {
 			s.logger.Info(application.FailedToCreatePacient, logging.Error(err))
 			return nil, err
@@ -57,7 +62,7 @@ func (s *PacientService) CreatePacient(userID string) (*entity.Pacient, error) {
 
 		s.logger.Debug(
 			application.PacientCreated,
-			logging.String("user_id", userID),
+			logging.String("user_id", user.ID),
 			logging.String("pacient_id", pacient.ID),
 		)
 
@@ -71,32 +76,21 @@ func (s *PacientService) CreatePacient(userID string) (*entity.Pacient, error) {
 
 	s.logger.Info(
 		application.FailedToCreatePacient,
-		logging.String("user_id", userID),
+		logging.String("user_id", user.ID),
 		logging.Error(application.ErrUserAlreadyIsAPacient),
 	)
 	return nil, application.ErrUserAlreadyIsAPacient
+}
+
+func (s *PacientService) FindPacientByID(pacientID string) (*entity.Pacient, error) {
+	return s.pacients.FindPacientByID(pacientID)
 }
 
 func (s *PacientService) FindPacientByUserID(userID string) (*entity.Pacient, error) {
 	return s.pacients.FindPacientByUserID(userID)
 }
 
-func (s *PacientService) UpdateEmergencyContact(userID string, emergencyContact valueobject.EmergencyContact) (*entity.Pacient, error) {
-	pacient, err := s.pacients.FindPacientByUserID(userID)
-	if err != nil {
-		if errors.Is(err, entity.ErrNotFound) {
-			s.logger.Info(
-				application.FailedToFindPacient,
-				logging.Error(err),
-				logging.String("user_id", userID),
-			)
-		} else {
-			s.logger.Error(application.FailedToFindPacient, err)
-		}
-
-		return nil, errors.WithMessage(application.FailedToFindPacient, err)
-	}
-
+func (s *PacientService) UpdateEmergencyContact(pacient *entity.Pacient, emergencyContact valueobject.EmergencyContact) (*entity.Pacient, error) {
 	if err := pacient.UpdateEmergencyContact(emergencyContact); err != nil {
 		s.logger.Info(application.FailedToUpdatePacient, logging.Error(err))
 		return nil, err

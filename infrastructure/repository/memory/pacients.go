@@ -51,6 +51,19 @@ func (r *PacientsRepository) CreatePacient(pacient *entity.Pacient) error {
 	return nil
 }
 
+func (r *PacientsRepository) FindPacientByID(pacientID string) (*entity.Pacient, error) {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+
+	for _, pacient := range r.pacients {
+		if pacient.ID == pacientID {
+			return pacient.toEntity(), nil
+		}
+	}
+
+	return nil, entity.ErrNotFound
+}
+
 func (r *PacientsRepository) FindPacientByUserID(userID string) (*entity.Pacient, error) {
 	r.mu.Lock()
 	defer r.mu.Unlock()

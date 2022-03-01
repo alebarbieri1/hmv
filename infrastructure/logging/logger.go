@@ -1,6 +1,9 @@
 package logging
 
-import "strconv"
+import (
+	"fmt"
+	"strconv"
+)
 
 type Logger interface {
 	Debug(message string, fields ...field)
@@ -17,6 +20,13 @@ func String(name, value string) field {
 	return field{
 		Name:  name,
 		Value: value,
+	}
+}
+
+func Stringer(name string, value fmt.Stringer) field {
+	return field{
+		Name:  name,
+		Value: value.String(),
 	}
 }
 

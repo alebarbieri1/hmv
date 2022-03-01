@@ -12,23 +12,24 @@ import (
 )
 
 type User struct {
-	ID        string
-	Username  string
-	Password  string
-	Profiles  []valueobject.Profile
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	ID          string
+	Username    string
+	Password    string
+	ProfileKind valueobject.ProfileKind
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
 }
 
 func NewUser(username, password string) (*User, error) {
 	now := time.Now()
 
 	s := &User{
-		ID:        uuid.NewString(),
-		Username:  username,
-		Password:  password,
-		CreatedAt: now,
-		UpdatedAt: now,
+		ID:          uuid.NewString(),
+		Username:    username,
+		Password:    password,
+		ProfileKind: valueobject.Undefined_ProfileKind,
+		CreatedAt:   now,
+		UpdatedAt:   now,
 	}
 
 	if err := s.Validate(); err != nil {
@@ -64,35 +65,20 @@ func (u *User) Validate() error {
 	)
 }
 
-func (u *User) AddProfile(profile valueobject.Profile) error {
-	for _, p := range u.Profiles {
-		if p == profile {
-			return ErrProfileAlreadySet(profile)
-		}
+func (u *User) SetProfileKind(profileKind valueobject.ProfileKind) error {
+	if u.HasProfileKind() {
+		return ErrProfileKindAlreadySet(u.ProfileKind)
 	}
 
-	u.Profiles = append(u.Profiles, profile)
+	u.ProfileKind = profileKind
 	return nil
 }
 
-// IsAnalyst returns true if the User has an Analyst profile
-func (u *User) IsAnalyst() bool {
-	for _, profile := range u.Profiles {
-		if profile == valueobject.AnalystProfile {
-			return true
-		}
-	}
+// HasProfileKind returns true if the user already has a profile set
+func (u *User) HasProfileKind() bool { return u.ProfileKind != valueobject.Undefined_ProfileKind }
 
-	return false
-}
+// IsAnalyst returns true if the User has an Analyst profile
+func (u *User) IsAnalyst() bool { return u.ProfileKind == valueobject.Analyst_ProfileKind }
 
 // IsPacient returns true if the User has a Pacient profile
-func (u *User) IsPacient() bool {
-	for _, profile := range u.Profiles {
-		if profile == valueobject.PacientProfile {
-			return true
-		}
-	}
-
-	return false
-}
+func (u *User) IsPacient() bool { return u.ProfileKind == valueobject.Pacient_ProfileKind }

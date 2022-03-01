@@ -47,6 +47,19 @@ func (r *AnalystsRepository) CreateAnalyst(analyst *entity.Analyst) error {
 	return nil
 }
 
+func (r *AnalystsRepository) FindAnalystByID(analysisID string) (*entity.Analyst, error) {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+
+	for _, analyst := range r.analysts {
+		if analyst.ID == analysisID {
+			return analyst.toEntity(), nil
+		}
+	}
+
+	return nil, entity.ErrNotFound
+}
+
 func (r *AnalystsRepository) FindAnalystByUserID(userID string) (*entity.Analyst, error) {
 	r.mu.Lock()
 	defer r.mu.Unlock()

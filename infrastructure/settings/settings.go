@@ -15,7 +15,7 @@ func New() (*Settings, error) {
 			Address: ":8080",
 		},
 		Logging: &logging.Settings{
-			DevelopmentMode: false,
+			DevelopmentMode: true,
 		},
 	}, nil
 }

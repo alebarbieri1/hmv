@@ -6,7 +6,8 @@ import (
 )
 
 type PacientUsecase interface {
-	CreatePacient(userID string) (*entity.Pacient, error)
+	CreatePacient(user *entity.User) (*entity.Pacient, error)
+	FindPacientByID(pacientID string) (*entity.Pacient, error)
 	FindPacientByUserID(userID string) (*entity.Pacient, error)
-	UpdateEmergencyContact(userID string, emergencyContact valueobject.EmergencyContact) (*entity.Pacient, error)
+	UpdateEmergencyContact(pacient *entity.Pacient, emergencyContact valueobject.EmergencyContact) (*entity.Pacient, error)
 }

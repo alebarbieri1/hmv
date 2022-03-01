@@ -8,6 +8,6 @@ import (
 
 var ErrNotFound = errors.New("not found")
 
-func ErrProfileAlreadySet(profile valueobject.Profile) error {
-	return fmt.Errorf("profile %s already set", profile)
+func ErrProfileKindAlreadySet(profileKind valueobject.ProfileKind) error {
+	return fmt.Errorf("profile kind already set as %s", profileKind)
 }

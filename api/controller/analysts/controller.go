@@ -33,5 +33,5 @@ func (c *Controller) SetRoutes(parent *mux.Router) {
 	)))
 
 	parent.HandleFunc("", c.createAnalyst).Methods(http.MethodPost)
-	parent.HandleFunc("/emergencies", c.listEmergencies).Methods(http.MethodGet)
+	parent.HandleFunc("/{analyst_id}", c.findAnalyst).Methods(http.MethodGet)
 }

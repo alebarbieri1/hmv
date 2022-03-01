@@ -18,7 +18,7 @@ func (c *Controller) createAnalyst(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	analyst, err := c.usecases.Analysts.CreateAnalyst(user.ID)
+	analyst, err := c.usecases.Analysts.CreateAnalyst(user)
 	if err == application.ErrUserAlreadyIsAnAnalyst {
 		c.drivers.Logger.Info(application.FailedToCreateAnalyst, logging.Error(err))
 		c.drivers.Presenter.Present(w, response.BadRequest(application.FailedToCreateAnalyst, err))
