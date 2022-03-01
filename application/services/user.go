@@ -45,7 +45,7 @@ func (s *UserService) CreateUser(username, password string) (*entity.User, error
 	return nil, application.ErrUsernameAlreadyInUse
 }
 
-func (s *UserService) FindUser(userID string) (*entity.User, error) {
+func (s *UserService) FindUserByID(userID string) (*entity.User, error) {
 	return s.users.FindUserByID(userID)
 }
 

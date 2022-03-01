@@ -23,5 +23,6 @@ func NewController(usecases *Usecases, drivers *drivers.Drivers) *Controller {
 }
 
 func (c *Controller) SetRoutes(parent *mux.Router) {
+	parent.HandleFunc("/{user_id}", c.findUser).Methods(http.MethodGet)
 	parent.HandleFunc("", c.createUser).Methods(http.MethodPost)
 }
