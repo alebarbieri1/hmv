@@ -54,6 +54,18 @@ func (r *EmergenciesRepository) CreateEmergency(emergency *entity.Emergency) err
 	return nil
 }
 
+func (r *EmergenciesRepository) FindEmergencyByID(emergencyID string) (*entity.Emergency, error) {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+
+	emergency, exists := r.emergencies[emergencyID]
+	if !exists {
+		return nil, entity.ErrNotFound
+	}
+
+	return emergency.toEntity(), nil
+}
+
 func (r *EmergenciesRepository) ListEmergencies() ([]*entity.Emergency, error) {
 	emergencies := make([]*entity.Emergency, 0, len(r.emergencies))
 
@@ -102,4 +114,11 @@ func (r *EmergenciesRepository) ListEmergenciesByPacientID(pacientID string) ([]
 	r.mu.Unlock()
 
 	return emergencies, nil
+}
+
+func (r *EmergenciesRepository) UpdateEmergency(emergency *entity.Emergency) error {
+	r.mu.Lock()
+	r.emergencies[emergency.ID] = NewEmergency(emergency)
+	r.mu.Unlock()
+	return nil
 }

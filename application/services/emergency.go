@@ -70,6 +70,10 @@ func (s *EmergencyService) CreateEmergency(user *entity.User) (*entity.Emergency
 	return emergency, nil
 }
 
+func (s *EmergencyService) FindEmergencyByID(emergencyID string) (*entity.Emergency, error) {
+	return s.emergencies.FindEmergencyByID(emergencyID)
+}
+
 func (s *EmergencyService) ListEmergencies() ([]*entity.Emergency, error) {
 	return s.emergencies.ListEmergencies()
 }
@@ -78,6 +82,50 @@ func (s *EmergencyService) ListEmergenciesByStatus(status valueobject.EmergencyS
 	return s.emergencies.ListEmergenciesByStatus(status)
 }
 
-func (s *EmergencyService) ListEmergenciesByPacient(pacient *entity.Pacient) ([]*entity.Emergency, error) {
+func (s *EmergencyService) ListUserEmergencies(user *entity.User) ([]*entity.Emergency, error) {
+	if !user.IsPacient() {
+		s.logger.Debug(application.FailedToListEmergencies, logging.Error(application.ErrUserMustBeAPacient))
+		return nil, application.ErrUserMustBeAPacient
+	}
+
+	pacient, err := s.pacients.FindPacientByUserID(user.ID)
+	if err == entity.ErrNotFound {
+		s.logger.Debug(application.FailedToFindPacient, logging.Error(err))
+		return nil, application.ErrUserMustBeAPacient
+	}
+
+	if err != nil {
+		s.logger.Error(application.FailedToFindPacient, err)
+		return nil, application.ErrInternalError
+	}
+
 	return s.emergencies.ListEmergenciesByPacientID(pacient.ID)
+}
+
+func (s *EmergencyService) UpdateEmergencyStatus(emergency *entity.Emergency, status valueobject.EmergencyStatus) error {
+	if err := emergency.UpdateStatus(status); err != nil {
+		s.logger.Debug(application.FailedToUpdateEmergency, logging.Error(err))
+		return err
+	}
+
+	if err := s.emergencies.UpdateEmergency(emergency); err != nil {
+		s.logger.Error(application.FailedToUpdateEmergency, err)
+		return application.ErrInternalError
+	}
+
+	s.logger.Debug(application.EmergencyUpdated, logging.String("emergency_id", emergency.ID))
+	return nil
+}
+
+func (s *EmergencyService) StartEmergencyCare(user *entity.User, emergency *entity.Emergency) error {
+	if !user.IsAnalyst() {
+		s.logger.Debug(application.FailedToStartEmergencyCare, logging.Error(application.ErrUserMustBeAnAnalyst))
+		return application.ErrUserMustBeAnAnalyst
+	}
+
+	return s.UpdateEmergencyStatus(emergency, valueobject.AmbulanceToPacient_EmergencyStatus)
+}
+
+func (s *EmergencyService) CancelEmergency(emergency *entity.Emergency) error {
+	return s.UpdateEmergencyStatus(emergency, valueobject.Cancelled_EmergencyStatus)
 }

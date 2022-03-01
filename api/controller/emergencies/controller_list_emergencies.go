@@ -36,32 +36,25 @@ func (c *Controller) listEmergencies(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	case user.IsPacient():
-		pacient, err := c.usecases.Pacients.FindPacientByUserID(user.ID)
-		if err == entity.ErrNotFound {
-			c.drivers.Logger.Info(application.FailedToFindPacient, logging.Error(err))
-			c.drivers.Presenter.Present(w, response.Forbidden(application.FailedToListEmergencies, application.ErrUserMustBeAPacient))
+		emergencies, err = c.usecases.Emergencies.ListUserEmergencies(user)
+		if err == application.ErrUserMustBeAPacient {
+			c.drivers.Logger.Info(application.FailedToListEmergencies, logging.Error(err))
+			c.drivers.Presenter.Present(w, response.BadRequest(application.FailedToListEmergencies, err))
 			return
 		}
 
-		if err != nil {
-			c.drivers.Logger.Error(application.FailedToFindPacient, err)
-			c.drivers.Presenter.Present(w, response.InternalServerError(application.FailedToListEmergencies, err))
-			return
-		}
-
-		emergencies, err = c.usecases.Emergencies.ListEmergenciesByPacient(pacient)
 		if err != nil {
 			c.drivers.Logger.Error(application.FailedToListEmergencies, err)
-			c.drivers.Presenter.Present(w, response.InternalServerError(application.FailedToListEmergencies, err))
+			c.drivers.Presenter.Present(w, response.InternalServerError(application.FailedToListEmergencies, application.ErrInternalError))
 			return
 		}
 	default:
 		c.drivers.Logger.Info(
 			application.FailedToListEmergencies,
-			logging.Error(application.ErrInvalidUserProfiles),
+			logging.Error(application.ErrInvalidUserProfile),
 			logging.String("user_id", user.ID),
 		)
-		c.drivers.Presenter.Present(w, response.BadRequest(application.FailedToListEmergencies, application.ErrInvalidUserProfiles))
+		c.drivers.Presenter.Present(w, response.BadRequest(application.FailedToListEmergencies, application.ErrInvalidUserProfile))
 		return
 	}
 

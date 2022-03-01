@@ -65,6 +65,7 @@ func New(drivers *drivers.Drivers) (*Controller, error) {
 				Authentication: authenticationService,
 				Analysts:       analystsService,
 				Emergencies:    emergenciesService,
+				Users:          usersService,
 			},
 			drivers,
 		),

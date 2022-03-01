@@ -49,8 +49,14 @@ func (e *Emergency) Validate() error {
 	)
 }
 
-func (e *Emergency) UpdateForm(form valueobject.EmergencyForm) { e.Form = form }
+func (e *Emergency) UpdateForm(form valueobject.EmergencyForm) error {
+	e.Form = form
+	return e.Validate()
+}
 
-func (e *Emergency) UpdateStatus(status valueobject.EmergencyStatus) { e.Status = status }
+func (e *Emergency) UpdateStatus(status valueobject.EmergencyStatus) error {
+	e.Status = status
+	return e.Validate()
+}
 
 func (e *Emergency) Priority() valueobject.EmergencyPriority { return e.Form.Priority() }

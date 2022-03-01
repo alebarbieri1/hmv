@@ -1,8 +1,9 @@
 package entity
 
 import (
+	"context"
 	"flavioltonon/hmv/domain/valueobject"
-	"flavioltonon/hmv/infrastructure/context"
+	internalContext "flavioltonon/hmv/infrastructure/context"
 	"net/http"
 	"time"
 
@@ -40,12 +41,16 @@ func NewUser(username, password string) (*User, error) {
 }
 
 func NewUserFromRequest(r *http.Request) (*User, error) {
-	ctx, err := context.Parse(r.Context())
+	return NewUserFromContext(r.Context())
+}
+
+func NewUserFromContext(ctx context.Context) (*User, error) {
+	ictx, err := internalContext.Parse(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	user, implements := ctx.Get(context.UserKey).(*User)
+	user, implements := ictx.Get(internalContext.UserKey).(*User)
 	if !implements {
 		return nil, ErrNotFound
 	}
