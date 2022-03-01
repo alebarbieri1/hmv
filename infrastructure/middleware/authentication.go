@@ -23,7 +23,7 @@ func Authentication(authentication usecases.AuthenticationUsecase, logger loggin
 				return
 			}
 
-			ctx := context.Background()
+			ctx := context.New()
 			ctx.Add(context.UserKey, user)
 			next.ServeHTTP(w, r.WithContext(ctx))
 		})
