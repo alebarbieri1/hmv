@@ -74,3 +74,10 @@ func (r *UsersRepository) FindUserByUsername(username string) (*entity.User, err
 
 	return nil, entity.ErrNotFound
 }
+
+func (r *UsersRepository) UpdateUser(user *entity.User) error {
+	r.mu.Lock()
+	r.users[user.ID] = NewUser(user)
+	r.mu.Unlock()
+	return nil
+}

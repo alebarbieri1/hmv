@@ -3,6 +3,7 @@ package controller
 import (
 	"net/http"
 
+	"flavioltonon/hmv/api/controller/analysts"
 	"flavioltonon/hmv/api/controller/pacients"
 	"flavioltonon/hmv/api/controller/users"
 	"flavioltonon/hmv/application/services"
@@ -15,6 +16,7 @@ import (
 
 // Controller is the application controller
 type Controller struct {
+	analysts *analysts.Controller
 	pacients *pacients.Controller
 	users    *users.Controller
 	drivers  *drivers.Drivers
@@ -23,6 +25,11 @@ type Controller struct {
 // New creates a new Controller with a given set of Drivers
 func New(drivers *drivers.Drivers) (*Controller, error) {
 	authenticationService, err := services.NewAuthenticationService(drivers.Repositories.Users, drivers.Logger)
+	if err != nil {
+		return nil, err
+	}
+
+	analystsService, err := services.NewAnalystService(drivers.Repositories.Analysts, drivers.Logger)
 	if err != nil {
 		return nil, err
 	}
@@ -43,6 +50,14 @@ func New(drivers *drivers.Drivers) (*Controller, error) {
 	}
 
 	return &Controller{
+		analysts: analysts.NewController(
+			&analysts.Usecases{
+				Authentication: authenticationService,
+				Analysts:       analystsService,
+				Emergencies:    emergenciesService,
+			},
+			drivers,
+		),
 		pacients: pacients.NewController(
 			&pacients.Usecases{
 				Authentication: authenticationService,
