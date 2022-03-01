@@ -26,6 +26,18 @@ func (s *PacientService) CreatePacient(userID string) (*entity.Pacient, error) {
 		return nil, err
 	}
 
+	// If the user does not have the input profile yet, we save it to its data
+	if err := user.AddProfile(valueobject.PacientProfile); err == nil {
+		if err := s.users.UpdateUser(user); err != nil {
+			s.logger.Error(application.FailedToUpdateUser, err)
+			return nil, application.ErrInternalError
+		}
+	}
+
+	// No matter if the user is set with an pacient profile or not - at this point we can simply try to find its
+	// data:
+	// - If it is not found, we should created it;
+	// - If we find it, we should return an error to the user
 	_, err = s.pacients.FindPacientByUserID(userID)
 	if err == entity.ErrNotFound {
 		pacient, err := entity.NewPacient(userID)
@@ -44,18 +56,6 @@ func (s *PacientService) CreatePacient(userID string) (*entity.Pacient, error) {
 			logging.String("user_id", userID),
 			logging.String("pacient_id", pacient.ID),
 		)
-
-		// TODO: this flow may fail after the pacient has already been created, and so should be improved with
-		// transaction logic or something like that.
-		if err := user.AddProfile(valueobject.PacientProfile); err != nil {
-			s.logger.Error(application.FailedToUpdateUser, err)
-			return nil, err
-		}
-
-		if err := s.users.UpdateUser(user); err != nil {
-			s.logger.Error(application.FailedToUpdateUser, err)
-			return nil, application.ErrInternalError
-		}
 
 		return pacient, nil
 	}
