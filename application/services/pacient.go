@@ -51,7 +51,7 @@ func (s *PacientService) CreatePacient(user *entity.User) (*entity.Pacient, erro
 	if err == entity.ErrNotFound {
 		pacient, err := entity.NewPacient(user.ID)
 		if err != nil {
-			s.logger.Info(application.FailedToCreatePacient, logging.Error(err))
+			s.logger.Debug(application.FailedToCreatePacient, logging.Error(err))
 			return nil, err
 		}
 
@@ -74,11 +74,6 @@ func (s *PacientService) CreatePacient(user *entity.User) (*entity.Pacient, erro
 		return nil, application.ErrInternalError
 	}
 
-	s.logger.Info(
-		application.FailedToCreatePacient,
-		logging.String("user_id", user.ID),
-		logging.Error(application.ErrUserAlreadyIsAPacient),
-	)
 	return nil, application.ErrUserAlreadyIsAPacient
 }
 
@@ -92,7 +87,7 @@ func (s *PacientService) FindPacientByUserID(userID string) (*entity.Pacient, er
 
 func (s *PacientService) UpdateEmergencyContact(pacient *entity.Pacient, emergencyContact valueobject.EmergencyContact) (*entity.Pacient, error) {
 	if err := pacient.UpdateEmergencyContact(emergencyContact); err != nil {
-		s.logger.Info(application.FailedToUpdatePacient, logging.Error(err))
+		s.logger.Debug(application.FailedToUpdatePacient, logging.Error(err))
 		return nil, err
 	}
 

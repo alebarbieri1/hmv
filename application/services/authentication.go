@@ -19,13 +19,18 @@ func NewAuthenticationService(repository repositories.UsersRepository, logger lo
 
 func (s *AuthenticationService) AuthenticateUser(username, password string) (*entity.User, error) {
 	user, err := s.users.FindUserByUsername(username)
-	if err != nil {
-		s.logger.Info(application.FailedToAuthenticateUser, logging.Error(application.ErrInvalidUsername))
+	if err == entity.ErrNotFound {
+		s.logger.Debug(application.FailedToAuthenticateUser, logging.Error(application.ErrInvalidUsername))
 		return nil, application.ErrInvalidUsernameOrPassword
 	}
 
+	if err != nil {
+		s.logger.Error(application.FailedToAuthenticateUser, err)
+		return nil, application.ErrInternalError
+	}
+
 	if user.Password != password {
-		s.logger.Info(application.FailedToAuthenticateUser, logging.Error(application.ErrInvalidPassword))
+		s.logger.Debug(application.FailedToAuthenticateUser, logging.Error(application.ErrInvalidPassword))
 		return nil, application.ErrInvalidUsernameOrPassword
 	}
 
@@ -36,7 +41,7 @@ func (s *AuthenticationService) AuthenticateUser(username, password string) (*en
 func (s *AuthenticationService) AuthenticateUserFromRequest(r *http.Request) (*entity.User, error) {
 	username, password, hasCredentials := r.BasicAuth()
 	if !hasCredentials {
-		s.logger.Info(application.FailedToAuthenticateUser, logging.Error(application.ErrBasicAuthenticationRequired))
+		s.logger.Debug(application.FailedToAuthenticateUser, logging.Error(application.ErrBasicAuthenticationRequired))
 		return nil, application.ErrBasicAuthenticationRequired
 	}
 

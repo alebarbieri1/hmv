@@ -28,7 +28,7 @@ func NewEmergencyService(
 
 func (s *EmergencyService) CreateEmergency(user *entity.User) (*entity.Emergency, error) {
 	if !user.IsPacient() {
-		s.logger.Info(
+		s.logger.Debug(
 			application.FailedToCreateEmergency,
 			logging.Error(application.ErrUserMustBeAPacient),
 			logging.String("user_id", user.ID),
@@ -38,7 +38,7 @@ func (s *EmergencyService) CreateEmergency(user *entity.User) (*entity.Emergency
 
 	pacient, err := s.pacients.FindPacientByUserID(user.ID)
 	if err == entity.ErrNotFound {
-		s.logger.Info(
+		s.logger.Debug(
 			application.FailedToCreateEmergency,
 			logging.Error(application.ErrUserMustBeAPacient),
 			logging.String("user_id", user.ID),
@@ -53,7 +53,7 @@ func (s *EmergencyService) CreateEmergency(user *entity.User) (*entity.Emergency
 
 	emergency, err := entity.NewEmergency(pacient.ID)
 	if err != nil {
-		s.logger.Info(application.FailedToCreateEmergency, logging.Error(err))
+		s.logger.Debug(application.FailedToCreateEmergency, logging.Error(err))
 		return nil, err
 	}
 

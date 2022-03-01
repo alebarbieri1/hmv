@@ -21,7 +21,7 @@ func (s *UserService) CreateUser(username, password string) (*entity.User, error
 	if err == entity.ErrNotFound {
 		user, err := entity.NewUser(username, password)
 		if err != nil {
-			s.logger.Info(application.FailedToCreateUser, logging.Error(err))
+			s.logger.Debug(application.FailedToCreateUser, logging.Error(err))
 			return nil, err
 		}
 

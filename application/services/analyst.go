@@ -29,6 +29,8 @@ func (s *AnalystService) CreateAnalyst(user *entity.User) (*entity.Analyst, erro
 			s.logger.Error(application.FailedToUpdateUser, err)
 			return nil, application.ErrInternalError
 		}
+	} else {
+		s.logger.Debug(application.FailedToUpdateUser, logging.Error(err))
 	}
 
 	// No matter if the user is set with an analyst profile or not - at this point we can simply try to find its
@@ -39,7 +41,7 @@ func (s *AnalystService) CreateAnalyst(user *entity.User) (*entity.Analyst, erro
 	if err == entity.ErrNotFound {
 		analyst, err := entity.NewAnalyst(user.ID)
 		if err != nil {
-			s.logger.Info(application.FailedToCreateAnalyst, logging.Error(err))
+			s.logger.Debug(application.FailedToCreateAnalyst, logging.Error(err))
 			return nil, err
 		}
 
@@ -62,11 +64,6 @@ func (s *AnalystService) CreateAnalyst(user *entity.User) (*entity.Analyst, erro
 		return nil, application.ErrInternalError
 	}
 
-	s.logger.Info(
-		application.FailedToCreateAnalyst,
-		logging.String("user_id", user.ID),
-		logging.Error(application.ErrUserAlreadyIsAnAnalyst),
-	)
 	return nil, application.ErrUserAlreadyIsAnAnalyst
 }
 
