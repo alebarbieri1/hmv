@@ -17,6 +17,12 @@ func (c *Controller) listEmergencies(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if !user.IsPacient() {
+		c.drivers.Logger.Info(application.FailedToListEmergencies, logging.Error(application.ErrUserMustBeAPacient))
+		c.drivers.Presenter.Present(w, response.Forbidden(application.FailedToListEmergencies, application.ErrUserMustBeAPacient))
+		return
+	}
+
 	pacient, err := c.usecases.Pacients.FindPacientByUserID(user.ID)
 	if err == entity.ErrNotFound {
 		c.drivers.Logger.Info(application.FailedToFindPacient, logging.Error(err))

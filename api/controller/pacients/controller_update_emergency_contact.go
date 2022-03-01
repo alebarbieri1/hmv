@@ -29,7 +29,26 @@ func (c *Controller) updateEmergencyContact(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
-	pacient, err := c.usecases.Pacients.UpdateEmergencyContact(user.ID, payload.toValueObject())
+	if !user.IsPacient() {
+		c.drivers.Logger.Info(application.FailedToUpdatePacient, logging.Error(application.ErrUserMustBeAPacient))
+		c.drivers.Presenter.Present(w, response.Forbidden(application.FailedToUpdatePacient, application.ErrUserMustBeAPacient))
+		return
+	}
+
+	pacient, err := c.usecases.Pacients.FindPacientByUserID(user.ID)
+	if err == entity.ErrNotFound {
+		c.drivers.Logger.Info(application.FailedToFindPacient, logging.Error(err))
+		c.drivers.Presenter.Present(w, response.Forbidden(application.FailedToListEmergencies, application.ErrUserMustBeAPacient))
+		return
+	}
+
+	if err != nil {
+		c.drivers.Logger.Error(application.FailedToFindPacient, err)
+		c.drivers.Presenter.Present(w, response.InternalServerError(application.FailedToListEmergencies, err))
+		return
+	}
+
+	updatedPacient, err := c.usecases.Pacients.UpdateEmergencyContact(pacient.ID, payload.toValueObject())
 	if err == application.ErrUserAlreadyIsAPacient {
 		c.drivers.Logger.Info(application.FailedToUpdatePacient, logging.Error(err))
 		c.drivers.Presenter.Present(w, response.BadRequest(application.FailedToUpdatePacient, err))
@@ -42,7 +61,7 @@ func (c *Controller) updateEmergencyContact(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
-	c.drivers.Presenter.Present(w, response.Created(presenter.NewPacient(pacient)))
+	c.drivers.Presenter.Present(w, response.Created(presenter.NewPacient(updatedPacient)))
 }
 
 type updateEmergencyContactPayload struct {

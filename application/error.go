@@ -5,6 +5,7 @@ import "errors"
 var (
 	ErrInternalError               = errors.New("internal error")
 	ErrBasicAuthenticationRequired = errors.New("basic authentication required")
+	ErrUserMustBeAnAnalyst         = errors.New("user must be an analyst")
 	ErrUserMustBeAPacient          = errors.New("user must be a pacient")
 	ErrUserAlreadyIsAPacient       = errors.New("user already is a pacient")
 	ErrUsernameAlreadyInUse        = errors.New("username is already in use")
@@ -15,6 +16,7 @@ var (
 
 const (
 	UserCreated              = "user created"
+	UserUpdated              = "user updated"
 	UserAuthenticated        = "user authenticated"
 	EmergencyCreated         = "emergency created"
 	PacientCreated           = "pacient created"
@@ -26,5 +28,7 @@ const (
 	FailedToCreatePacient    = "failed to create pacient"
 	FailedToUpdatePacient    = "failed to update pacient"
 	FailedToFindPacient      = "failed to find pacient"
+	FailedToFindUser         = "failed to find user"
 	FailedToCreateUser       = "failed to create user"
+	FailedToUpdateUser       = "failed to update user"
 )

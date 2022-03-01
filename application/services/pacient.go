@@ -11,6 +11,7 @@ import (
 
 type PacientService struct {
 	pacients repositories.PacientsRepository
+	users    repositories.UsersRepository
 	logger   logging.Logger
 }
 
@@ -19,7 +20,13 @@ func NewPacientService(repository repositories.PacientsRepository, logger loggin
 }
 
 func (s *PacientService) CreatePacient(userID string) (*entity.Pacient, error) {
-	_, err := s.pacients.FindPacientByUserID(userID)
+	user, err := s.users.FindUserByID(userID)
+	if err != nil {
+		s.logger.Info(application.FailedToFindUser, logging.Error(err))
+		return nil, err
+	}
+
+	_, err = s.pacients.FindPacientByUserID(userID)
 	if err == entity.ErrNotFound {
 		pacient, err := entity.NewPacient(userID)
 		if err != nil {
@@ -37,6 +44,19 @@ func (s *PacientService) CreatePacient(userID string) (*entity.Pacient, error) {
 			logging.String("user_id", userID),
 			logging.String("pacient_id", pacient.ID),
 		)
+
+		// TODO: this flow may fail after the pacient has already been created, and so should be improved with
+		// transaction logic or something like that.
+		if err := user.AddProfile(valueobject.PacientProfile); err != nil {
+			s.logger.Error(application.FailedToUpdateUser, err)
+			return nil, err
+		}
+
+		if err := s.users.UpdateUser(user); err != nil {
+			s.logger.Error(application.FailedToUpdateUser, err)
+			return nil, application.ErrInternalError
+		}
+
 		return pacient, nil
 	}
 
