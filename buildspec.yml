@@ -1,0 +1,22 @@
+version: 0.2
+phases:
+  install:
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR....
+      - aws --version
+      - $(aws ecr get-login --no-include-email --region us-east-1)
+  build:
+    commands:
+      - echo Build started on `date`
+      - docker build -t backend-fiap .
+      - docker tag backend-challenge-fiap 416463717909.dkr.ecr.us-east-1.amazonaws.com/backend-challenge-fiap:latest
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - echo Pushing to repo
+      - docker push 416463717909.dkr.ecr.us-east-1.amazonaws.com/backend-challenge-fiap:latest
+      - echo Writing image definitions file...
+      - printf '[{"name":"challenge-fiap-backend-container","imageUri":"416463717909.dkr.ecr.us-east-1.amazonaws.com/backend-challenge-fiap:latest"}]' > imagedefinitions.json
+artifacts:
+  files: imagedefinitions.json
