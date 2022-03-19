@@ -10,7 +10,7 @@ phases:
   build:
     commands:
       - echo Build started on `date`
-      - docker build -t backend-fiap .
+      - docker build -t backend-challenge-fiap .
       - docker tag backend-challenge-fiap 416463717909.dkr.ecr.us-east-1.amazonaws.com/backend-challenge-fiap:latest
   post_build:
     commands:
