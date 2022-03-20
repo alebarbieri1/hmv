@@ -1,6 +1,7 @@
 package services
 
 import (
+	"context"
 	"flavioltonon/hmv/application"
 	"flavioltonon/hmv/domain/entity"
 	"flavioltonon/hmv/domain/repositories"
@@ -67,6 +68,31 @@ func (s *EmergencyService) CreateEmergency(user *entity.User) (*entity.Emergency
 		logging.String("emergency_id", emergency.ID),
 		logging.String("user_id", user.ID),
 	)
+	return emergency, nil
+}
+
+func (s *EmergencyService) UpdateEmergencyForm(ctx context.Context, user *entity.User, emergencyID string, form valueobject.EmergencyForm) (*entity.Emergency, error) {
+	if !user.IsPacient() {
+		s.logger.Debug(application.FailedToListEmergencies, logging.Error(application.ErrUserMustBeAPacient))
+		return nil, application.ErrUserMustBeAPacient
+	}
+
+	emergency, err := s.FindEmergencyByID(emergencyID)
+	if err != nil {
+		s.logger.Error(application.FailedToFindEmergency, err)
+		return nil, err
+	}
+
+	if err := emergency.UpdateForm(form); err != nil {
+		s.logger.Error(application.FailedToUpdateEmergencyForm, err)
+		return nil, err
+	}
+
+	if err := s.emergencies.UpdateEmergency(emergency); err != nil {
+		s.logger.Error(application.FailedToUpdateEmergency, err)
+		return nil, application.ErrInternalError
+	}
+
 	return emergency, nil
 }
 

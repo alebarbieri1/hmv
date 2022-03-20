@@ -29,3 +29,20 @@ func (i AbdominalPainIntensity) String() string {
 
 	return "undefined"
 }
+
+func NewAbdominalPainIntensityFromString(s string) AbdominalPainIntensity {
+	switch s {
+	case "very-low":
+		return VeryLow_AbdominalPainIntensity
+	case "low":
+		return Low_AbdominalPainIntensity
+	case "medium":
+		return Medium_AbdominalPainIntensity
+	case "high":
+		return High_AbdominalPainIntensity
+	case "very-high":
+		return VeryHigh_AbdominalPainIntensity
+	}
+
+	return Undefined_AbdominalPainIntensity
+}

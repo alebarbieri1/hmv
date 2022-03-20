@@ -5,21 +5,15 @@ import ozzo "github.com/go-ozzo/ozzo-validation/v4"
 var _ EmergencyFormSession = (*AbdominalPainEmergencyFormSession)(nil)
 
 type AbdominalPainEmergencyFormSession struct {
-	HasAbdominalPain       *bool
-	AbdominalPainIntensity AbdominalPainIntensity
+	Has       *bool
+	Intensity AbdominalPainIntensity
 }
 
 func (f AbdominalPainEmergencyFormSession) Validate() error {
 	return ozzo.ValidateStruct(&f,
-		ozzo.Field(&f.HasAbdominalPain, ozzo.By(func(value interface{}) error {
-			if f.AbdominalPainIntensity == Undefined_AbdominalPainIntensity {
-				return ozzo.Nil.Validate(value)
-			}
-
-			return ozzo.NotNil.Validate(value)
-		})),
-		ozzo.Field(&f.AbdominalPainIntensity, ozzo.By(func(value interface{}) error {
-			if !f.IsSet() || !*f.HasAbdominalPain {
+		ozzo.Field(&f.Has),
+		ozzo.Field(&f.Intensity, ozzo.By(func(value interface{}) error {
+			if !f.IsSet() || !*f.Has {
 				return ozzo.In(Undefined_AbdominalPainIntensity).Validate(value)
 			}
 
@@ -28,12 +22,12 @@ func (f AbdominalPainEmergencyFormSession) Validate() error {
 	)
 }
 
-func (f AbdominalPainEmergencyFormSession) IsSet() bool { return f.HasAbdominalPain != nil }
+func (f AbdominalPainEmergencyFormSession) IsSet() bool { return f.Has != nil }
 
 func (f AbdominalPainEmergencyFormSession) Score() float64 {
 	if !f.IsSet() {
 		return 0
 	}
 
-	return f.AbdominalPainIntensity.Float64() / VeryHigh_AbdominalPainIntensity.Float64()
+	return f.Intensity.Float64() / VeryHigh_AbdominalPainIntensity.Float64()
 }

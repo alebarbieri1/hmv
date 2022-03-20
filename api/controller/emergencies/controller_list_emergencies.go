@@ -7,6 +7,7 @@ import (
 	"flavioltonon/hmv/domain/valueobject"
 	"flavioltonon/hmv/infrastructure/logging"
 	"flavioltonon/hmv/infrastructure/response"
+	"fmt"
 	"net/http"
 )
 
@@ -24,7 +25,9 @@ func (c *Controller) listEmergencies(w http.ResponseWriter, r *http.Request) {
 	case user.IsAnalyst():
 		s := r.URL.Query().Get("status")
 
-		if status := valueobject.EmergencyStatusFromString(s); status == valueobject.Undefined_EmergencyStatus {
+		fmt.Printf("s: %v\n", s)
+
+		if status := valueobject.NewEmergencyStatusFromString(s); status == valueobject.Undefined_EmergencyStatus {
 			emergencies, err = c.usecases.Emergencies.ListEmergencies()
 		} else {
 			emergencies, err = c.usecases.Emergencies.ListEmergenciesByStatus(status)

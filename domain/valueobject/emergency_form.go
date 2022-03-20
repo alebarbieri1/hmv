@@ -7,14 +7,14 @@ import (
 )
 
 type EmergencyForm struct {
-	Headache         HeadacheEmergencyFormSession
-	Breathing        BreathingEmergencyFormSession
-	ChestPain        ChestPainEmergencyFormSession
-	AbdominalPain    AbdominalPainEmergencyFormSession
-	Backache         BackacheEmergencyFormSession
-	BodyTemperature  BodyTemperatureEmergencyFormSession
-	BloodPressure    BloodPressureEmergencyFormSession
-	OxygenSaturation OxygenSaturationEmergencyFormSession
+	Headache              HeadacheEmergencyFormSession
+	BreathingDifficulties BreathingDifficultiesEmergencyFormSession
+	ChestPain             ChestPainEmergencyFormSession
+	AbdominalPain         AbdominalPainEmergencyFormSession
+	Backache              BackacheEmergencyFormSession
+	BodyTemperature       BodyTemperatureEmergencyFormSession
+	BloodPressure         BloodPressureEmergencyFormSession
+	OxygenSaturation      OxygenSaturationEmergencyFormSession
 }
 
 type EmergencyFormSession interface {
@@ -24,7 +24,7 @@ type EmergencyFormSession interface {
 
 func NewEmergencyForm(
 	headache HeadacheEmergencyFormSession,
-	breathing BreathingEmergencyFormSession,
+	breathingDifficulties BreathingDifficultiesEmergencyFormSession,
 	chestPain ChestPainEmergencyFormSession,
 	abdominalPain AbdominalPainEmergencyFormSession,
 	backache BackacheEmergencyFormSession,
@@ -33,14 +33,14 @@ func NewEmergencyForm(
 	oxygenSaturation OxygenSaturationEmergencyFormSession,
 ) (EmergencyForm, error) {
 	form := EmergencyForm{
-		Headache:         headache,
-		Breathing:        breathing,
-		ChestPain:        chestPain,
-		AbdominalPain:    abdominalPain,
-		Backache:         backache,
-		BodyTemperature:  bodyTemperature,
-		BloodPressure:    bloodPressure,
-		OxygenSaturation: oxygenSaturation,
+		Headache:              headache,
+		BreathingDifficulties: breathingDifficulties,
+		ChestPain:             chestPain,
+		AbdominalPain:         abdominalPain,
+		Backache:              backache,
+		BodyTemperature:       bodyTemperature,
+		BloodPressure:         bloodPressure,
+		OxygenSaturation:      oxygenSaturation,
 	}
 
 	if err := form.Validate(); err != nil {
@@ -53,7 +53,7 @@ func NewEmergencyForm(
 func (f EmergencyForm) Validate() error {
 	return ozzo.ValidateStruct(&f,
 		ozzo.Field(&f.Headache),
-		ozzo.Field(&f.Breathing),
+		ozzo.Field(&f.BreathingDifficulties),
 		ozzo.Field(&f.ChestPain),
 		ozzo.Field(&f.AbdominalPain),
 		ozzo.Field(&f.Backache),
@@ -64,6 +64,10 @@ func (f EmergencyForm) Validate() error {
 }
 
 func (f EmergencyForm) Priority() EmergencyPriority {
+	if f.IsEmpty() {
+		return Undefined_EmergencyPriority
+	}
+
 	switch {
 	case f.hasVeryHighPriority():
 		return VeryHigh_EmergencyPriority
@@ -91,17 +95,28 @@ func (f EmergencyForm) hasHighPriority() bool {
 func (f EmergencyForm) hasMediumPriority() bool {
 	return f.BodyTemperature.Score() > 0.5 ||
 		f.AbdominalPain.Score() > 0.5 ||
-		f.Breathing.Score() > 0.5 ||
+		f.BreathingDifficulties.Score() > 0.5 ||
 		f.Headache.Score() > 0.7 ||
 		f.Backache.Score() > 0.5
+}
+
+func (f EmergencyForm) IsEmpty() bool {
+	v := reflect.ValueOf(f)
+
+	for i := 0; i < v.NumField(); i++ {
+		if field, implements := v.Field(i).Interface().(EmergencyFormSession); implements && field.IsSet() {
+			return false
+		}
+	}
+
+	return true
 }
 
 func (f EmergencyForm) IsComplete() bool {
 	v := reflect.ValueOf(f)
 
 	for i := 0; i < v.NumField(); i++ {
-		field, implements := v.Field(i).Interface().(EmergencyFormSession)
-		if !implements || !field.IsSet() {
+		if field, implements := v.Field(i).Interface().(EmergencyFormSession); !implements || !field.IsSet() {
 			return false
 		}
 	}

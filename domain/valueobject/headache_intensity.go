@@ -29,3 +29,20 @@ func (i HeadacheIntensity) String() string {
 
 	return "undefined"
 }
+
+func NewHeadacheIntensityFromString(s string) HeadacheIntensity {
+	switch s {
+	case "very-low":
+		return VeryLow_HeadacheIntensity
+	case "low":
+		return Low_HeadacheIntensity
+	case "medium":
+		return Medium_HeadacheIntensity
+	case "high":
+		return High_HeadacheIntensity
+	case "very-high":
+		return VeryHigh_HeadacheIntensity
+	}
+
+	return Undefined_HeadacheIntensity
+}

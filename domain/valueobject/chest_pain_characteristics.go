@@ -17,3 +17,12 @@ func (c ChestPainCharacteristics) String() string {
 
 	return "undefined"
 }
+
+func NewChestPainCharacteristicsFromString(s string) ChestPainCharacteristics {
+	switch s {
+	case "radiating-to-the-left-arm":
+		return RadiatingToTheLeftArm_ChestPainCharacteristics
+	}
+
+	return Undefined_ChestPainCharacteristics
+}

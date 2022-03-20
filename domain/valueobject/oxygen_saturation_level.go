@@ -24,3 +24,16 @@ func (i OxygenSaturationLevel) String() string {
 
 	return "undefined"
 }
+
+func NewOxygenSaturationLevelFromString(s string) OxygenSaturationLevel {
+	switch s {
+	case "normal":
+		return Normal_OxygenSaturationLevel
+	case "hypoxic":
+		return Hypoxic_OxygenSaturationLevel
+	case "severely-hypoxic":
+		return SeverelyHypoxic_OxygenSaturationLevel
+	}
+
+	return Undefined_OxygenSaturationLevel
+}

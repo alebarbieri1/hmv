@@ -11,7 +11,7 @@ const (
 	Cancelled_EmergencyStatus
 )
 
-func EmergencyStatusFromString(s string) EmergencyStatus {
+func NewEmergencyStatusFromString(s string) EmergencyStatus {
 	switch s {
 	case "triage":
 		return Triage_EmergencyStatus
