@@ -9,6 +9,7 @@ var (
 	ErrUserAlreadyIsAnAnalyst      = errors.New("user already is an analyst")
 	ErrUserMustBeAPacient          = errors.New("user must be a pacient")
 	ErrUserAlreadyIsAPacient       = errors.New("user already is a pacient")
+	ErrUserMustBeARescuer          = errors.New("user must be a rescuer")
 	ErrUserAlreadyIsARescuer       = errors.New("user already is a rescuer")
 	ErrUserMustBeAPacientOrRescuer = errors.New("user must be a pacient or a rescuer")
 	ErrInvalidUserProfile          = errors.New("invalid user profile")
@@ -38,6 +39,7 @@ const (
 	FailedToFindEmergency       = "failed to find emergency"
 	FailedToListEmergencies     = "failed to list emergencies"
 	FailedToSendAmbulance       = "failed to send ambulance"
+	FailedToRemovePacient       = "failed to remove pacient"
 	FailedToFinishEmergencyCare = "failed to finish emergency care"
 	FailedToCreateAnalyst       = "failed to create analyst"
 	FailedToFindAnalyst         = "failed to find analyst"

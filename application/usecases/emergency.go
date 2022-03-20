@@ -15,6 +15,7 @@ type EmergencyUsecase interface {
 	ListUserEmergencies(user *entity.User) ([]*entity.Emergency, error)
 	UpdateEmergencyStatus(emergency *entity.Emergency, status valueobject.EmergencyStatus) error
 	SendAmbulance(user *entity.User, emergency *entity.Emergency) error
+	RemovePacient(user *entity.User, emergency *entity.Emergency) error
 	FinishEmergencyCare(user *entity.User, emergency *entity.Emergency) error
 	CancelEmergency(emergency *entity.Emergency) error
 }

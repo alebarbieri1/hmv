@@ -12,7 +12,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func (c *Controller) startEmergencyCare(w http.ResponseWriter, r *http.Request) {
+func (c *Controller) finishEmergencyCare(w http.ResponseWriter, r *http.Request) {
 	user, err := entity.NewUserFromRequest(r)
 	if err != nil {
 		c.drivers.Logger.Info(application.FailedToAuthenticateUser, logging.Error(err))
@@ -35,16 +35,20 @@ func (c *Controller) startEmergencyCare(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	err = c.usecases.Emergencies.StartEmergencyCare(user, emergency)
-	if err == application.ErrUserMustBeAnAnalyst {
-		c.drivers.Logger.Error(application.FailedToUpdateEmergency, err)
-		c.drivers.Presenter.Present(w, response.BadRequest(application.FailedToUpdateEmergency, err))
-		return
-	}
-
-	if err != nil {
+	err = c.usecases.Emergencies.FinishEmergencyCare(user, emergency)
+	if err == application.ErrInternalError {
 		c.drivers.Logger.Error(application.FailedToUpdateEmergency, err)
 		c.drivers.Presenter.Present(w, response.InternalServerError(application.FailedToUpdateEmergency, err))
+		return
+	}
+	if err == application.ErrUserMustBeAnAnalyst {
+		c.drivers.Logger.Error(application.FailedToUpdateEmergency, err)
+		c.drivers.Presenter.Present(w, response.Forbidden(application.FailedToUpdateEmergency, err))
+		return
+	}
+	if err != nil {
+		c.drivers.Logger.Error(application.FailedToUpdateEmergency, err)
+		c.drivers.Presenter.Present(w, response.BadRequest(application.FailedToUpdateEmergency, err))
 		return
 	}
 

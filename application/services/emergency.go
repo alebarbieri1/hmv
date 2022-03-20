@@ -154,11 +154,11 @@ func (s *EmergencyService) SendAmbulance(user *entity.User, emergency *entity.Em
 
 func (s *EmergencyService) RemovePacient(user *entity.User, emergency *entity.Emergency) error {
 	if !user.IsRescuer() {
-		s.logger.Debug(application.FailedToFinishEmergencyCare, logging.Error(application.ErrUserMustBeAnAnalyst))
-		return application.ErrUserMustBeAnAnalyst
+		s.logger.Debug(application.FailedToRemovePacient, logging.Error(application.ErrUserMustBeARescuer))
+		return application.ErrUserMustBeARescuer
 	}
 
-	return s.UpdateEmergencyStatus(emergency, valueobject.Finished_EmergencyStatus)
+	return s.UpdateEmergencyStatus(emergency, valueobject.AmbulanceToHospital_EmergencyStatus)
 }
 
 func (s *EmergencyService) FinishEmergencyCare(user *entity.User, emergency *entity.Emergency) error {
