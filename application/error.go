@@ -9,6 +9,8 @@ var (
 	ErrUserAlreadyIsAnAnalyst      = errors.New("user already is an analyst")
 	ErrUserMustBeAPacient          = errors.New("user must be a pacient")
 	ErrUserAlreadyIsAPacient       = errors.New("user already is a pacient")
+	ErrUserAlreadyIsARescuer       = errors.New("user already is a rescuer")
+	ErrUserMustBeAPacientOrRescuer = errors.New("user must be a pacient or a rescuer")
 	ErrInvalidUserProfile          = errors.New("invalid user profile")
 	ErrUsernameAlreadyInUse        = errors.New("username is already in use")
 	ErrInvalidUsername             = errors.New("invalid username")
@@ -27,6 +29,7 @@ const (
 	AnalystCreated              = "analyst created"
 	PacientCreated              = "pacient created"
 	PacientUpdated              = "pacient updated"
+	RescuerCreated              = "rescuer created"
 	FailedToValidateRequest     = "failed to validate request"
 	FailedToAuthenticateUser    = "failed to authenticate user"
 	FailedToCreateEmergency     = "failed to create emergency"
@@ -34,13 +37,17 @@ const (
 	FailedToUpdateEmergencyForm = "failed to update emergency form"
 	FailedToFindEmergency       = "failed to find emergency"
 	FailedToListEmergencies     = "failed to list emergencies"
-	FailedToStartEmergencyCare  = "failed to start emergency care"
+	FailedToSendAmbulance       = "failed to send ambulance"
+	FailedToFinishEmergencyCare = "failed to finish emergency care"
 	FailedToCreateAnalyst       = "failed to create analyst"
 	FailedToFindAnalyst         = "failed to find analyst"
 	FailedToCreatePacient       = "failed to create pacient"
 	FailedToUpdatePacient       = "failed to update pacient"
 	FailedToFindPacient         = "failed to find pacient"
-	FailedToFindUser            = "failed to find user"
+	FailedToCreateRescuer       = "failed to create rescuer"
+	FailedToUpdateRescuer       = "failed to update rescuer"
+	FailedToFindRescuer         = "failed to find rescuer"
 	FailedToCreateUser          = "failed to create user"
 	FailedToUpdateUser          = "failed to update user"
+	FailedToFindUser            = "failed to find user"
 )

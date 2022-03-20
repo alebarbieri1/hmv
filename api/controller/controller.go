@@ -6,6 +6,7 @@ import (
 	"flavioltonon/hmv/api/controller/analysts"
 	"flavioltonon/hmv/api/controller/emergencies"
 	"flavioltonon/hmv/api/controller/pacients"
+	"flavioltonon/hmv/api/controller/rescuers"
 	"flavioltonon/hmv/api/controller/users"
 	"flavioltonon/hmv/application/services"
 	"flavioltonon/hmv/infrastructure/drivers"
@@ -20,6 +21,7 @@ type Controller struct {
 	analysts    *analysts.Controller
 	emergencies *emergencies.Controller
 	pacients    *pacients.Controller
+	rescuers    *rescuers.Controller
 	users       *users.Controller
 	drivers     *drivers.Drivers
 }
@@ -54,6 +56,15 @@ func New(drivers *drivers.Drivers) (*Controller, error) {
 		return nil, err
 	}
 
+	rescuersService, err := services.NewRescuerService(
+		drivers.Repositories.Rescuers,
+		drivers.Repositories.Users,
+		drivers.Logger,
+	)
+	if err != nil {
+		return nil, err
+	}
+
 	usersService, err := services.NewUserService(drivers.Repositories.Users, drivers.Logger)
 	if err != nil {
 		return nil, err
@@ -64,7 +75,6 @@ func New(drivers *drivers.Drivers) (*Controller, error) {
 			&analysts.Usecases{
 				Authentication: authenticationService,
 				Analysts:       analystsService,
-				Emergencies:    emergenciesService,
 				Users:          usersService,
 			},
 			drivers,
@@ -85,6 +95,14 @@ func New(drivers *drivers.Drivers) (*Controller, error) {
 			},
 			drivers,
 		),
+		rescuers: rescuers.NewController(
+			&rescuers.Usecases{
+				Authentication: authenticationService,
+				Rescuers:       rescuersService,
+				Users:          usersService,
+			},
+			drivers,
+		),
 		users: users.NewController(
 			&users.Usecases{
 				Users: usersService,
@@ -100,6 +118,7 @@ func (c *Controller) NewRouter() http.Handler {
 	c.analysts.SetRoutes(router.PathPrefix("/analysts").Subrouter())
 	c.emergencies.SetRoutes(router.PathPrefix("/emergencies").Subrouter())
 	c.pacients.SetRoutes(router.PathPrefix("/pacients").Subrouter())
+	c.rescuers.SetRoutes(router.PathPrefix("/rescuers").Subrouter())
 	c.users.SetRoutes(router.PathPrefix("/users").Subrouter())
 	return alice.New(
 		middleware.ResponseWrapper(),

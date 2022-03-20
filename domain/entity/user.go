@@ -87,3 +87,6 @@ func (u *User) IsAnalyst() bool { return u.ProfileKind == valueobject.Analyst_Pr
 
 // IsPacient returns true if the User has a Pacient profile
 func (u *User) IsPacient() bool { return u.ProfileKind == valueobject.Pacient_ProfileKind }
+
+// IsRescuer returns true if the User has a Rescuer profile
+func (u *User) IsRescuer() bool { return u.ProfileKind == valueobject.Rescuer_ProfileKind }
