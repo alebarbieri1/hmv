@@ -14,7 +14,7 @@ import (
 func (c *Controller) findAnalyst(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 
-	user, err := c.usecases.Analysts.FindAnalystByID(vars["analyst_id"])
+	analyst, err := c.usecases.Analysts.FindAnalystByID(vars["analyst_id"])
 	if err == entity.ErrNotFound {
 		c.drivers.Logger.Info(application.FailedToFindAnalyst, logging.Error(err))
 		c.drivers.Presenter.Present(w, response.NotFound(application.FailedToFindAnalyst, err))
@@ -27,5 +27,5 @@ func (c *Controller) findAnalyst(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	c.drivers.Presenter.Present(w, response.OK(presenter.NewAnalyst(user)))
+	c.drivers.Presenter.Present(w, response.OK(presenter.NewAnalyst(analyst)))
 }
