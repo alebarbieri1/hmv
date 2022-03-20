@@ -56,6 +56,9 @@ func (e *Emergency) UpdateForm(form valueobject.EmergencyForm) error {
 }
 
 func (e *Emergency) UpdateStatus(status valueobject.EmergencyStatus) error {
+	if !e.Status.CanChangeTo(status) {
+		return ErrInvalidStatusChange(e.Status, status)
+	}
 	e.Status = status
 	return e.Validate()
 }
