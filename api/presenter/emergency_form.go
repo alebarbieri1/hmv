@@ -30,7 +30,7 @@ func NewEmergencyForm(f valueobject.EmergencyForm) *EmergencyForm {
 
 type HeadacheEmergencyFormSession struct {
 	Has       bool   `json:"has"`
-	Intensity string `json:"intensity,omitempty`
+	Intensity string `json:"intensity,omitempty"`
 }
 
 func NewHeadacheEmergencyFormSession(session valueobject.HeadacheEmergencyFormSession) HeadacheEmergencyFormSession {
@@ -56,7 +56,7 @@ func NewChestPainEmergencyFormSession(session valueobject.ChestPainEmergencyForm
 
 type AbdominalPainEmergencyFormSession struct {
 	Has       bool   `json:"has"`
-	Intensity string `json:"intensity,omitempty`
+	Intensity string `json:"intensity,omitempty"`
 }
 
 func NewAbdominalPainEmergencyFormSession(session valueobject.AbdominalPainEmergencyFormSession) AbdominalPainEmergencyFormSession {
@@ -72,7 +72,7 @@ func NewBackacheEmergencyFormSession(session valueobject.BackacheEmergencyFormSe
 }
 
 type BodyTemperatureEmergencyFormSession struct {
-	Temperature *float64 `json:"temperature,omitempty`
+	Temperature *float64 `json:"temperature,omitempty"`
 }
 
 func NewBodyTemperatureEmergencyFormSession(session valueobject.BodyTemperatureEmergencyFormSession) BodyTemperatureEmergencyFormSession {
@@ -80,8 +80,8 @@ func NewBodyTemperatureEmergencyFormSession(session valueobject.BodyTemperatureE
 }
 
 type BloodPressureEmergencyFormSession struct {
-	Systolic  *float64 `json:"systolic,omitempty`
-	Diastolic *float64 `json:"diastolic,omitempty`
+	Systolic  *float64 `json:"systolic,omitempty"`
+	Diastolic *float64 `json:"diastolic,omitempty"`
 }
 
 func NewBloodPressureEmergencyFormSession(session valueobject.BloodPressureEmergencyFormSession) BloodPressureEmergencyFormSession {
@@ -89,7 +89,7 @@ func NewBloodPressureEmergencyFormSession(session valueobject.BloodPressureEmerg
 }
 
 type OxygenSaturationEmergencyFormSession struct {
-	Saturation *float64 `json:"saturation,omitempty`
+	Saturation *float64 `json:"saturation,omitempty"`
 }
 
 func NewOxygenSaturationEmergencyFormSession(session valueobject.OxygenSaturationEmergencyFormSession) OxygenSaturationEmergencyFormSession {
