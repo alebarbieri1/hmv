@@ -19,9 +19,19 @@ func (c *Controller) createEmergency(w http.ResponseWriter, r *http.Request) {
 	}
 
 	emergency, err := c.usecases.Emergencies.CreateEmergency(user)
-	if err != nil {
+	if err == application.ErrInternalError {
 		c.drivers.Logger.Error(application.FailedToCreateEmergency, err)
 		c.drivers.Presenter.Present(w, response.InternalServerError(application.FailedToCreateEmergency, err))
+		return
+	}
+	if err == application.ErrUserMustBeAPacient {
+		c.drivers.Logger.Error(application.FailedToCreateEmergency, err)
+		c.drivers.Presenter.Present(w, response.Forbidden(application.FailedToCreateEmergency, err))
+		return
+	}
+	if err != nil {
+		c.drivers.Logger.Error(application.FailedToCreateEmergency, err)
+		c.drivers.Presenter.Present(w, response.BadRequest(application.FailedToCreateEmergency, err))
 		return
 	}
 

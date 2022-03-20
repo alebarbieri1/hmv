@@ -1,4 +1,4 @@
-package analysts
+package rescuers
 
 import (
 	"net/http"
@@ -17,7 +17,7 @@ type Controller struct {
 
 type Usecases struct {
 	Authentication usecases.AuthenticationUsecase
-	Analysts       usecases.AnalystUsecase
+	Rescuers       usecases.RescuerUsecase
 	Users          usecases.UserUsecase
 }
 
@@ -32,6 +32,6 @@ func (c *Controller) SetRoutes(parent *mux.Router) {
 		c.drivers.Presenter,
 	)))
 
-	parent.HandleFunc("", c.createAnalyst).Methods(http.MethodPost)
-	parent.HandleFunc("/{analyst_id}", c.findAnalyst).Methods(http.MethodGet)
+	parent.HandleFunc("", c.createRescuer).Methods(http.MethodPost)
+	parent.HandleFunc("/{rescuer_id}", c.findRescuer).Methods(http.MethodGet)
 }

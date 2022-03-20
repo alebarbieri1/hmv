@@ -1,6 +1,7 @@
 package services
 
 import (
+	"context"
 	"flavioltonon/hmv/application"
 	"flavioltonon/hmv/domain/entity"
 	"flavioltonon/hmv/domain/repositories"
@@ -70,6 +71,31 @@ func (s *EmergencyService) CreateEmergency(user *entity.User) (*entity.Emergency
 	return emergency, nil
 }
 
+func (s *EmergencyService) UpdateEmergencyForm(ctx context.Context, user *entity.User, emergencyID string, form valueobject.EmergencyForm) (*entity.Emergency, error) {
+	if !user.IsPacient() && !user.IsRescuer() {
+		s.logger.Debug(application.FailedToListEmergencies, logging.Error(application.ErrUserMustBeAPacient))
+		return nil, application.ErrUserMustBeAPacientOrRescuer
+	}
+
+	emergency, err := s.FindEmergencyByID(emergencyID)
+	if err != nil {
+		s.logger.Error(application.FailedToFindEmergency, err)
+		return nil, err
+	}
+
+	if err := emergency.UpdateForm(form); err != nil {
+		s.logger.Error(application.FailedToUpdateEmergencyForm, err)
+		return nil, err
+	}
+
+	if err := s.emergencies.UpdateEmergency(emergency); err != nil {
+		s.logger.Error(application.FailedToUpdateEmergency, err)
+		return nil, application.ErrInternalError
+	}
+
+	return emergency, nil
+}
+
 func (s *EmergencyService) FindEmergencyByID(emergencyID string) (*entity.Emergency, error) {
 	return s.emergencies.FindEmergencyByID(emergencyID)
 }
@@ -117,13 +143,31 @@ func (s *EmergencyService) UpdateEmergencyStatus(emergency *entity.Emergency, st
 	return nil
 }
 
-func (s *EmergencyService) StartEmergencyCare(user *entity.User, emergency *entity.Emergency) error {
+func (s *EmergencyService) SendAmbulance(user *entity.User, emergency *entity.Emergency) error {
 	if !user.IsAnalyst() {
-		s.logger.Debug(application.FailedToStartEmergencyCare, logging.Error(application.ErrUserMustBeAnAnalyst))
+		s.logger.Debug(application.FailedToSendAmbulance, logging.Error(application.ErrUserMustBeAnAnalyst))
 		return application.ErrUserMustBeAnAnalyst
 	}
 
 	return s.UpdateEmergencyStatus(emergency, valueobject.AmbulanceToPacient_EmergencyStatus)
+}
+
+func (s *EmergencyService) RemovePacient(user *entity.User, emergency *entity.Emergency) error {
+	if !user.IsRescuer() {
+		s.logger.Debug(application.FailedToRemovePacient, logging.Error(application.ErrUserMustBeARescuer))
+		return application.ErrUserMustBeARescuer
+	}
+
+	return s.UpdateEmergencyStatus(emergency, valueobject.AmbulanceToHospital_EmergencyStatus)
+}
+
+func (s *EmergencyService) FinishEmergencyCare(user *entity.User, emergency *entity.Emergency) error {
+	if !user.IsAnalyst() {
+		s.logger.Debug(application.FailedToFinishEmergencyCare, logging.Error(application.ErrUserMustBeAnAnalyst))
+		return application.ErrUserMustBeAnAnalyst
+	}
+
+	return s.UpdateEmergencyStatus(emergency, valueobject.Finished_EmergencyStatus)
 }
 
 func (s *EmergencyService) CancelEmergency(emergency *entity.Emergency) error {

@@ -11,7 +11,48 @@ const (
 	Cancelled_EmergencyStatus
 )
 
-func EmergencyStatusFromString(s string) EmergencyStatus {
+type EmergencyStatusFlow map[EmergencyStatus][]EmergencyStatus
+
+// CanChangeTo returns true if a given EmergencyStatus can progress to a given EmergencyStatus
+func (s EmergencyStatus) CanChangeTo(to EmergencyStatus) bool {
+	from, exists := _EmergencyStatusFlow[s]
+	if !exists {
+		return false
+	}
+
+	for _, status := range from {
+		if status == to {
+			return true
+		}
+	}
+
+	return false
+}
+
+// _EmergencyStatusFlow defines all the EmergencyStatus changes available
+var _EmergencyStatusFlow = EmergencyStatusFlow{
+	Undefined_EmergencyStatus: {
+		Triage_EmergencyStatus,
+		AmbulanceToPacient_EmergencyStatus,
+		AmbulanceToHospital_EmergencyStatus,
+		Finished_EmergencyStatus,
+		Cancelled_EmergencyStatus,
+	},
+	Triage_EmergencyStatus: {
+		AmbulanceToPacient_EmergencyStatus,
+		Cancelled_EmergencyStatus,
+	},
+	AmbulanceToPacient_EmergencyStatus: {
+		AmbulanceToHospital_EmergencyStatus,
+		Cancelled_EmergencyStatus,
+	},
+	AmbulanceToHospital_EmergencyStatus: {
+		Finished_EmergencyStatus,
+		Cancelled_EmergencyStatus,
+	},
+}
+
+func NewEmergencyStatusFromString(s string) EmergencyStatus {
 	switch s {
 	case "triage":
 		return Triage_EmergencyStatus

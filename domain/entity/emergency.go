@@ -43,6 +43,7 @@ func (e *Emergency) Validate() error {
 	return ozzo.ValidateStruct(e,
 		ozzo.Field(&e.ID, ozzo.Required, is.UUIDv4),
 		ozzo.Field(&e.PacientID, ozzo.Required, is.UUIDv4),
+		ozzo.Field(&e.Form),
 		ozzo.Field(&e.CreatedAt, ozzo.Required, ozzo.Max(now)),
 		ozzo.Field(&e.UpdatedAt, ozzo.Required, ozzo.Max(now)),
 		ozzo.Field(&e.Status, ozzo.Required),
@@ -55,6 +56,9 @@ func (e *Emergency) UpdateForm(form valueobject.EmergencyForm) error {
 }
 
 func (e *Emergency) UpdateStatus(status valueobject.EmergencyStatus) error {
+	if !e.Status.CanChangeTo(status) {
+		return ErrInvalidStatusChange(e.Status, status)
+	}
 	e.Status = status
 	return e.Validate()
 }
