@@ -12,6 +12,7 @@ import (
 	"github.com/google/uuid"
 )
 
+// User is one of the application's users
 type User struct {
 	ID          string
 	Username    string
@@ -21,6 +22,7 @@ type User struct {
 	UpdatedAt   time.Time
 }
 
+// NewUser creates a new User with a given username/password pair
 func NewUser(username, password string) (*User, error) {
 	now := time.Now()
 
@@ -40,10 +42,12 @@ func NewUser(username, password string) (*User, error) {
 	return s, nil
 }
 
+// NewUserFromRequest recovers a User from a given http.Request
 func NewUserFromRequest(r *http.Request) (*User, error) {
 	return NewUserFromContext(r.Context())
 }
 
+// NewUserFromContext recovers a User from a given context.Context
 func NewUserFromContext(ctx context.Context) (*User, error) {
 	ictx, err := internalContext.Parse(ctx)
 	if err != nil {
@@ -58,6 +62,7 @@ func NewUserFromContext(ctx context.Context) (*User, error) {
 	return user, nil
 }
 
+// Validate validates a User
 func (u *User) Validate() error {
 	now := time.Now()
 
@@ -65,11 +70,13 @@ func (u *User) Validate() error {
 		ozzo.Field(&u.ID, ozzo.Required, is.UUIDv4),
 		ozzo.Field(&u.Username, ozzo.Required, ozzo.Length(0, 64)),
 		ozzo.Field(&u.Password, ozzo.Required, ozzo.Length(0, 64)),
+		ozzo.Field(&u.ProfileKind, ozzo.Required),
 		ozzo.Field(&u.CreatedAt, ozzo.Required, ozzo.Max(now)),
 		ozzo.Field(&u.UpdatedAt, ozzo.Required, ozzo.Max(now)),
 	)
 }
 
+// SetProfileKind sets the User with a ProfileKind. If the User already has a ProfileKind, an error should be returned instead.
 func (u *User) SetProfileKind(profileKind valueobject.ProfileKind) error {
 	if u.HasProfileKind() {
 		return ErrProfileKindAlreadySet(u.ProfileKind)
