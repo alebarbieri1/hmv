@@ -555,3 +555,61 @@ func TestUser_IsRescuer(t *testing.T) {
 		})
 	}
 }
+
+func TestUser_SetUserData(t *testing.T) {
+	type fields struct {
+		Data valueobject.UserData
+	}
+
+	type args struct {
+		data valueobject.UserData
+	}
+
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		wantErr bool
+	}{
+		{
+			name: "Given a valid valueobject.UserData, User.SetUserData should return no errors",
+			fields: fields{
+				Data: valueobject.UserData{
+					Name: "baz",
+				},
+			},
+			args: args{
+				data: valueobject.UserData{
+					Name: "qux",
+				},
+			},
+			wantErr: false,
+		},
+		{
+			name: "Given an invalid valueobject.UserData, User.SetUserData should return an error",
+			fields: fields{
+				Data: valueobject.UserData{
+					Name: "baz",
+				},
+			},
+			args: args{
+				data: valueobject.UserData{
+					Name: "",
+				},
+			},
+			wantErr: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			u := &User{
+				Data: tt.fields.Data,
+			}
+
+			err := u.SetUserData(tt.args.data)
+
+			assert.Equal(t, tt.wantErr, err != nil)
+		})
+	}
+}

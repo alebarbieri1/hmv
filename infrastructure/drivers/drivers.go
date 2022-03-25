@@ -26,9 +26,12 @@ func New(settings *settings.Settings) (*Drivers, error) {
 
 	if settings.Server.DevelopmentMode {
 		repositories.Users.CreateUser(&entity.User{
-			ID:          "af3ecfbc-0e18-4448-875a-d64744a1f5cd",
-			Username:    "paciente@teste.com",
-			Password:    "1234abc@",
+			ID:       "af3ecfbc-0e18-4448-875a-d64744a1f5cd",
+			Username: "paciente@teste.com",
+			Password: "1234abc@",
+			Data: valueobject.UserData{
+				Name: "Lúcia Maria",
+			},
 			ProfileKind: valueobject.Pacient_ProfileKind,
 			CreatedAt:   time.Date(2022, 03, 25, 21, 18, 33, 0, time.UTC),
 			UpdatedAt:   time.Date(2022, 03, 25, 21, 18, 33, 0, time.UTC),
@@ -46,9 +49,12 @@ func New(settings *settings.Settings) (*Drivers, error) {
 		})
 
 		repositories.Users.CreateUser(&entity.User{
-			ID:          "6d763219-d191-4970-85cf-5abeab25f9c4",
-			Username:    "analista@hmv.com.br",
-			Password:    "1234abc@",
+			ID:       "6d763219-d191-4970-85cf-5abeab25f9c4",
+			Username: "analista@hmv.com.br",
+			Password: "1234abc@",
+			Data: valueobject.UserData{
+				Name: "Ana Souza",
+			},
 			ProfileKind: valueobject.Analyst_ProfileKind,
 			CreatedAt:   time.Date(2022, 03, 25, 21, 18, 33, 0, time.UTC),
 			UpdatedAt:   time.Date(2022, 03, 25, 21, 18, 33, 0, time.UTC),
@@ -62,9 +68,12 @@ func New(settings *settings.Settings) (*Drivers, error) {
 		})
 
 		repositories.Users.CreateUser(&entity.User{
-			ID:          "16674382-3430-414e-b429-0e847999ca8e",
-			Username:    "socorrista@hmv.com.br",
-			Password:    "1234abc@",
+			ID:       "16674382-3430-414e-b429-0e847999ca8e",
+			Username: "socorrista@hmv.com.br",
+			Password: "1234abc@",
+			Data: valueobject.UserData{
+				Name: "João Silva",
+			},
 			ProfileKind: valueobject.Rescuer_ProfileKind,
 			CreatedAt:   time.Date(2022, 03, 25, 21, 18, 33, 0, time.UTC),
 			UpdatedAt:   time.Date(2022, 03, 25, 21, 18, 33, 0, time.UTC),

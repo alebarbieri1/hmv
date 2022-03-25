@@ -12,6 +12,7 @@ type User struct {
 	ID          string
 	Username    string
 	Password    string
+	Data        valueobject.UserData
 	ProfileKind valueobject.ProfileKind
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
@@ -23,6 +24,7 @@ func NewUser(e *entity.User) *User {
 		ID:          e.ID,
 		Username:    e.Username,
 		Password:    e.Password,
+		Data:        e.Data,
 		ProfileKind: e.ProfileKind,
 		CreatedAt:   e.CreatedAt,
 		UpdatedAt:   e.UpdatedAt,
@@ -35,6 +37,7 @@ func (u *User) toEntity() *entity.User {
 		ID:          u.ID,
 		Username:    u.Username,
 		Password:    u.Password,
+		Data:        u.Data,
 		ProfileKind: u.ProfileKind,
 		CreatedAt:   u.CreatedAt,
 		UpdatedAt:   u.UpdatedAt,

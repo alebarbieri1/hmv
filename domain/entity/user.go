@@ -17,6 +17,8 @@ type User struct {
 	ID          string
 	Username    string
 	Password    string
+	Name        string
+	Data        valueobject.UserData
 	ProfileKind valueobject.ProfileKind
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
@@ -27,9 +29,12 @@ func NewUser(username, password string) (*User, error) {
 	now := time.Now()
 
 	s := &User{
-		ID:          uuid.NewString(),
-		Username:    username,
-		Password:    password,
+		ID:       uuid.NewString(),
+		Username: username,
+		Password: password,
+		Data: valueobject.UserData{
+			Name: username,
+		},
 		ProfileKind: valueobject.Undefined_ProfileKind,
 		CreatedAt:   now,
 		UpdatedAt:   now,
@@ -74,6 +79,16 @@ func (u *User) Validate() error {
 		ozzo.Field(&u.CreatedAt, ozzo.Required, ozzo.Max(now)),
 		ozzo.Field(&u.UpdatedAt, ozzo.Required, ozzo.Max(now)),
 	)
+}
+
+// SetUserData sets the User with a ProfileKind. If the User already has a ProfileKind, an error should be returned instead.
+func (u *User) SetUserData(data valueobject.UserData) error {
+	if err := data.Validate(); err != nil {
+		return err
+	}
+
+	u.Data = data
+	return nil
 }
 
 // SetProfileKind sets the User with a ProfileKind. If the User already has a ProfileKind, an error should be returned instead.
