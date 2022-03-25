@@ -36,6 +36,15 @@ func TestEmergencyStatusFlow_CanChange(t *testing.T) {
 			},
 			want: false,
 		},
+		{
+			name: "If the starting EmergencyStatus is not mapped in the EmergencyStatusFlow, CanChange should return false",
+			f:    DefaultEmergencyStatusFlow,
+			args: args{
+				from: -1,
+				to:   Finished_EmergencyStatus,
+			},
+			want: false,
+		},
 	}
 
 	for _, tt := range tests {
