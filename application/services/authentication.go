@@ -8,15 +8,18 @@ import (
 	"net/http"
 )
 
+// AuthenticationService implements all the usecases related to users authentication
 type AuthenticationService struct {
 	users  repositories.UsersRepository
 	logger logging.Logger
 }
 
+// NewAuthenticationService creates a new AuthenticationService
 func NewAuthenticationService(repository repositories.UsersRepository, logger logging.Logger) (*AuthenticationService, error) {
 	return &AuthenticationService{users: repository, logger: logger}, nil
 }
 
+// AuthenticateUser validates a username/password pair and returns its related entity.User, in case it exists
 func (s *AuthenticationService) AuthenticateUser(username, password string) (*entity.User, error) {
 	user, err := s.users.FindUserByUsername(username)
 	if err == entity.ErrNotFound {
@@ -38,6 +41,7 @@ func (s *AuthenticationService) AuthenticateUser(username, password string) (*en
 	return user, nil
 }
 
+// AuthenticateUser validates a username/password pair from a http.Request and returns its related entity.User, in case it exists
 func (s *AuthenticationService) AuthenticateUserFromRequest(r *http.Request) (*entity.User, error) {
 	username, password, hasCredentials := r.BasicAuth()
 	if !hasCredentials {

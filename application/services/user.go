@@ -7,15 +7,19 @@ import (
 	"flavioltonon/hmv/infrastructure/logging"
 )
 
+// UserService implements all the usecases related to one of the application users
 type UserService struct {
 	users  repositories.UsersRepository
 	logger logging.Logger
 }
 
+// NewUserService creates a new UserService
 func NewUserService(repository repositories.UsersRepository, logger logging.Logger) (*UserService, error) {
 	return &UserService{users: repository, logger: logger}, nil
 }
 
+// CreateUser creates a new entity.User with a given username and password. If the username has already been taken,
+// an application.ErrUsernameAlreadyInUse will be returned instead.
 func (s *UserService) CreateUser(username, password string) (*entity.User, error) {
 	_, err := s.users.FindUserByUsername(username)
 	if err == entity.ErrNotFound {
@@ -43,6 +47,8 @@ func (s *UserService) CreateUser(username, password string) (*entity.User, error
 	return nil, application.ErrUsernameAlreadyInUse
 }
 
+// FindUserByID returns an entity.User with a given userID. If no entities are found, entity.ErrNotFound
+// should be returned instead.
 func (s *UserService) FindUserByID(userID string) (*entity.User, error) {
 	return s.users.FindUserByID(userID)
 }

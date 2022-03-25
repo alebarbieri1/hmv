@@ -452,7 +452,7 @@ func TestEmergenciesRepository_ListUsers(t *testing.T) {
 
 			users, err := r.ListUsers()
 			assert.Equal(t, tt.wantErr, err != nil)
-			assert.Equal(t, tt.want, users)
+			assert.ElementsMatch(t, tt.want, users)
 		})
 	}
 }

@@ -121,10 +121,13 @@ func TestEmergency_toEntity(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			emergency := &Emergency{
-				ID:        tt.fields.ID,
-				PacientID: tt.fields.PacientID,
-				CreatedAt: tt.fields.CreatedAt,
-				UpdatedAt: tt.fields.UpdatedAt,
+				ID:         tt.fields.ID,
+				PacientID:  tt.fields.PacientID,
+				CreatedAt:  tt.fields.CreatedAt,
+				UpdatedAt:  tt.fields.UpdatedAt,
+				Form:       tt.fields.Form,
+				StatusFlow: tt.fields.StatusFlow,
+				Status:     tt.fields.Status,
 			}
 
 			assert.Equal(t, tt.want, emergency.toEntity())
@@ -477,7 +480,7 @@ func TestEmergenciesRepository_ListEmergencies(t *testing.T) {
 
 			emergencies, err := r.ListEmergencies()
 			assert.Equal(t, tt.wantErr, err != nil)
-			assert.Equal(t, tt.want, emergencies)
+			assert.ElementsMatch(t, tt.want, emergencies)
 		})
 	}
 }
@@ -579,7 +582,7 @@ func TestEmergenciesRepository_ListEmergenciesByStatus(t *testing.T) {
 
 			emergencies, err := r.ListEmergenciesByStatus(tt.args.status)
 			assert.Equal(t, tt.wantErr, err != nil)
-			assert.Equal(t, tt.want, emergencies)
+			assert.ElementsMatch(t, tt.want, emergencies)
 		})
 	}
 }
@@ -681,7 +684,7 @@ func TestEmergenciesRepository_ListEmergenciesByPacientID(t *testing.T) {
 
 			emergencies, err := r.ListEmergenciesByPacientID(tt.args.pacientID)
 			assert.Equal(t, tt.wantErr, err != nil)
-			assert.Equal(t, tt.want, emergencies)
+			assert.ElementsMatch(t, tt.want, emergencies)
 		})
 	}
 }
