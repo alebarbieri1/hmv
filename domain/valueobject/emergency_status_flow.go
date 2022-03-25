@@ -23,9 +23,6 @@ func (f EmergencyStatusFlow) CanChange(from, to EmergencyStatus) bool {
 var DefaultEmergencyStatusFlow = EmergencyStatusFlow{
 	Undefined_EmergencyStatus: {
 		Triage_EmergencyStatus,
-		AmbulanceToPacient_EmergencyStatus,
-		AmbulanceToHospital_EmergencyStatus,
-		Finished_EmergencyStatus,
 		Cancelled_EmergencyStatus,
 	},
 	Triage_EmergencyStatus: {
