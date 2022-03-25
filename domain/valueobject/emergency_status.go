@@ -1,5 +1,6 @@
 package valueobject
 
+// EmergencyStatus is the status of an Emergency
 type EmergencyStatus int
 
 const (
@@ -11,47 +12,7 @@ const (
 	Cancelled_EmergencyStatus
 )
 
-type EmergencyStatusFlow map[EmergencyStatus][]EmergencyStatus
-
-// CanChangeTo returns true if a given EmergencyStatus can progress to a given EmergencyStatus
-func (s EmergencyStatus) CanChangeTo(to EmergencyStatus) bool {
-	from, exists := _EmergencyStatusFlow[s]
-	if !exists {
-		return false
-	}
-
-	for _, status := range from {
-		if status == to {
-			return true
-		}
-	}
-
-	return false
-}
-
-// _EmergencyStatusFlow defines all the EmergencyStatus changes available
-var _EmergencyStatusFlow = EmergencyStatusFlow{
-	Undefined_EmergencyStatus: {
-		Triage_EmergencyStatus,
-		AmbulanceToPacient_EmergencyStatus,
-		AmbulanceToHospital_EmergencyStatus,
-		Finished_EmergencyStatus,
-		Cancelled_EmergencyStatus,
-	},
-	Triage_EmergencyStatus: {
-		AmbulanceToPacient_EmergencyStatus,
-		Cancelled_EmergencyStatus,
-	},
-	AmbulanceToPacient_EmergencyStatus: {
-		AmbulanceToHospital_EmergencyStatus,
-		Cancelled_EmergencyStatus,
-	},
-	AmbulanceToHospital_EmergencyStatus: {
-		Finished_EmergencyStatus,
-		Cancelled_EmergencyStatus,
-	},
-}
-
+// NewEmergencyStatusFromString creates a new EmergencyStatus from a given string
 func NewEmergencyStatusFromString(s string) EmergencyStatus {
 	switch s {
 	case "triage":
@@ -69,6 +30,7 @@ func NewEmergencyStatusFromString(s string) EmergencyStatus {
 	return Undefined_EmergencyStatus
 }
 
+// String returns the string value of an EmergencyStatus
 func (s EmergencyStatus) String() string {
 	switch s {
 	case Triage_EmergencyStatus:

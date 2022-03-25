@@ -2,15 +2,18 @@ package valueobject
 
 var _ EmergencyFormSession = (*BloodPressureEmergencyFormSession)(nil)
 
+// BloodPressureEmergencyFormSession is an EmergencyForm session restricted for blood pressure information
 type BloodPressureEmergencyFormSession struct {
 	Systolic  *float64
 	Diastolic *float64
 }
 
+// IsSet returns true if EmergencyFormSession is set
 func (f BloodPressureEmergencyFormSession) IsSet() bool {
 	return f.Systolic != nil && f.Diastolic != nil
 }
 
+// Score returns a float64 score according to the EmergencyFormSession level of criticity
 func (f BloodPressureEmergencyFormSession) Score() float64 {
 	if f.IsSet() {
 		switch {
@@ -31,5 +34,5 @@ func (f BloodPressureEmergencyFormSession) Score() float64 {
 		}
 	}
 
-	return 0
+	return 0.0
 }

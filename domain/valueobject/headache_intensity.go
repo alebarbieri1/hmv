@@ -2,6 +2,7 @@ package valueobject
 
 type HeadacheIntensity float64
 
+// Float64 returns the HeadacheIntensity as a float64
 func (i HeadacheIntensity) Float64() float64 { return float64(i) }
 
 const (
@@ -13,6 +14,7 @@ const (
 	VeryHigh_HeadacheIntensity
 )
 
+// String returns the string value of an HeadacheIntensity
 func (i HeadacheIntensity) String() string {
 	switch i {
 	case VeryLow_HeadacheIntensity:
@@ -30,6 +32,7 @@ func (i HeadacheIntensity) String() string {
 	return "undefined"
 }
 
+// NewHeadacheIntensityFromString creates a new HeadacheIntensity from a given string
 func NewHeadacheIntensityFromString(s string) HeadacheIntensity {
 	switch s {
 	case "very-low":

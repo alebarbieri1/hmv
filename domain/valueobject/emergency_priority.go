@@ -1,5 +1,6 @@
 package valueobject
 
+// EmergencyPriority is the priority level given to an Emergency
 type EmergencyPriority int
 
 const (
@@ -10,6 +11,7 @@ const (
 	VeryHigh_EmergencyPriority
 )
 
+// String returns the string value of an EmergencyPriority
 func (e EmergencyPriority) String() string {
 	switch e {
 	case Low_EmergencyPriority:

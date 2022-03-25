@@ -2,6 +2,7 @@ package valueobject
 
 type AbdominalPainIntensity float64
 
+// Float64 returns the AbdominalPainIntensity as a float64
 func (i AbdominalPainIntensity) Float64() float64 { return float64(i) }
 
 const (
@@ -13,6 +14,7 @@ const (
 	VeryHigh_AbdominalPainIntensity
 )
 
+// String returns the string value of an AbdominalPainIntensity
 func (i AbdominalPainIntensity) String() string {
 	switch i {
 	case VeryLow_AbdominalPainIntensity:
@@ -30,6 +32,7 @@ func (i AbdominalPainIntensity) String() string {
 	return "undefined"
 }
 
+// NewAbdominalPainIntensityFromString creates a new AbdominalPainIntensity from a given string
 func NewAbdominalPainIntensityFromString(s string) AbdominalPainIntensity {
 	switch s {
 	case "very-low":
