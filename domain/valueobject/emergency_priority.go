@@ -21,7 +21,7 @@ func (e EmergencyPriority) String() string {
 	case High_EmergencyPriority:
 		return "high"
 	case VeryHigh_EmergencyPriority:
-		return "very high"
+		return "very-high"
 	}
 
 	return "undefined"

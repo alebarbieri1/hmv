@@ -32,7 +32,7 @@ func (c *Controller) updateEmergencyForm(w http.ResponseWriter, r *http.Request)
 
 	vars := mux.Vars(r)
 
-	emergency, err := c.usecases.Emergencies.UpdateEmergencyForm(r.Context(), user, vars["emergency_id"], payload.toValueObject())
+	emergency, err := c.usecases.Emergencies.UpdateEmergencyForm(user.ID, vars["emergency_id"], payload.toValueObject())
 	if err != nil {
 		c.drivers.Logger.Error(application.FailedToUpdateEmergency, err)
 		c.drivers.Presenter.Present(w, response.InternalServerError(application.FailedToUpdateEmergency, err))

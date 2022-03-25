@@ -4,6 +4,7 @@ import (
 	"flavioltonon/hmv/domain/entity"
 )
 
+// Emergency is a entity.Emergency presenter
 type Emergency struct {
 	ID        string         `json:"_id"`
 	PacientID string         `json:"pacient_id"`
@@ -13,6 +14,7 @@ type Emergency struct {
 	Status    string         `json:"status"`
 }
 
+// NewEmergency returns a presentation for a Emergency
 func NewEmergency(e *entity.Emergency) *Emergency {
 	return &Emergency{
 		ID:        e.ID,
@@ -24,8 +26,10 @@ func NewEmergency(e *entity.Emergency) *Emergency {
 	}
 }
 
+// Emergencies is a set of Emergency presenters
 type Emergencies []*Emergency
 
+// NewEmergencies returns a presentation for Emergencies
 func NewEmergencies(es []*entity.Emergency) Emergencies {
 	emergencies := make(Emergencies, 0, len(es))
 

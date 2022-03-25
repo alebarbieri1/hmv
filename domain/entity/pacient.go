@@ -9,6 +9,7 @@ import (
 	"github.com/google/uuid"
 )
 
+// Pacient defines data about a pacient
 type Pacient struct {
 	ID               string
 	UserID           string
@@ -17,6 +18,7 @@ type Pacient struct {
 	UpdatedAt        time.Time
 }
 
+// NewPacient creates a new Pacient
 func NewPacient(userID string) (*Pacient, error) {
 	now := time.Now()
 
@@ -34,6 +36,7 @@ func NewPacient(userID string) (*Pacient, error) {
 	return s, nil
 }
 
+// Validate validates a Pacient
 func (p *Pacient) Validate() error {
 	now := time.Now()
 
@@ -45,8 +48,12 @@ func (p *Pacient) Validate() error {
 	)
 }
 
+// UpdateEmergencyContact updates the pacient's emergency contact data
 func (p *Pacient) UpdateEmergencyContact(emergencyContact valueobject.EmergencyContact) error {
+	if err := emergencyContact.Validate(); err != nil {
+		return err
+	}
 	p.EmergencyContact = emergencyContact
 	p.UpdatedAt = time.Now()
-	return p.Validate()
+	return nil
 }

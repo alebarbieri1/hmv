@@ -10,6 +10,7 @@ import (
 	"github.com/google/uuid"
 )
 
+// Emergency defines data about an emergency
 type Emergency struct {
 	ID         string
 	PacientID  string
@@ -20,6 +21,7 @@ type Emergency struct {
 	Status     valueobject.EmergencyStatus
 }
 
+// NewEmergency creates a new Emergency
 func NewEmergency(pacientID string) (*Emergency, error) {
 	now := time.Now()
 
@@ -39,30 +41,38 @@ func NewEmergency(pacientID string) (*Emergency, error) {
 	return e, nil
 }
 
+// Validate validates an Emergency
 func (e *Emergency) Validate() error {
 	now := time.Now()
 
 	return ozzo.ValidateStruct(e,
 		ozzo.Field(&e.ID, ozzo.Required, is.UUIDv4),
 		ozzo.Field(&e.PacientID, ozzo.Required, is.UUIDv4),
-		ozzo.Field(&e.Form),
 		ozzo.Field(&e.CreatedAt, ozzo.Required, ozzo.Max(now)),
 		ozzo.Field(&e.UpdatedAt, ozzo.Required, ozzo.Max(now)),
+		ozzo.Field(&e.StatusFlow, ozzo.Required),
 		ozzo.Field(&e.Status, ozzo.Required),
 	)
 }
 
+// UpdateForm updates Emergency.Form with a new valueobject.EmergencyForm
 func (e *Emergency) UpdateForm(form valueobject.EmergencyForm) error {
+	if err := form.Validate(); err != nil {
+		return err
+	}
 	e.Form = form
-	return e.Validate()
+	return nil
 }
 
+// UpdateStatus updates Emergency.Status with a new valueobject.EmergencyStatus. If the status change is not mapped in
+// the Emergency.StatusFlow, an error should be returned instead.
 func (e *Emergency) UpdateStatus(status valueobject.EmergencyStatus) error {
 	if !e.StatusFlow.CanChange(e.Status, status) {
 		return ErrInvalidStatusChange(e.Status, status)
 	}
 	e.Status = status
-	return e.Validate()
+	return nil
 }
 
+// Priority returns the priority level of the Emergency
 func (e *Emergency) Priority() valueobject.EmergencyPriority { return e.Form.Priority() }

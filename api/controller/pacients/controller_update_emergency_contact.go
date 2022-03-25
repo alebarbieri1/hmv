@@ -16,6 +16,13 @@ import (
 )
 
 func (c *Controller) updateEmergencyContact(w http.ResponseWriter, r *http.Request) {
+	user, err := entity.NewUserFromRequest(r)
+	if err != nil {
+		c.drivers.Logger.Info(application.FailedToAuthenticateUser, logging.Error(err))
+		c.drivers.Presenter.Present(w, response.Unauthorized(application.FailedToAuthenticateUser, err))
+		return
+	}
+
 	payload, err := c.newUpdateEmergencyContactPayload(r)
 	if err != nil {
 		c.drivers.Logger.Info(application.FailedToValidateRequest, logging.Error(err))
@@ -25,20 +32,7 @@ func (c *Controller) updateEmergencyContact(w http.ResponseWriter, r *http.Reque
 
 	vars := mux.Vars(r)
 
-	pacient, err := c.usecases.Pacients.FindPacientByID(vars["pacient_id"])
-	if err == entity.ErrNotFound {
-		c.drivers.Logger.Info(application.FailedToFindPacient, logging.Error(err))
-		c.drivers.Presenter.Present(w, response.Forbidden(application.FailedToListEmergencies, application.ErrUserMustBeAPacient))
-		return
-	}
-
-	if err != nil {
-		c.drivers.Logger.Error(application.FailedToFindPacient, err)
-		c.drivers.Presenter.Present(w, response.InternalServerError(application.FailedToListEmergencies, err))
-		return
-	}
-
-	updatedPacient, err := c.usecases.Pacients.UpdateEmergencyContact(pacient, payload.toValueObject())
+	updatedPacient, err := c.usecases.Pacients.UpdateEmergencyContact(user.ID, vars["pacient_id"], payload.toValueObject())
 	if err == application.ErrUserAlreadyIsAPacient {
 		c.drivers.Logger.Info(application.FailedToUpdatePacient, logging.Error(err))
 		c.drivers.Presenter.Present(w, response.BadRequest(application.FailedToUpdatePacient, err))

@@ -12,7 +12,8 @@ type Settings struct {
 func New() (*Settings, error) {
 	return &Settings{
 		Server: &ServerSettings{
-			Address: ":8080",
+			Address:         ":8080",
+			DevelopmentMode: true,
 		},
 		Logging: &logging.Settings{
 			DevelopmentMode: true,
@@ -24,4 +25,7 @@ func New() (*Settings, error) {
 type ServerSettings struct {
 	// Address is the address of the server
 	Address string
+
+	// DevelopmentMode defines if the server is running in development mode
+	DevelopmentMode bool
 }

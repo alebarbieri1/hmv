@@ -22,20 +22,7 @@ func (c *Controller) removePacient(w http.ResponseWriter, r *http.Request) {
 
 	vars := mux.Vars(r)
 
-	emergency, err := c.usecases.Emergencies.FindEmergencyByID(vars["emergency_id"])
-	if err == entity.ErrNotFound {
-		c.drivers.Logger.Info(application.FailedToFindEmergency, logging.Error(err))
-		c.drivers.Presenter.Present(w, response.NotFound(application.FailedToFindEmergency, err))
-		return
-	}
-
-	if err != nil {
-		c.drivers.Logger.Error(application.FailedToFindEmergency, err)
-		c.drivers.Presenter.Present(w, response.InternalServerError(application.FailedToFindEmergency, err))
-		return
-	}
-
-	err = c.usecases.Emergencies.RemovePacient(user, emergency)
+	emergency, err := c.usecases.Emergencies.RemovePacient(user.ID, vars["emergency_id"])
 	if err == application.ErrInternalError {
 		c.drivers.Logger.Error(application.FailedToUpdateEmergency, err)
 		c.drivers.Presenter.Present(w, response.InternalServerError(application.FailedToUpdateEmergency, err))

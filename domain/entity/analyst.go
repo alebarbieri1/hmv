@@ -35,13 +35,14 @@ func NewAnalyst(userID string) (*Analyst, error) {
 	return s, nil
 }
 
+// Validate validates an Analyst
 func (p *Analyst) Validate() error {
 	now := time.Now()
 
 	return ozzo.ValidateStruct(p,
 		ozzo.Field(&p.ID, ozzo.Required, is.UUIDv4),
 		ozzo.Field(&p.UserID, ozzo.Required, is.UUIDv4),
-		ozzo.Field(&p.CreatedAt, ozzo.Required, ozzo.Max(now)),
-		ozzo.Field(&p.UpdatedAt, ozzo.Required, ozzo.Max(now)),
+		ozzo.Field(&p.CreatedAt, ozzo.Max(now)),
+		ozzo.Field(&p.UpdatedAt, ozzo.Max(now)),
 	)
 }

@@ -6,6 +6,7 @@ import (
 	"time"
 )
 
+// Rescuer is a representation of entity.Rescuer in the repository
 type Rescuer struct {
 	ID        string
 	UserID    string
@@ -13,6 +14,7 @@ type Rescuer struct {
 	UpdatedAt time.Time
 }
 
+// NewRescuer creates a new Rescuer
 func NewRescuer(e *entity.Rescuer) *Rescuer {
 	return &Rescuer{
 		ID:        e.ID,
@@ -22,6 +24,7 @@ func NewRescuer(e *entity.Rescuer) *Rescuer {
 	}
 }
 
+// toEntity transforms an Rescuer into a entity.Rescuer
 func (u *Rescuer) toEntity() *entity.Rescuer {
 	return &entity.Rescuer{
 		ID:        u.ID,
@@ -31,22 +34,33 @@ func (u *Rescuer) toEntity() *entity.Rescuer {
 	}
 }
 
+// RescuersRepository is a repository for entity.Rescuer entities
 type RescuersRepository struct {
 	rescuers map[string]*Rescuer
 	mu       sync.RWMutex
 }
 
+// NewRescuersRepository creates a new RescuersRepository
 func NewRescuersRepository() (*RescuersRepository, error) {
 	return &RescuersRepository{rescuers: make(map[string]*Rescuer)}, nil
 }
 
+// CreateRescuer stores an entity.Rescuer into the repository. If an Rescuer with the same ID already
+// exists in the repository, entity.ErrDuplicatedEntry should be returned instead.
 func (r *RescuersRepository) CreateRescuer(rescuer *entity.Rescuer) error {
 	r.mu.Lock()
+	defer r.mu.Unlock()
+
+	if _, exists := r.rescuers[rescuer.ID]; exists {
+		return entity.ErrDuplicatedEntry
+	}
+
 	r.rescuers[rescuer.ID] = NewRescuer(rescuer)
-	r.mu.Unlock()
 	return nil
 }
 
+// FindRescuerByID returns an entity.Rescuer identified by a given rescuerID. If no entities are found,
+// entity.ErrNotFound should be returned instead.
 func (r *RescuersRepository) FindRescuerByID(rescuerID string) (*entity.Rescuer, error) {
 	r.mu.Lock()
 	defer r.mu.Unlock()
@@ -59,6 +73,8 @@ func (r *RescuersRepository) FindRescuerByID(rescuerID string) (*entity.Rescuer,
 	return rescuer.toEntity(), nil
 }
 
+// FindRescuerByUserID returns an entity.Rescuer identified by a given userID. If no entities are found,
+// entity.ErrNotFound should be returned instead.
 func (r *RescuersRepository) FindRescuerByUserID(userID string) (*entity.Rescuer, error) {
 	r.mu.Lock()
 	defer r.mu.Unlock()

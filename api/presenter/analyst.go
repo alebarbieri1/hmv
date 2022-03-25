@@ -4,6 +4,7 @@ import (
 	"flavioltonon/hmv/domain/entity"
 )
 
+// Analyst is a entity.Analyst presenter
 type Analyst struct {
 	ID        string `json:"_id"`
 	UserID    string `json:"user_id"`
@@ -11,6 +12,7 @@ type Analyst struct {
 	UpdatedAt string `json:"updated_at"`
 }
 
+// NewAnalyst returns a presentation for a Analyst
 func NewAnalyst(e *entity.Analyst) *Analyst {
 	return &Analyst{
 		ID:        e.ID,

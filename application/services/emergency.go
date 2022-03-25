@@ -1,33 +1,45 @@
 package services
 
 import (
-	"context"
 	"flavioltonon/hmv/application"
 	"flavioltonon/hmv/domain/entity"
 	"flavioltonon/hmv/domain/repositories"
 	"flavioltonon/hmv/domain/valueobject"
+	"flavioltonon/hmv/infrastructure/errors"
 	"flavioltonon/hmv/infrastructure/logging"
 )
 
+// EmergencyService implements all the usecases related to pacients emergencies
 type EmergencyService struct {
 	emergencies repositories.EmergenciesRepository
 	pacients    repositories.PacientsRepository
+	users       repositories.UsersRepository
 	logger      logging.Logger
 }
 
+// NewEmergencyService creates a new EmergencyService
 func NewEmergencyService(
 	emergencies repositories.EmergenciesRepository,
 	pacients repositories.PacientsRepository,
+	users repositories.UsersRepository,
 	logger logging.Logger,
 ) (*EmergencyService, error) {
 	return &EmergencyService{
 		emergencies: emergencies,
 		pacients:    pacients,
+		users:       users,
 		logger:      logger,
 	}, nil
 }
 
-func (s *EmergencyService) CreateEmergency(user *entity.User) (*entity.Emergency, error) {
+// CreateEmergency creates a new entity.Emergency
+func (s *EmergencyService) CreateEmergency(userID string) (*entity.Emergency, error) {
+	user, err := s.users.FindUserByID(userID)
+	if err != nil {
+		s.logger.Error(application.FailedToFindUser, err, logging.String("user_id", userID))
+		return nil, err
+	}
+
 	if !user.IsPacient() {
 		s.logger.Debug(
 			application.FailedToCreateEmergency,
@@ -71,16 +83,42 @@ func (s *EmergencyService) CreateEmergency(user *entity.User) (*entity.Emergency
 	return emergency, nil
 }
 
-func (s *EmergencyService) UpdateEmergencyForm(ctx context.Context, user *entity.User, emergencyID string, form valueobject.EmergencyForm) (*entity.Emergency, error) {
-	if !user.IsPacient() && !user.IsRescuer() {
-		s.logger.Debug(application.FailedToListEmergencies, logging.Error(application.ErrUserMustBeAPacient))
-		return nil, application.ErrUserMustBeAPacientOrRescuer
+// UpdateEmergencyForm updates the EmergencyForm of a entity.Emergency with a given emergencyID. This action can only
+// be performed by users with Pacient_ProfileKind or Rescuer_ProfileKind.
+func (s *EmergencyService) UpdateEmergencyForm(userID string, emergencyID string, form valueobject.EmergencyForm) (*entity.Emergency, error) {
+	user, err := s.users.FindUserByID(userID)
+	if err != nil {
+		s.logger.Error(application.FailedToFindUser, err, logging.String("user_id", userID))
+		return nil, err
 	}
 
 	emergency, err := s.FindEmergencyByID(emergencyID)
 	if err != nil {
 		s.logger.Error(application.FailedToFindEmergency, err)
 		return nil, err
+	}
+
+	switch {
+	case user.IsPacient():
+		pacient, err := s.pacients.FindPacientByUserID(userID)
+		if err != nil {
+			return nil, err
+		}
+
+		if pacient.ID != emergency.PacientID {
+			s.logger.Info(application.FailedToFindEmergency,
+				logging.Error(entity.ErrNotFound),
+				logging.String("user_id", userID),
+				logging.String("emergency_id", emergency.ID),
+			)
+			return nil, errors.WithMessage(application.FailedToFindEmergency, entity.ErrNotFound)
+
+		}
+	case user.IsRescuer():
+		break
+	default:
+		s.logger.Debug(application.FailedToListEmergencies, logging.Error(application.ErrUserMustBeAPacient))
+		return nil, application.ErrUserMustBeAPacientOrRescuer
 	}
 
 	if err := emergency.UpdateForm(form); err != nil {
@@ -96,19 +134,30 @@ func (s *EmergencyService) UpdateEmergencyForm(ctx context.Context, user *entity
 	return emergency, nil
 }
 
+// FindEmergencyByID returns an entity.Emergency with a given emergencyID. If no entities are found, entity.ErrNotFound
+// should be returned instead.
 func (s *EmergencyService) FindEmergencyByID(emergencyID string) (*entity.Emergency, error) {
 	return s.emergencies.FindEmergencyByID(emergencyID)
 }
 
+// ListEmergencies returns a list with all known entity.Emergency entities
 func (s *EmergencyService) ListEmergencies() ([]*entity.Emergency, error) {
 	return s.emergencies.ListEmergencies()
 }
 
+// ListEmergenciesByStatus returns a list with all known entity.Emergency entities that have a given valueobject.EmergencyStatus
 func (s *EmergencyService) ListEmergenciesByStatus(status valueobject.EmergencyStatus) ([]*entity.Emergency, error) {
 	return s.emergencies.ListEmergenciesByStatus(status)
 }
 
-func (s *EmergencyService) ListUserEmergencies(user *entity.User) ([]*entity.Emergency, error) {
+// ListEmergenciesByStatus returns a list with all known entity.Emergency entities that are related to a User
+func (s *EmergencyService) ListEmergenciesByUser(userID string) ([]*entity.Emergency, error) {
+	user, err := s.users.FindUserByID(userID)
+	if err != nil {
+		s.logger.Error(application.FailedToFindUser, err, logging.String("user_id", userID))
+		return nil, err
+	}
+
 	if !user.IsPacient() {
 		s.logger.Debug(application.FailedToListEmergencies, logging.Error(application.ErrUserMustBeAPacient))
 		return nil, application.ErrUserMustBeAPacient
@@ -128,48 +177,76 @@ func (s *EmergencyService) ListUserEmergencies(user *entity.User) ([]*entity.Eme
 	return s.emergencies.ListEmergenciesByPacientID(pacient.ID)
 }
 
-func (s *EmergencyService) UpdateEmergencyStatus(emergency *entity.Emergency, status valueobject.EmergencyStatus) error {
+// UpdateEmergencyStatus updates the EmergencyStatus of a entity.Emergency with a given emergencyID.
+func (s *EmergencyService) UpdateEmergencyStatus(emergencyID string, status valueobject.EmergencyStatus) (*entity.Emergency, error) {
+	emergency, err := s.emergencies.FindEmergencyByID(emergencyID)
+	if err != nil {
+		return nil, err
+	}
+
 	if err := emergency.UpdateStatus(status); err != nil {
 		s.logger.Debug(application.FailedToUpdateEmergency, logging.Error(err))
-		return err
+		return nil, err
 	}
 
 	if err := s.emergencies.UpdateEmergency(emergency); err != nil {
 		s.logger.Error(application.FailedToUpdateEmergency, err)
-		return application.ErrInternalError
+		return nil, application.ErrInternalError
 	}
 
 	s.logger.Debug(application.EmergencyUpdated, logging.String("emergency_id", emergency.ID))
-	return nil
+	return emergency, nil
 }
 
-func (s *EmergencyService) SendAmbulance(user *entity.User, emergency *entity.Emergency) error {
+// SendAmbulance updates the EmergencyStatus of a entity.Emergency with a given emergencyID to AmbulanceToPacient_EmergencyStatus.
+func (s *EmergencyService) SendAmbulance(userID string, emergencyID string) (*entity.Emergency, error) {
+	user, err := s.users.FindUserByID(userID)
+	if err != nil {
+		s.logger.Error(application.FailedToFindUser, err, logging.String("user_id", userID))
+		return nil, err
+	}
+
 	if !user.IsAnalyst() {
 		s.logger.Debug(application.FailedToSendAmbulance, logging.Error(application.ErrUserMustBeAnAnalyst))
-		return application.ErrUserMustBeAnAnalyst
+		return nil, application.ErrUserMustBeAnAnalyst
 	}
 
-	return s.UpdateEmergencyStatus(emergency, valueobject.AmbulanceToPacient_EmergencyStatus)
+	return s.UpdateEmergencyStatus(emergencyID, valueobject.AmbulanceToPacient_EmergencyStatus)
 }
 
-func (s *EmergencyService) RemovePacient(user *entity.User, emergency *entity.Emergency) error {
+// RemovePacient updates the EmergencyStatus of a entity.Emergency with a given emergencyID to AmbulanceToHospital_EmergencyStatus.
+func (s *EmergencyService) RemovePacient(userID string, emergencyID string) (*entity.Emergency, error) {
+	user, err := s.users.FindUserByID(userID)
+	if err != nil {
+		s.logger.Error(application.FailedToFindUser, err, logging.String("user_id", userID))
+		return nil, err
+	}
+
 	if !user.IsRescuer() {
 		s.logger.Debug(application.FailedToRemovePacient, logging.Error(application.ErrUserMustBeARescuer))
-		return application.ErrUserMustBeARescuer
+		return nil, application.ErrUserMustBeARescuer
 	}
 
-	return s.UpdateEmergencyStatus(emergency, valueobject.AmbulanceToHospital_EmergencyStatus)
+	return s.UpdateEmergencyStatus(emergencyID, valueobject.AmbulanceToHospital_EmergencyStatus)
 }
 
-func (s *EmergencyService) FinishEmergencyCare(user *entity.User, emergency *entity.Emergency) error {
+// FinishEmergencyCare updates the EmergencyStatus of a entity.Emergency with a given emergencyID to Finished_EmergencyStatus.
+func (s *EmergencyService) FinishEmergencyCare(userID string, emergencyID string) (*entity.Emergency, error) {
+	user, err := s.users.FindUserByID(userID)
+	if err != nil {
+		s.logger.Error(application.FailedToFindUser, err, logging.String("user_id", userID))
+		return nil, err
+	}
+
 	if !user.IsAnalyst() {
 		s.logger.Debug(application.FailedToFinishEmergencyCare, logging.Error(application.ErrUserMustBeAnAnalyst))
-		return application.ErrUserMustBeAnAnalyst
+		return nil, application.ErrUserMustBeAnAnalyst
 	}
 
-	return s.UpdateEmergencyStatus(emergency, valueobject.Finished_EmergencyStatus)
+	return s.UpdateEmergencyStatus(emergencyID, valueobject.Finished_EmergencyStatus)
 }
 
-func (s *EmergencyService) CancelEmergency(emergency *entity.Emergency) error {
-	return s.UpdateEmergencyStatus(emergency, valueobject.Cancelled_EmergencyStatus)
+// CancelEmergency updates the EmergencyStatus of a entity.Emergency with a given emergencyID to Cancelled_EmergencyStatus.
+func (s *EmergencyService) CancelEmergency(emergencyID string) (*entity.Emergency, error) {
+	return s.UpdateEmergencyStatus(emergencyID, valueobject.Cancelled_EmergencyStatus)
 }
