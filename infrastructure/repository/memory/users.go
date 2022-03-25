@@ -79,6 +79,20 @@ func (r *UsersRepository) FindUserByUsername(username string) (*entity.User, err
 	return nil, entity.ErrNotFound
 }
 
+// ListUsers returns all the entity.User in the repository
+func (r *UsersRepository) ListUsers() ([]*entity.User, error) {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+
+	users := make([]*entity.User, 0, len(r.users))
+
+	for _, user := range r.users {
+		users = append(users, user.toEntity())
+	}
+
+	return users, nil
+}
+
 func (r *UsersRepository) UpdateUser(user *entity.User) error {
 	r.mu.Lock()
 	r.users[user.ID] = NewUser(user)
