@@ -18,7 +18,6 @@ type Controller struct {
 type Usecases struct {
 	Authentication usecases.AuthenticationUsecase
 	Analysts       usecases.AnalystUsecase
-	Users          usecases.UserUsecase
 }
 
 func NewController(usecases *Usecases, drivers *drivers.Drivers) *Controller {

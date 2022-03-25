@@ -18,10 +18,10 @@ func (c *Controller) createPacient(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	pacient, err := c.usecases.Pacients.CreatePacient(user)
+	pacient, err := c.usecases.Pacients.CreatePacient(user.ID)
 	if err == application.ErrUserAlreadyIsAPacient {
-		c.drivers.Logger.Info(application.FailedToCreatePacient, logging.Error(err))
-		c.drivers.Presenter.Present(w, response.BadRequest(application.FailedToCreatePacient, err))
+		c.drivers.Logger.Debug(application.FailedToCreatePacient, logging.Error(err))
+		c.drivers.Presenter.Present(w, response.OK(pacient))
 		return
 	}
 

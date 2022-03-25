@@ -17,7 +17,6 @@ type Controller struct {
 
 type Usecases struct {
 	Authentication usecases.AuthenticationUsecase
-	Emergencies    usecases.EmergencyUsecase
 	Pacients       usecases.PacientUsecase
 }
 

@@ -18,7 +18,7 @@ func (c *Controller) createEmergency(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	emergency, err := c.usecases.Emergencies.CreateEmergency(user)
+	emergency, err := c.usecases.Emergencies.CreateEmergency(user.ID)
 	if err == application.ErrInternalError {
 		c.drivers.Logger.Error(application.FailedToCreateEmergency, err)
 		c.drivers.Presenter.Present(w, response.InternalServerError(application.FailedToCreateEmergency, err))

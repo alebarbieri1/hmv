@@ -7,7 +7,6 @@ import (
 	"flavioltonon/hmv/domain/valueobject"
 	"flavioltonon/hmv/infrastructure/logging"
 	"flavioltonon/hmv/infrastructure/response"
-	"fmt"
 	"net/http"
 )
 
@@ -25,8 +24,6 @@ func (c *Controller) listEmergencies(w http.ResponseWriter, r *http.Request) {
 	case user.IsAnalyst():
 		s := r.URL.Query().Get("status")
 
-		fmt.Printf("s: %v\n", s)
-
 		if status := valueobject.NewEmergencyStatusFromString(s); status == valueobject.Undefined_EmergencyStatus {
 			emergencies, err = c.usecases.Emergencies.ListEmergencies()
 		} else {
@@ -39,7 +36,7 @@ func (c *Controller) listEmergencies(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	case user.IsPacient():
-		emergencies, err = c.usecases.Emergencies.ListUserEmergencies(user)
+		emergencies, err = c.usecases.Emergencies.ListEmergenciesByUser(user.ID)
 		if err == application.ErrUserMustBeAPacient {
 			c.drivers.Logger.Info(application.FailedToListEmergencies, logging.Error(err))
 			c.drivers.Presenter.Present(w, response.BadRequest(application.FailedToListEmergencies, err))

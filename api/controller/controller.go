@@ -42,7 +42,11 @@ func New(drivers *drivers.Drivers) (*Controller, error) {
 		return nil, err
 	}
 
-	emergenciesService, err := services.NewEmergencyService(drivers.Repositories.Emergencies, drivers.Repositories.Pacients, drivers.Logger)
+	emergenciesService, err := services.NewEmergencyService(
+		drivers.Repositories.Emergencies,
+		drivers.Repositories.Pacients,
+		drivers.Repositories.Users,
+		drivers.Logger)
 	if err != nil {
 		return nil, err
 	}
@@ -75,7 +79,6 @@ func New(drivers *drivers.Drivers) (*Controller, error) {
 			&analysts.Usecases{
 				Authentication: authenticationService,
 				Analysts:       analystsService,
-				Users:          usersService,
 			},
 			drivers,
 		),
@@ -83,14 +86,12 @@ func New(drivers *drivers.Drivers) (*Controller, error) {
 			&emergencies.Usecases{
 				Authentication: authenticationService,
 				Emergencies:    emergenciesService,
-				Pacients:       pacientsService,
 			},
 			drivers,
 		),
 		pacients: pacients.NewController(
 			&pacients.Usecases{
 				Authentication: authenticationService,
-				Emergencies:    emergenciesService,
 				Pacients:       pacientsService,
 			},
 			drivers,
@@ -99,7 +100,6 @@ func New(drivers *drivers.Drivers) (*Controller, error) {
 			&rescuers.Usecases{
 				Authentication: authenticationService,
 				Rescuers:       rescuersService,
-				Users:          usersService,
 			},
 			drivers,
 		),
