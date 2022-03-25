@@ -6,6 +6,7 @@ import (
 	"time"
 )
 
+// Analyst is a representation of entity.Analyst in the repository
 type Analyst struct {
 	ID        string
 	UserID    string
@@ -13,6 +14,7 @@ type Analyst struct {
 	UpdatedAt time.Time
 }
 
+// NewAnalyst creates a new Analyst
 func NewAnalyst(e *entity.Analyst) *Analyst {
 	return &Analyst{
 		ID:        e.ID,
@@ -22,6 +24,7 @@ func NewAnalyst(e *entity.Analyst) *Analyst {
 	}
 }
 
+// toEntity transforms an Analyst into a entity.Analyst
 func (u *Analyst) toEntity() *entity.Analyst {
 	return &entity.Analyst{
 		ID:        u.ID,
@@ -31,22 +34,33 @@ func (u *Analyst) toEntity() *entity.Analyst {
 	}
 }
 
+// AnalystsRepository is a repository for entity.Analyst entities
 type AnalystsRepository struct {
 	analysts map[string]*Analyst
 	mu       sync.RWMutex
 }
 
+// NewAnalystsRepository creates a new AnalystsRepository
 func NewAnalystsRepository() (*AnalystsRepository, error) {
 	return &AnalystsRepository{analysts: make(map[string]*Analyst)}, nil
 }
 
+// CreateAnalyst stores an entity.Analyst into the repository. If an Analyst with the same ID already
+// exists in the repository, entity.ErrDuplicatedEntry should be returned instead.
 func (r *AnalystsRepository) CreateAnalyst(analyst *entity.Analyst) error {
 	r.mu.Lock()
+	defer r.mu.Unlock()
+
+	if _, exists := r.analysts[analyst.ID]; exists {
+		return entity.ErrDuplicatedEntry
+	}
+
 	r.analysts[analyst.ID] = NewAnalyst(analyst)
-	r.mu.Unlock()
 	return nil
 }
 
+// FindAnalystByID returns an entity.Analyst identified by a given analystID. If no entities are found,
+// entity.ErrNotFound should be returned instead.
 func (r *AnalystsRepository) FindAnalystByID(analystID string) (*entity.Analyst, error) {
 	r.mu.Lock()
 	defer r.mu.Unlock()
@@ -59,6 +73,8 @@ func (r *AnalystsRepository) FindAnalystByID(analystID string) (*entity.Analyst,
 	return analyst.toEntity(), nil
 }
 
+// FindAnalystByUserID returns an entity.Analyst identified by a given userID. If no entities are found,
+// entity.ErrNotFound should be returned instead.
 func (r *AnalystsRepository) FindAnalystByUserID(userID string) (*entity.Analyst, error) {
 	r.mu.Lock()
 	defer r.mu.Unlock()

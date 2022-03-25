@@ -5,6 +5,7 @@ import (
 	"flavioltonon/hmv/infrastructure/repository/memory"
 )
 
+// Repositories defines all the repositories available in the application
 type Repositories struct {
 	Analysts    repositories.AnalystsRepository
 	Emergencies repositories.EmergenciesRepository
@@ -13,6 +14,7 @@ type Repositories struct {
 	Users       repositories.UsersRepository
 }
 
+// NewRepositories creates a new Repositories
 func NewRepositories() (*Repositories, error) {
 	analysts, err := memory.NewAnalystsRepository()
 	if err != nil {
