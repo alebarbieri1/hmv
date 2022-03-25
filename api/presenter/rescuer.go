@@ -4,6 +4,7 @@ import (
 	"flavioltonon/hmv/domain/entity"
 )
 
+// Rescuer is a entity.Rescuer presenter
 type Rescuer struct {
 	ID        string `json:"_id"`
 	UserID    string `json:"user_id"`
@@ -11,6 +12,7 @@ type Rescuer struct {
 	UpdatedAt string `json:"updated_at"`
 }
 
+// NewRescuer returns a presentation for a Rescuer
 func NewRescuer(e *entity.Rescuer) *Rescuer {
 	return &Rescuer{
 		ID:        e.ID,

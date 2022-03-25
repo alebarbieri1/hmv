@@ -4,6 +4,7 @@ import (
 	"flavioltonon/hmv/domain/entity"
 )
 
+// Pacient is a entity.Pacient presenter
 type Pacient struct {
 	ID               string            `json:"_id"`
 	UserID           string            `json:"user_id"`
@@ -12,6 +13,7 @@ type Pacient struct {
 	UpdatedAt        string            `json:"updated_at"`
 }
 
+// NewPacient returns a presentation for a Pacient
 func NewPacient(e *entity.Pacient) *Pacient {
 	return &Pacient{
 		ID:               e.ID,
