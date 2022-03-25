@@ -52,4 +52,5 @@ const (
 	FailedToCreateUser          = "failed to create user"
 	FailedToUpdateUser          = "failed to update user"
 	FailedToFindUser            = "failed to find user"
+	FailedToListUsers           = "failed to list users"
 )

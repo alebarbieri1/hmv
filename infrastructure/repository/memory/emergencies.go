@@ -8,33 +8,36 @@ import (
 )
 
 type Emergency struct {
-	ID        string
-	PacientID string
-	Form      valueobject.EmergencyForm
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	Status    valueobject.EmergencyStatus
+	ID         string
+	PacientID  string
+	Form       valueobject.EmergencyForm
+	CreatedAt  time.Time
+	UpdatedAt  time.Time
+	StatusFlow valueobject.EmergencyStatusFlow
+	Status     valueobject.EmergencyStatus
 }
 
 func NewEmergency(e *entity.Emergency) *Emergency {
 	return &Emergency{
-		ID:        e.ID,
-		PacientID: e.PacientID,
-		Form:      e.Form,
-		CreatedAt: e.CreatedAt,
-		UpdatedAt: e.UpdatedAt,
-		Status:    e.Status,
+		ID:         e.ID,
+		PacientID:  e.PacientID,
+		Form:       e.Form,
+		CreatedAt:  e.CreatedAt,
+		UpdatedAt:  e.UpdatedAt,
+		StatusFlow: e.StatusFlow,
+		Status:     e.Status,
 	}
 }
 
 func (e *Emergency) toEntity() *entity.Emergency {
 	return &entity.Emergency{
-		ID:        e.ID,
-		PacientID: e.PacientID,
-		Form:      e.Form,
-		CreatedAt: e.CreatedAt,
-		UpdatedAt: e.UpdatedAt,
-		Status:    e.Status,
+		ID:         e.ID,
+		PacientID:  e.PacientID,
+		Form:       e.Form,
+		CreatedAt:  e.CreatedAt,
+		UpdatedAt:  e.UpdatedAt,
+		StatusFlow: e.StatusFlow,
+		Status:     e.Status,
 	}
 }
 

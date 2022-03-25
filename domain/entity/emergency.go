@@ -11,23 +11,25 @@ import (
 )
 
 type Emergency struct {
-	ID        string
-	PacientID string
-	Form      valueobject.EmergencyForm
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	Status    valueobject.EmergencyStatus
+	ID         string
+	PacientID  string
+	Form       valueobject.EmergencyForm
+	CreatedAt  time.Time
+	UpdatedAt  time.Time
+	StatusFlow valueobject.EmergencyStatusFlow
+	Status     valueobject.EmergencyStatus
 }
 
 func NewEmergency(pacientID string) (*Emergency, error) {
 	now := time.Now()
 
 	e := &Emergency{
-		ID:        uuid.NewString(),
-		PacientID: pacientID,
-		CreatedAt: now,
-		UpdatedAt: now,
-		Status:    valueobject.Triage_EmergencyStatus,
+		ID:         uuid.NewString(),
+		PacientID:  pacientID,
+		CreatedAt:  now,
+		UpdatedAt:  now,
+		StatusFlow: valueobject.DefaultEmergencyStatusFlow,
+		Status:     valueobject.Triage_EmergencyStatus,
 	}
 
 	if err := e.Validate(); err != nil {
@@ -56,7 +58,7 @@ func (e *Emergency) UpdateForm(form valueobject.EmergencyForm) error {
 }
 
 func (e *Emergency) UpdateStatus(status valueobject.EmergencyStatus) error {
-	if !e.Status.CanChangeTo(status) {
+	if !e.StatusFlow.CanChange(e.Status, status) {
 		return ErrInvalidStatusChange(e.Status, status)
 	}
 	e.Status = status

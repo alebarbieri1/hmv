@@ -46,3 +46,6 @@ func (s *UserService) CreateUser(username, password string) (*entity.User, error
 func (s *UserService) FindUserByID(userID string) (*entity.User, error) {
 	return s.users.FindUserByID(userID)
 }
+
+// ListUsers returns a list with all known users
+func (s *UserService) ListUsers() ([]*entity.User, error) { return s.users.ListUsers() }
