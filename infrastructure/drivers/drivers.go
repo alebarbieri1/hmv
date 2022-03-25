@@ -30,8 +30,8 @@ func New(settings *settings.Settings) (*Drivers, error) {
 			Username:    "paciente@teste.com",
 			Password:    "1234abc@",
 			ProfileKind: valueobject.Pacient_ProfileKind,
-			CreatedAt:   time.Date(2022, 25, 03, 21, 18, 33, 0, time.UTC),
-			UpdatedAt:   time.Date(2022, 25, 03, 21, 18, 33, 0, time.UTC),
+			CreatedAt:   time.Date(2022, 03, 25, 21, 18, 33, 0, time.UTC),
+			UpdatedAt:   time.Date(2022, 03, 25, 21, 18, 33, 0, time.UTC),
 		})
 
 		repositories.Pacients.CreatePacient(&entity.Pacient{
@@ -41,8 +41,8 @@ func New(settings *settings.Settings) (*Drivers, error) {
 				Name:         "Contato de emergência",
 				MobileNumber: "5511999999999",
 			},
-			CreatedAt: time.Date(2022, 25, 03, 21, 18, 33, 0, time.UTC),
-			UpdatedAt: time.Date(2022, 25, 03, 21, 18, 33, 0, time.UTC),
+			CreatedAt: time.Date(2022, 03, 25, 21, 18, 33, 0, time.UTC),
+			UpdatedAt: time.Date(2022, 03, 25, 21, 18, 33, 0, time.UTC),
 		})
 
 		repositories.Users.CreateUser(&entity.User{
@@ -50,15 +50,15 @@ func New(settings *settings.Settings) (*Drivers, error) {
 			Username:    "analista@hmv.com.br",
 			Password:    "1234abc@",
 			ProfileKind: valueobject.Analyst_ProfileKind,
-			CreatedAt:   time.Date(2022, 25, 03, 21, 18, 33, 0, time.UTC),
-			UpdatedAt:   time.Date(2022, 25, 03, 21, 18, 33, 0, time.UTC),
+			CreatedAt:   time.Date(2022, 03, 25, 21, 18, 33, 0, time.UTC),
+			UpdatedAt:   time.Date(2022, 03, 25, 21, 18, 33, 0, time.UTC),
 		})
 
 		repositories.Analysts.CreateAnalyst(&entity.Analyst{
 			ID:        "7470aade-d9b1-413e-8e76-d2eb837864ce",
 			UserID:    "6d763219-d191-4970-85cf-5abeab25f9c4",
-			CreatedAt: time.Date(2022, 25, 03, 21, 18, 33, 0, time.UTC),
-			UpdatedAt: time.Date(2022, 25, 03, 21, 18, 33, 0, time.UTC),
+			CreatedAt: time.Date(2022, 03, 25, 21, 18, 33, 0, time.UTC),
+			UpdatedAt: time.Date(2022, 03, 25, 21, 18, 33, 0, time.UTC),
 		})
 
 		repositories.Users.CreateUser(&entity.User{
@@ -66,15 +66,15 @@ func New(settings *settings.Settings) (*Drivers, error) {
 			Username:    "socorrista@hmv.com.br",
 			Password:    "1234abc@",
 			ProfileKind: valueobject.Rescuer_ProfileKind,
-			CreatedAt:   time.Date(2022, 25, 03, 21, 18, 33, 0, time.UTC),
-			UpdatedAt:   time.Date(2022, 25, 03, 21, 18, 33, 0, time.UTC),
+			CreatedAt:   time.Date(2022, 03, 25, 21, 18, 33, 0, time.UTC),
+			UpdatedAt:   time.Date(2022, 03, 25, 21, 18, 33, 0, time.UTC),
 		})
 
 		repositories.Rescuers.CreateRescuer(&entity.Rescuer{
 			ID:        "b6d41f8e-bf3c-451c-bc83-6f01312aed55",
 			UserID:    "16674382-3430-414e-b429-0e847999ca8e",
-			CreatedAt: time.Date(2022, 25, 03, 21, 18, 33, 0, time.UTC),
-			UpdatedAt: time.Date(2022, 25, 03, 21, 18, 33, 0, time.UTC),
+			CreatedAt: time.Date(2022, 03, 25, 21, 18, 33, 0, time.UTC),
+			UpdatedAt: time.Date(2022, 03, 25, 21, 18, 33, 0, time.UTC),
 		})
 	}
 
