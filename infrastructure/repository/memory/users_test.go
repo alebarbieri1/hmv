@@ -25,10 +25,12 @@ func TestNewUser(t *testing.T) {
 			name: "Given an entity.User, a new User should be created",
 			args: args{
 				e: &entity.User{
-					ID:          "6fe98880-b181-4c1a-a17e-b6947af7f1c6",
-					Username:    "foo",
-					Password:    "bar",
-					Name:        "baz",
+					ID:       "6fe98880-b181-4c1a-a17e-b6947af7f1c6",
+					Username: "foo",
+					Password: "bar",
+					Data: valueobject.UserData{
+						Name: "baz",
+					},
 					ProfileKind: valueobject.Pacient_ProfileKind,
 					CreatedAt:   today,
 					UpdatedAt:   today,
