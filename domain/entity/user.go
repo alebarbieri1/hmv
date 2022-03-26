@@ -17,7 +17,6 @@ type User struct {
 	ID          string
 	Username    string
 	Password    string
-	Name        string
 	Data        valueobject.UserData
 	ProfileKind valueobject.ProfileKind
 	CreatedAt   time.Time
