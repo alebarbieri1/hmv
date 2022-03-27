@@ -4,7 +4,7 @@ HMV é uma API de gestão do ciclo de vida emergências no Hospital Moinhos de V
 
 ## Requisitos:
 
-- golang@1.17.1
+- [golang@1.17.1](https://go.dev/doc/install)
 
 ## Rodando o projeto:
 
@@ -26,7 +26,7 @@ A qualquer momento, é possível alterar as configurações da aplicação atrav
 
 ## Rodando testes unitários:
 
-Para rodar os testes unitários da aplicação, basta executar o comando Make `make tests`.
+Para rodar os testes unitários da aplicação, basta executar o [comando Make](https://pt.wikipedia.org/wiki/Make) `make tests`.
 
 ## Testando as APIs:
 
