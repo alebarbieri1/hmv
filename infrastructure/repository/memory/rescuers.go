@@ -41,8 +41,8 @@ type RescuersRepository struct {
 }
 
 // NewRescuersRepository creates a new RescuersRepository
-func NewRescuersRepository() (*RescuersRepository, error) {
-	return &RescuersRepository{rescuers: make(map[string]*Rescuer)}, nil
+func NewRescuersRepository() *RescuersRepository {
+	return &RescuersRepository{rescuers: make(map[string]*Rescuer)}
 }
 
 // CreateRescuer stores an entity.Rescuer into the repository. If an Rescuer with the same ID already

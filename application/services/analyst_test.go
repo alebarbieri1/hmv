@@ -31,7 +31,7 @@ type AnalystServiceTestSuite struct {
 func (suite *AnalystServiceTestSuite) SetupTest() {
 	suite.today = time.Date(2022, time.February, 22, 0, 0, 0, 0, time.UTC)
 
-	suite.analysts, _ = memory.NewAnalystsRepository()
+	suite.analysts = memory.NewAnalystsRepository()
 	suite.analysts.CreateAnalyst(&entity.Analyst{
 		ID:        "47322c6f-5883-4596-a305-29be7395ddd1",
 		UserID:    "0ae23a9d-c9f0-4088-8e64-3ad341c07821",
@@ -39,7 +39,7 @@ func (suite *AnalystServiceTestSuite) SetupTest() {
 		UpdatedAt: suite.today,
 	})
 
-	suite.users, _ = memory.NewUsersRepository()
+	suite.users = memory.NewUsersRepository()
 	suite.users.CreateUser(&entity.User{
 		ID:          "e01f33c3-074f-4f89-b4df-9708ba248599",
 		Username:    "undefined",

@@ -34,7 +34,7 @@ func (suite *EmergencyServiceTestSuite) SetupTest() {
 
 	_true := true
 
-	suite.emergencies, _ = memory.NewEmergenciesRepository()
+	suite.emergencies = memory.NewEmergenciesRepository()
 	suite.emergencies.CreateEmergency(&entity.Emergency{
 		ID:        "d08de3ca-e09f-4ba9-bee1-e0c12c1c560c",
 		PacientID: "47322c6f-5883-4596-a305-29be7395ddd1",
@@ -120,7 +120,7 @@ func (suite *EmergencyServiceTestSuite) SetupTest() {
 		Status:     valueobject.Finished_EmergencyStatus,
 	})
 
-	suite.pacients, _ = memory.NewPacientsRepository()
+	suite.pacients = memory.NewPacientsRepository()
 	suite.pacients.CreatePacient(&entity.Pacient{
 		ID:     "47322c6f-5883-4596-a305-29be7395ddd1",
 		UserID: "0ae23a9d-c9f0-4088-8e64-3ad341c07821",
@@ -154,7 +154,7 @@ func (suite *EmergencyServiceTestSuite) SetupTest() {
 		UpdatedAt: suite.today,
 	})
 
-	suite.users, _ = memory.NewUsersRepository()
+	suite.users = memory.NewUsersRepository()
 	suite.users.CreateUser(&entity.User{
 		ID:          "e01f33c3-074f-4f89-b4df-9708ba248599",
 		Username:    "undefined",

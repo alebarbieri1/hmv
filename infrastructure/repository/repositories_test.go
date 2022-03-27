@@ -8,14 +8,6 @@ import (
 )
 
 func TestNewRepositories(t *testing.T) {
-	var (
-		analysts, _    = memory.NewAnalystsRepository()
-		emergencies, _ = memory.NewEmergenciesRepository()
-		pacients, _    = memory.NewPacientsRepository()
-		rescuers, _    = memory.NewRescuersRepository()
-		users, _       = memory.NewUsersRepository()
-	)
-
 	tests := []struct {
 		name    string
 		want    *Repositories
@@ -24,11 +16,11 @@ func TestNewRepositories(t *testing.T) {
 		{
 			name: "If I call NewRepositories, a new Repositories should be created",
 			want: &Repositories{
-				Analysts:    analysts,
-				Emergencies: emergencies,
-				Pacients:    pacients,
-				Rescuers:    rescuers,
-				Users:       users,
+				Analysts:    memory.NewAnalystsRepository(),
+				Emergencies: memory.NewEmergenciesRepository(),
+				Pacients:    memory.NewPacientsRepository(),
+				Rescuers:    memory.NewRescuersRepository(),
+				Users:       memory.NewUsersRepository(),
 			},
 			wantErr: false,
 		},

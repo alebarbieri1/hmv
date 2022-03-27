@@ -51,8 +51,8 @@ type UsersRepository struct {
 }
 
 // NewUsersRepository creates a new UsersRepository
-func NewUsersRepository() (*UsersRepository, error) {
-	return &UsersRepository{users: make(map[string]*User)}, nil
+func NewUsersRepository() *UsersRepository {
+	return &UsersRepository{users: make(map[string]*User)}
 }
 
 // CreateUser stores an entity.User into the repository. If an User with the same ID already

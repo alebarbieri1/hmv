@@ -45,8 +45,8 @@ type PacientsRepository struct {
 }
 
 // NewPacientsRepository creates a new PacientsRepository
-func NewPacientsRepository() (*PacientsRepository, error) {
-	return &PacientsRepository{pacients: make(map[string]*Pacient)}, nil
+func NewPacientsRepository() *PacientsRepository {
+	return &PacientsRepository{pacients: make(map[string]*Pacient)}
 }
 
 // CreatePacient stores an entity.Pacient into the repository. If an Pacient with the same ID already

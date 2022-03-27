@@ -51,8 +51,8 @@ type EmergenciesRepository struct {
 }
 
 // NewEmergenciesRepository creates a new EmergenciesRepository
-func NewEmergenciesRepository() (*EmergenciesRepository, error) {
-	return &EmergenciesRepository{emergencies: make(map[string]*Emergency)}, nil
+func NewEmergenciesRepository() *EmergenciesRepository {
+	return &EmergenciesRepository{emergencies: make(map[string]*Emergency)}
 }
 
 // CreateEmergency stores an entity.Emergency into the repository. If an Emergency with the same ID already
