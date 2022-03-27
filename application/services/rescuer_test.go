@@ -85,7 +85,7 @@ func (suite *RescuerServiceTestSuite) SetupTest() {
 		UpdatedAt:   suite.today,
 	})
 
-	suite.logger, _ = logging.NewMockLogger()
+	suite.logger, _ = logging.NewNopLogger()
 
 	suite.rescuerService, _ = NewRescuerService(suite.rescuers, suite.users, suite.logger)
 }

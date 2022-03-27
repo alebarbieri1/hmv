@@ -218,7 +218,7 @@ func (suite *EmergencyServiceTestSuite) SetupTest() {
 		UpdatedAt:   suite.today,
 	})
 
-	suite.logger, _ = logging.NewMockLogger()
+	suite.logger, _ = logging.NewNopLogger()
 
 	suite.emergencyService, _ = NewEmergencyService(suite.emergencies, suite.pacients, suite.users, suite.logger)
 }
