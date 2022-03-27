@@ -31,7 +31,7 @@ func NewPacient(e *entity.Pacient) *Pacient {
 	}
 
 	if !e.Data.BirthDate.IsZero() {
-		pacient.BirthDate = e.Data.BirthDate.Format("02/01/2006 - 15:04:05h")
+		pacient.BirthDate = e.Data.BirthDate.Format("02/01/2006")
 
 	}
 
