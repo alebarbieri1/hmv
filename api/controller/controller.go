@@ -95,6 +95,7 @@ func (c *Controller) NewRouter() http.Handler {
 	c.rescuers.SetRoutes(router.PathPrefix("/rescuers").Subrouter())
 	c.users.SetRoutes(router.PathPrefix("/users").Subrouter())
 	return alice.New(
+		middleware.CORS(),
 		middleware.ResponseWrapper(),
 		middleware.RequestID(),
 		middleware.Logging(c.drivers.Logger),
