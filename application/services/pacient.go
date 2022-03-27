@@ -21,8 +21,8 @@ func NewPacientService(
 	pacients repositories.PacientsRepository,
 	users repositories.UsersRepository,
 	logger logging.Logger,
-) (*PacientService, error) {
-	return &PacientService{pacients: pacients, users: users, logger: logger}, nil
+) *PacientService {
+	return &PacientService{pacients: pacients, users: users, logger: logger}
 }
 
 // CreatePacient creates a new entity.Pacient

@@ -18,8 +18,8 @@ func NewRescuerService(
 	rescuers repositories.RescuersRepository,
 	users repositories.UsersRepository,
 	logger logging.Logger,
-) (*RescuerService, error) {
-	return &RescuerService{rescuers: rescuers, users: users, logger: logger}, nil
+) *RescuerService {
+	return &RescuerService{rescuers: rescuers, users: users, logger: logger}
 }
 
 func (s *RescuerService) CreateRescuer(userID string) (*entity.Rescuer, error) {

@@ -15,8 +15,8 @@ type AuthenticationService struct {
 }
 
 // NewAuthenticationService creates a new AuthenticationService
-func NewAuthenticationService(repository repositories.UsersRepository, logger logging.Logger) (*AuthenticationService, error) {
-	return &AuthenticationService{users: repository, logger: logger}, nil
+func NewAuthenticationService(repository repositories.UsersRepository, logger logging.Logger) *AuthenticationService {
+	return &AuthenticationService{users: repository, logger: logger}
 }
 
 // AuthenticateUser validates a username/password pair and returns its related entity.User, in case it exists

@@ -220,12 +220,11 @@ func (suite *EmergencyServiceTestSuite) SetupTest() {
 
 	suite.logger = logging.NewNopLogger()
 
-	suite.emergencyService, _ = NewEmergencyService(suite.emergencies, suite.pacients, suite.users, suite.logger)
+	suite.emergencyService = NewEmergencyService(suite.emergencies, suite.pacients, suite.users, suite.logger)
 }
 
 func (suite *EmergencyServiceTestSuite) TestNewEmergencyService() {
 	suite.T().Run("Given a set of drivers, a new EmergencyService should be created", func(t *testing.T) {
-		got, err := NewEmergencyService(suite.emergencies, suite.pacients, suite.users, suite.logger)
 		assert.Equal(t,
 			&EmergencyService{
 				emergencies: suite.emergencies,
@@ -233,9 +232,8 @@ func (suite *EmergencyServiceTestSuite) TestNewEmergencyService() {
 				users:       suite.users,
 				logger:      suite.logger,
 			},
-			got,
+			NewEmergencyService(suite.emergencies, suite.pacients, suite.users, suite.logger),
 		)
-		assert.Equal(t, false, err != nil)
 	})
 }
 

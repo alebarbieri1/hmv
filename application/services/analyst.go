@@ -20,8 +20,8 @@ func NewAnalystService(
 	analysts repositories.AnalystsRepository,
 	users repositories.UsersRepository,
 	logger logging.Logger,
-) (*AnalystService, error) {
-	return &AnalystService{analysts: analysts, users: users, logger: logger}, nil
+) *AnalystService {
+	return &AnalystService{analysts: analysts, users: users, logger: logger}
 }
 
 // CreateAnalyst creates a new entity.Analyst

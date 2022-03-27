@@ -87,14 +87,12 @@ func (suite *AnalystServiceTestSuite) SetupTest() {
 
 	suite.logger = logging.NewNopLogger()
 
-	suite.analystService, _ = NewAnalystService(suite.analysts, suite.users, suite.logger)
+	suite.analystService = NewAnalystService(suite.analysts, suite.users, suite.logger)
 }
 
 func (suite *AnalystServiceTestSuite) TestNewAnalystService() {
 	suite.T().Run("Given a set of drivers, a new AnalystService should be created", func(t *testing.T) {
-		got, err := NewAnalystService(suite.analysts, suite.users, suite.logger)
-		assert.Equal(t, &AnalystService{analysts: suite.analysts, users: suite.users, logger: suite.logger}, got)
-		assert.Equal(t, false, err != nil)
+		assert.Equal(t, &AnalystService{analysts: suite.analysts, users: suite.users, logger: suite.logger}, NewAnalystService(suite.analysts, suite.users, suite.logger))
 	})
 }
 

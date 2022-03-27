@@ -87,14 +87,12 @@ func (suite *RescuerServiceTestSuite) SetupTest() {
 
 	suite.logger = logging.NewNopLogger()
 
-	suite.rescuerService, _ = NewRescuerService(suite.rescuers, suite.users, suite.logger)
+	suite.rescuerService = NewRescuerService(suite.rescuers, suite.users, suite.logger)
 }
 
 func (suite *RescuerServiceTestSuite) TestNewRescuerService() {
 	suite.T().Run("Given a set of drivers, a new RescuerService should be created", func(t *testing.T) {
-		got, err := NewRescuerService(suite.rescuers, suite.users, suite.logger)
-		assert.Equal(t, &RescuerService{rescuers: suite.rescuers, users: suite.users, logger: suite.logger}, got)
-		assert.Equal(t, false, err != nil)
+		assert.Equal(t, &RescuerService{rescuers: suite.rescuers, users: suite.users, logger: suite.logger}, NewRescuerService(suite.rescuers, suite.users, suite.logger))
 	})
 }
 

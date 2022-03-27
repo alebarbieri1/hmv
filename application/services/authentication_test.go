@@ -43,14 +43,12 @@ func (suite *AuthenticationServiceTestSuite) SetupTest() {
 
 	suite.logger = logging.NewNopLogger()
 
-	suite.authenticationService, _ = NewAuthenticationService(suite.users, suite.logger)
+	suite.authenticationService = NewAuthenticationService(suite.users, suite.logger)
 }
 
 func (suite *AuthenticationServiceTestSuite) TestNewAuthenticationService() {
 	suite.T().Run("Given a set of drivers, a new AuthenticationService should be created", func(t *testing.T) {
-		got, err := NewAuthenticationService(suite.users, suite.logger)
-		assert.Equal(t, &AuthenticationService{users: suite.users, logger: suite.logger}, got)
-		assert.Equal(t, false, err != nil)
+		assert.Equal(t, &AuthenticationService{users: suite.users, logger: suite.logger}, NewAuthenticationService(suite.users, suite.logger))
 	})
 }
 

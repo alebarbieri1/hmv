@@ -27,90 +27,63 @@ type Controller struct {
 }
 
 // New creates a new Controller with a given set of Drivers
-func New(drivers *drivers.Drivers) (*Controller, error) {
-	authenticationService, err := services.NewAuthenticationService(drivers.Repositories.Users, drivers.Logger)
-	if err != nil {
-		return nil, err
-	}
-
-	analystsService, err := services.NewAnalystService(
-		drivers.Repositories.Analysts,
-		drivers.Repositories.Users,
-		drivers.Logger,
-	)
-	if err != nil {
-		return nil, err
-	}
-
-	emergenciesService, err := services.NewEmergencyService(
-		drivers.Repositories.Emergencies,
-		drivers.Repositories.Pacients,
-		drivers.Repositories.Users,
-		drivers.Logger)
-	if err != nil {
-		return nil, err
-	}
-
-	pacientsService, err := services.NewPacientService(
-		drivers.Repositories.Pacients,
-		drivers.Repositories.Users,
-		drivers.Logger,
-	)
-	if err != nil {
-		return nil, err
-	}
-
-	rescuersService, err := services.NewRescuerService(
-		drivers.Repositories.Rescuers,
-		drivers.Repositories.Users,
-		drivers.Logger,
-	)
-	if err != nil {
-		return nil, err
-	}
-
-	usersService, err := services.NewUserService(drivers.Repositories.Users, drivers.Logger)
-	if err != nil {
-		return nil, err
-	}
+func New(drivers *drivers.Drivers) *Controller {
+	authenticationService := services.NewAuthenticationService(drivers.Repositories.Users, drivers.Logger)
 
 	return &Controller{
 		analysts: analysts.NewController(
 			&analysts.Usecases{
 				Authentication: authenticationService,
-				Analysts:       analystsService,
+				Analysts: services.NewAnalystService(
+					drivers.Repositories.Analysts,
+					drivers.Repositories.Users,
+					drivers.Logger,
+				),
 			},
 			drivers,
 		),
 		emergencies: emergencies.NewController(
 			&emergencies.Usecases{
 				Authentication: authenticationService,
-				Emergencies:    emergenciesService,
+				Emergencies: services.NewEmergencyService(
+					drivers.Repositories.Emergencies,
+					drivers.Repositories.Pacients,
+					drivers.Repositories.Users,
+					drivers.Logger,
+				),
 			},
 			drivers,
 		),
 		pacients: pacients.NewController(
 			&pacients.Usecases{
 				Authentication: authenticationService,
-				Pacients:       pacientsService,
+				Pacients: services.NewPacientService(
+					drivers.Repositories.Pacients,
+					drivers.Repositories.Users,
+					drivers.Logger,
+				),
 			},
 			drivers,
 		),
 		rescuers: rescuers.NewController(
 			&rescuers.Usecases{
 				Authentication: authenticationService,
-				Rescuers:       rescuersService,
+				Rescuers: services.NewRescuerService(
+					drivers.Repositories.Rescuers,
+					drivers.Repositories.Users,
+					drivers.Logger,
+				),
 			},
 			drivers,
 		),
 		users: users.NewController(
 			&users.Usecases{
-				Users: usersService,
+				Users: services.NewUserService(drivers.Repositories.Users, drivers.Logger),
 			},
 			drivers,
 		),
 		drivers: drivers,
-	}, nil
+	}
 }
 
 func (c *Controller) NewRouter() http.Handler {

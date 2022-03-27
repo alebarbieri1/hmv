@@ -91,14 +91,12 @@ func (suite *PacientServiceTestSuite) SetupTest() {
 
 	suite.logger = logging.NewNopLogger()
 
-	suite.pacientService, _ = NewPacientService(suite.pacients, suite.users, suite.logger)
+	suite.pacientService = NewPacientService(suite.pacients, suite.users, suite.logger)
 }
 
 func (suite *PacientServiceTestSuite) TestNewPacientService() {
 	suite.T().Run("Given a set of drivers, a new PacientService should be created", func(t *testing.T) {
-		got, err := NewPacientService(suite.pacients, suite.users, suite.logger)
-		assert.Equal(t, &PacientService{pacients: suite.pacients, users: suite.users, logger: suite.logger}, got)
-		assert.Equal(t, false, err != nil)
+		assert.Equal(t, &PacientService{pacients: suite.pacients, users: suite.users, logger: suite.logger}, NewPacientService(suite.pacients, suite.users, suite.logger))
 	})
 }
 

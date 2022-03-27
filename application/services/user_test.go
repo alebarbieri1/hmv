@@ -52,14 +52,12 @@ func (suite *UserServiceTestSuite) SetupTest() {
 
 	suite.logger = logging.NewNopLogger()
 
-	suite.userService, _ = NewUserService(suite.users, suite.logger)
+	suite.userService = NewUserService(suite.users, suite.logger)
 }
 
 func (suite *UserServiceTestSuite) TestNewUserService() {
 	suite.T().Run("Given a set of drivers, a new UserService should be created", func(t *testing.T) {
-		got, err := NewUserService(suite.users, suite.logger)
-		assert.Equal(t, &UserService{users: suite.users, logger: suite.logger}, got)
-		assert.Equal(t, false, err != nil)
+		assert.Equal(t, &UserService{users: suite.users, logger: suite.logger}, NewUserService(suite.users, suite.logger))
 	})
 }
 
