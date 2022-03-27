@@ -8,50 +8,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestNewPacient(t *testing.T) {
-	type args struct {
-		userID string
-	}
-
-	tests := []struct {
-		name    string
-		args    args
-		want    *Pacient
-		wantErr bool
-	}{
-		{
-			name: "Given a valid userID, a new Pacient should be created",
-			args: args{
-				userID: "6fe98880-b181-4c1a-a17e-b6947af7f1c6",
-			},
-			want: &Pacient{
-				UserID: "6fe98880-b181-4c1a-a17e-b6947af7f1c6",
-			},
-			wantErr: false,
-		},
-		{
-			name: "Given an invalid userID, an error should be returned",
-			args: args{
-				userID: "foo",
-			},
-			want:    nil,
-			wantErr: true,
-		},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got, err := NewPacient(tt.args.userID)
-			assert.Equal(t, tt.wantErr, err != nil)
-
-			if err == nil {
-				assert.Equal(t, tt.want.UserID, got.UserID)
-				assert.Equal(t, tt.want.EmergencyContact, got.EmergencyContact)
-			}
-		})
-	}
-}
-
 func TestPacient_Validate(t *testing.T) {
 	type fields struct {
 		ID        string
@@ -190,9 +146,11 @@ func TestPacient_UpdateEmergencyContact(t *testing.T) {
 			},
 			wantErr: false,
 			want: &Pacient{
-				EmergencyContact: valueobject.EmergencyContact{
-					Name:         "bar",
-					MobileNumber: "5519999999999",
+				Data: valueobject.PacientData{
+					EmergencyContact: valueobject.EmergencyContact{
+						Name:         "bar",
+						MobileNumber: "5519999999999",
+					},
 				},
 			},
 		},
@@ -212,9 +170,11 @@ func TestPacient_UpdateEmergencyContact(t *testing.T) {
 			},
 			wantErr: true,
 			want: &Pacient{
-				EmergencyContact: valueobject.EmergencyContact{
-					Name:         "foo",
-					MobileNumber: "5511999999999",
+				Data: valueobject.PacientData{
+					EmergencyContact: valueobject.EmergencyContact{
+						Name:         "foo",
+						MobileNumber: "5511999999999",
+					},
 				},
 			},
 		},
@@ -223,7 +183,9 @@ func TestPacient_UpdateEmergencyContact(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			p := &Pacient{
-				EmergencyContact: tt.fields.EmergencyContact,
+				Data: valueobject.PacientData{
+					EmergencyContact: tt.fields.EmergencyContact,
+				},
 			}
 
 			err := p.UpdateEmergencyContact(tt.args.emergencyContact)
@@ -231,7 +193,7 @@ func TestPacient_UpdateEmergencyContact(t *testing.T) {
 			assert.Equal(t, tt.wantErr, err != nil)
 
 			if err == nil {
-				assert.Equal(t, tt.want.EmergencyContact, p.EmergencyContact)
+				assert.Equal(t, tt.want.Data, p.Data)
 			}
 		})
 	}

@@ -35,9 +35,11 @@ func (suite *PacientServiceTestSuite) SetupTest() {
 	suite.pacients.CreatePacient(&entity.Pacient{
 		ID:     "47322c6f-5883-4596-a305-29be7395ddd1",
 		UserID: "0ae23a9d-c9f0-4088-8e64-3ad341c07821",
-		EmergencyContact: valueobject.EmergencyContact{
-			Name:         "foo",
-			MobileNumber: "5511999999999",
+		Data: valueobject.PacientData{
+			EmergencyContact: valueobject.EmergencyContact{
+				Name:         "foo",
+				MobileNumber: "5511999999999",
+			},
 		},
 		CreatedAt: suite.today,
 		UpdatedAt: suite.today,
@@ -127,9 +129,11 @@ func (suite *PacientServiceTestSuite) TestPacientService_FindPacientByID() {
 			want: &entity.Pacient{
 				ID:     "47322c6f-5883-4596-a305-29be7395ddd1",
 				UserID: "0ae23a9d-c9f0-4088-8e64-3ad341c07821",
-				EmergencyContact: valueobject.EmergencyContact{
-					Name:         "foo",
-					MobileNumber: "5511999999999",
+				Data: valueobject.PacientData{
+					EmergencyContact: valueobject.EmergencyContact{
+						Name:         "foo",
+						MobileNumber: "5511999999999",
+					},
 				},
 				CreatedAt: suite.today,
 				UpdatedAt: suite.today,
@@ -174,9 +178,11 @@ func (suite *PacientServiceTestSuite) TestPacientService_FindPacientByUserID() {
 			want: &entity.Pacient{
 				ID:     "47322c6f-5883-4596-a305-29be7395ddd1",
 				UserID: "0ae23a9d-c9f0-4088-8e64-3ad341c07821",
-				EmergencyContact: valueobject.EmergencyContact{
-					Name:         "foo",
-					MobileNumber: "5511999999999",
+				Data: valueobject.PacientData{
+					EmergencyContact: valueobject.EmergencyContact{
+						Name:         "foo",
+						MobileNumber: "5511999999999",
+					},
 				},
 				CreatedAt: suite.today,
 				UpdatedAt: suite.today,
@@ -256,9 +262,11 @@ func (suite *PacientServiceTestSuite) TestPacientService_UpdateEmergencyContact(
 				},
 			},
 			want: &entity.Pacient{
-				EmergencyContact: valueobject.EmergencyContact{
-					Name:         "bar",
-					MobileNumber: "5519999999999",
+				Data: valueobject.PacientData{
+					EmergencyContact: valueobject.EmergencyContact{
+						Name:         "bar",
+						MobileNumber: "5519999999999",
+					},
 				},
 			},
 			wantErr: false,
@@ -270,7 +278,7 @@ func (suite *PacientServiceTestSuite) TestPacientService_UpdateEmergencyContact(
 			got, err := suite.pacientService.UpdateEmergencyContact(tt.args.userID, tt.args.pacientID, tt.args.emergencyContact)
 			assert.Equal(t, tt.wantErr, err != nil)
 			if err == nil {
-				assert.Equal(t, tt.want.EmergencyContact, got.EmergencyContact)
+				assert.Equal(t, tt.want.Data, got.Data)
 			}
 		})
 	}

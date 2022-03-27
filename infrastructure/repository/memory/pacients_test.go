@@ -29,9 +29,11 @@ func TestNewPacient(t *testing.T) {
 					UserID:    "6453415b-ea7f-4519-bb55-0f66bc50621b",
 					CreatedAt: today,
 					UpdatedAt: today,
-					EmergencyContact: valueobject.EmergencyContact{
-						Name:         "foo",
-						MobileNumber: "5511999999999",
+					Data: valueobject.PacientData{
+						EmergencyContact: valueobject.EmergencyContact{
+							Name:         "foo",
+							MobileNumber: "5511999999999",
+						},
 					},
 				},
 			},
@@ -40,9 +42,11 @@ func TestNewPacient(t *testing.T) {
 				UserID:    "6453415b-ea7f-4519-bb55-0f66bc50621b",
 				CreatedAt: today,
 				UpdatedAt: today,
-				EmergencyContact: valueobject.EmergencyContact{
-					Name:         "foo",
-					MobileNumber: "5511999999999",
+				Data: valueobject.PacientData{
+					EmergencyContact: valueobject.EmergencyContact{
+						Name:         "foo",
+						MobileNumber: "5511999999999",
+					},
 				},
 			},
 		},
@@ -57,11 +61,11 @@ func TestNewPacient(t *testing.T) {
 
 func TestPacient_toEntity(t *testing.T) {
 	type fields struct {
-		ID               string
-		UserID           string
-		EmergencyContact valueobject.EmergencyContact
-		CreatedAt        time.Time
-		UpdatedAt        time.Time
+		ID        string
+		UserID    string
+		Data      valueobject.PacientData
+		CreatedAt time.Time
+		UpdatedAt time.Time
 	}
 
 	today := time.Now().Truncate(24 * time.Hour)
@@ -78,9 +82,11 @@ func TestPacient_toEntity(t *testing.T) {
 				UserID:    "6453415b-ea7f-4519-bb55-0f66bc50621b",
 				CreatedAt: today,
 				UpdatedAt: today,
-				EmergencyContact: valueobject.EmergencyContact{
-					Name:         "foo",
-					MobileNumber: "5511999999999",
+				Data: valueobject.PacientData{
+					EmergencyContact: valueobject.EmergencyContact{
+						Name:         "foo",
+						MobileNumber: "5511999999999",
+					},
 				},
 			},
 			want: &entity.Pacient{
@@ -88,9 +94,11 @@ func TestPacient_toEntity(t *testing.T) {
 				UserID:    "6453415b-ea7f-4519-bb55-0f66bc50621b",
 				CreatedAt: today,
 				UpdatedAt: today,
-				EmergencyContact: valueobject.EmergencyContact{
-					Name:         "foo",
-					MobileNumber: "5511999999999",
+				Data: valueobject.PacientData{
+					EmergencyContact: valueobject.EmergencyContact{
+						Name:         "foo",
+						MobileNumber: "5511999999999",
+					},
 				},
 			},
 		},
@@ -99,11 +107,11 @@ func TestPacient_toEntity(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			pacient := &Pacient{
-				ID:               tt.fields.ID,
-				UserID:           tt.fields.UserID,
-				CreatedAt:        tt.fields.CreatedAt,
-				UpdatedAt:        tt.fields.UpdatedAt,
-				EmergencyContact: tt.fields.EmergencyContact,
+				ID:        tt.fields.ID,
+				UserID:    tt.fields.UserID,
+				CreatedAt: tt.fields.CreatedAt,
+				UpdatedAt: tt.fields.UpdatedAt,
+				Data:      tt.fields.Data,
 			}
 
 			assert.Equal(t, tt.want, pacient.toEntity())
@@ -160,9 +168,11 @@ func TestPacientsRepository_CreatePacient(t *testing.T) {
 						UserID:    "6453415b-ea7f-4519-bb55-0f66bc50621b",
 						CreatedAt: today,
 						UpdatedAt: today,
-						EmergencyContact: valueobject.EmergencyContact{
-							Name:         "foo",
-							MobileNumber: "5511999999999",
+						Data: valueobject.PacientData{
+							EmergencyContact: valueobject.EmergencyContact{
+								Name:         "foo",
+								MobileNumber: "5511999999999",
+							},
 						},
 					},
 				},
@@ -173,9 +183,11 @@ func TestPacientsRepository_CreatePacient(t *testing.T) {
 					UserID:    "21a48c8f-1008-4e11-a05f-82fabab09b92",
 					CreatedAt: today,
 					UpdatedAt: today,
-					EmergencyContact: valueobject.EmergencyContact{
-						Name:         "foo",
-						MobileNumber: "5511999999999",
+					Data: valueobject.PacientData{
+						EmergencyContact: valueobject.EmergencyContact{
+							Name:         "foo",
+							MobileNumber: "5511999999999",
+						},
 					},
 				},
 			},
@@ -186,9 +198,11 @@ func TestPacientsRepository_CreatePacient(t *testing.T) {
 					UserID:    "6453415b-ea7f-4519-bb55-0f66bc50621b",
 					CreatedAt: today,
 					UpdatedAt: today,
-					EmergencyContact: valueobject.EmergencyContact{
-						Name:         "foo",
-						MobileNumber: "5511999999999",
+					Data: valueobject.PacientData{
+						EmergencyContact: valueobject.EmergencyContact{
+							Name:         "foo",
+							MobileNumber: "5511999999999",
+						},
 					},
 				},
 				"ee7f37e4-c165-4a35-9109-41ced42ee1fc": {
@@ -196,9 +210,11 @@ func TestPacientsRepository_CreatePacient(t *testing.T) {
 					UserID:    "21a48c8f-1008-4e11-a05f-82fabab09b92",
 					CreatedAt: today,
 					UpdatedAt: today,
-					EmergencyContact: valueobject.EmergencyContact{
-						Name:         "foo",
-						MobileNumber: "5511999999999",
+					Data: valueobject.PacientData{
+						EmergencyContact: valueobject.EmergencyContact{
+							Name:         "foo",
+							MobileNumber: "5511999999999",
+						},
 					},
 				},
 			},
@@ -212,9 +228,11 @@ func TestPacientsRepository_CreatePacient(t *testing.T) {
 						UserID:    "6453415b-ea7f-4519-bb55-0f66bc50621b",
 						CreatedAt: today,
 						UpdatedAt: today,
-						EmergencyContact: valueobject.EmergencyContact{
-							Name:         "foo",
-							MobileNumber: "5511999999999",
+						Data: valueobject.PacientData{
+							EmergencyContact: valueobject.EmergencyContact{
+								Name:         "foo",
+								MobileNumber: "5511999999999",
+							},
 						},
 					},
 				},
@@ -225,9 +243,11 @@ func TestPacientsRepository_CreatePacient(t *testing.T) {
 					UserID:    "21a48c8f-1008-4e11-a05f-82fabab09b92",
 					CreatedAt: today,
 					UpdatedAt: today,
-					EmergencyContact: valueobject.EmergencyContact{
-						Name:         "foo",
-						MobileNumber: "5511999999999",
+					Data: valueobject.PacientData{
+						EmergencyContact: valueobject.EmergencyContact{
+							Name:         "foo",
+							MobileNumber: "5511999999999",
+						},
 					},
 				},
 			},
@@ -238,9 +258,11 @@ func TestPacientsRepository_CreatePacient(t *testing.T) {
 					UserID:    "6453415b-ea7f-4519-bb55-0f66bc50621b",
 					CreatedAt: today,
 					UpdatedAt: today,
-					EmergencyContact: valueobject.EmergencyContact{
-						Name:         "foo",
-						MobileNumber: "5511999999999",
+					Data: valueobject.PacientData{
+						EmergencyContact: valueobject.EmergencyContact{
+							Name:         "foo",
+							MobileNumber: "5511999999999",
+						},
 					},
 				},
 			},
@@ -288,9 +310,11 @@ func TestPacientsRepository_FindPacientByID(t *testing.T) {
 						UserID:    "6453415b-ea7f-4519-bb55-0f66bc50621b",
 						CreatedAt: today,
 						UpdatedAt: today,
-						EmergencyContact: valueobject.EmergencyContact{
-							Name:         "foo",
-							MobileNumber: "5511999999999",
+						Data: valueobject.PacientData{
+							EmergencyContact: valueobject.EmergencyContact{
+								Name:         "foo",
+								MobileNumber: "5511999999999",
+							},
 						},
 					},
 				},
@@ -304,9 +328,11 @@ func TestPacientsRepository_FindPacientByID(t *testing.T) {
 				UserID:    "6453415b-ea7f-4519-bb55-0f66bc50621b",
 				CreatedAt: today,
 				UpdatedAt: today,
-				EmergencyContact: valueobject.EmergencyContact{
-					Name:         "foo",
-					MobileNumber: "5511999999999",
+				Data: valueobject.PacientData{
+					EmergencyContact: valueobject.EmergencyContact{
+						Name:         "foo",
+						MobileNumber: "5511999999999",
+					},
 				},
 			},
 		},
@@ -319,9 +345,11 @@ func TestPacientsRepository_FindPacientByID(t *testing.T) {
 						UserID:    "6453415b-ea7f-4519-bb55-0f66bc50621b",
 						CreatedAt: today,
 						UpdatedAt: today,
-						EmergencyContact: valueobject.EmergencyContact{
-							Name:         "foo",
-							MobileNumber: "5511999999999",
+						Data: valueobject.PacientData{
+							EmergencyContact: valueobject.EmergencyContact{
+								Name:         "foo",
+								MobileNumber: "5511999999999",
+							},
 						},
 					},
 				},
@@ -374,9 +402,11 @@ func TestPacientsRepository_FindPacientByUserID(t *testing.T) {
 						UserID:    "6453415b-ea7f-4519-bb55-0f66bc50621b",
 						CreatedAt: today,
 						UpdatedAt: today,
-						EmergencyContact: valueobject.EmergencyContact{
-							Name:         "foo",
-							MobileNumber: "5511999999999",
+						Data: valueobject.PacientData{
+							EmergencyContact: valueobject.EmergencyContact{
+								Name:         "foo",
+								MobileNumber: "5511999999999",
+							},
 						},
 					},
 				},
@@ -390,9 +420,11 @@ func TestPacientsRepository_FindPacientByUserID(t *testing.T) {
 				UserID:    "6453415b-ea7f-4519-bb55-0f66bc50621b",
 				CreatedAt: today,
 				UpdatedAt: today,
-				EmergencyContact: valueobject.EmergencyContact{
-					Name:         "foo",
-					MobileNumber: "5511999999999",
+				Data: valueobject.PacientData{
+					EmergencyContact: valueobject.EmergencyContact{
+						Name:         "foo",
+						MobileNumber: "5511999999999",
+					},
 				},
 			},
 		},
@@ -405,9 +437,11 @@ func TestPacientsRepository_FindPacientByUserID(t *testing.T) {
 						UserID:    "6453415b-ea7f-4519-bb55-0f66bc50621b",
 						CreatedAt: today,
 						UpdatedAt: today,
-						EmergencyContact: valueobject.EmergencyContact{
-							Name:         "foo",
-							MobileNumber: "5511999999999",
+						Data: valueobject.PacientData{
+							EmergencyContact: valueobject.EmergencyContact{
+								Name:         "foo",
+								MobileNumber: "5511999999999",
+							},
 						},
 					},
 				},
@@ -460,9 +494,11 @@ func TestPacientsRepository_UpdatePacient(t *testing.T) {
 						UserID:    "6453415b-ea7f-4519-bb55-0f66bc50621b",
 						CreatedAt: today,
 						UpdatedAt: today,
-						EmergencyContact: valueobject.EmergencyContact{
-							Name:         "foo",
-							MobileNumber: "5511999999999",
+						Data: valueobject.PacientData{
+							EmergencyContact: valueobject.EmergencyContact{
+								Name:         "foo",
+								MobileNumber: "5511999999999",
+							},
 						},
 					},
 				},
@@ -473,9 +509,11 @@ func TestPacientsRepository_UpdatePacient(t *testing.T) {
 					UserID:    "6453415b-ea7f-4519-bb55-0f66bc50621b",
 					CreatedAt: today,
 					UpdatedAt: today,
-					EmergencyContact: valueobject.EmergencyContact{
-						Name:         "bar",
-						MobileNumber: "5519999999999",
+					Data: valueobject.PacientData{
+						EmergencyContact: valueobject.EmergencyContact{
+							Name:         "bar",
+							MobileNumber: "5519999999999",
+						},
 					},
 				},
 			},
@@ -486,9 +524,11 @@ func TestPacientsRepository_UpdatePacient(t *testing.T) {
 					UserID:    "6453415b-ea7f-4519-bb55-0f66bc50621b",
 					CreatedAt: today,
 					UpdatedAt: today,
-					EmergencyContact: valueobject.EmergencyContact{
-						Name:         "bar",
-						MobileNumber: "5519999999999",
+					Data: valueobject.PacientData{
+						EmergencyContact: valueobject.EmergencyContact{
+							Name:         "bar",
+							MobileNumber: "5519999999999",
+						},
 					},
 				},
 			},
@@ -502,9 +542,11 @@ func TestPacientsRepository_UpdatePacient(t *testing.T) {
 						UserID:    "6453415b-ea7f-4519-bb55-0f66bc50621b",
 						CreatedAt: today,
 						UpdatedAt: today,
-						EmergencyContact: valueobject.EmergencyContact{
-							Name:         "foo",
-							MobileNumber: "5511999999999",
+						Data: valueobject.PacientData{
+							EmergencyContact: valueobject.EmergencyContact{
+								Name:         "foo",
+								MobileNumber: "5511999999999",
+							},
 						},
 					},
 				},
@@ -515,9 +557,11 @@ func TestPacientsRepository_UpdatePacient(t *testing.T) {
 					UserID:    "21a48c8f-1008-4e11-a05f-82fabab09b92",
 					CreatedAt: today,
 					UpdatedAt: today,
-					EmergencyContact: valueobject.EmergencyContact{
-						Name:         "",
-						MobileNumber: "5519999999999999999999999",
+					Data: valueobject.PacientData{
+						EmergencyContact: valueobject.EmergencyContact{
+							Name:         "",
+							MobileNumber: "5519999999999999999999999",
+						},
 					},
 				},
 			},
@@ -528,9 +572,11 @@ func TestPacientsRepository_UpdatePacient(t *testing.T) {
 					UserID:    "6453415b-ea7f-4519-bb55-0f66bc50621b",
 					CreatedAt: today,
 					UpdatedAt: today,
-					EmergencyContact: valueobject.EmergencyContact{
-						Name:         "foo",
-						MobileNumber: "5511999999999",
+					Data: valueobject.PacientData{
+						EmergencyContact: valueobject.EmergencyContact{
+							Name:         "foo",
+							MobileNumber: "5511999999999",
+						},
 					},
 				},
 			},

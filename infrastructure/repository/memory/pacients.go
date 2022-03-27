@@ -9,32 +9,32 @@ import (
 
 // Pacient is a representation of entity.Pacient in the repository
 type Pacient struct {
-	ID               string
-	UserID           string
-	EmergencyContact valueobject.EmergencyContact
-	CreatedAt        time.Time
-	UpdatedAt        time.Time
+	ID        string
+	UserID    string
+	Data      valueobject.PacientData
+	CreatedAt time.Time
+	UpdatedAt time.Time
 }
 
 // NewPacient creates a new Pacient
 func NewPacient(e *entity.Pacient) *Pacient {
 	return &Pacient{
-		ID:               e.ID,
-		UserID:           e.UserID,
-		EmergencyContact: e.EmergencyContact,
-		CreatedAt:        e.CreatedAt,
-		UpdatedAt:        e.UpdatedAt,
+		ID:        e.ID,
+		UserID:    e.UserID,
+		Data:      e.Data,
+		CreatedAt: e.CreatedAt,
+		UpdatedAt: e.UpdatedAt,
 	}
 }
 
 // toEntity transforms an Pacient into a entity.Pacient
 func (u *Pacient) toEntity() *entity.Pacient {
 	return &entity.Pacient{
-		ID:               u.ID,
-		UserID:           u.UserID,
-		EmergencyContact: u.EmergencyContact,
-		CreatedAt:        u.CreatedAt,
-		UpdatedAt:        u.UpdatedAt,
+		ID:        u.ID,
+		UserID:    u.UserID,
+		Data:      u.Data,
+		CreatedAt: u.CreatedAt,
+		UpdatedAt: u.UpdatedAt,
 	}
 }
 

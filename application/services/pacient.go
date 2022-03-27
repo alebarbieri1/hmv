@@ -60,7 +60,7 @@ func (s *PacientService) CreatePacient(userID string) (*entity.Pacient, error) {
 		return nil, application.ErrInternalError
 	}
 
-	pacient, err = entity.NewPacient(user.ID)
+	pacient, err = user.NewPacient()
 	if err != nil {
 		s.logger.Debug(application.FailedToCreatePacient, logging.Error(err))
 		return nil, err

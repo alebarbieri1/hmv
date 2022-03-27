@@ -124,9 +124,11 @@ func (suite *EmergencyServiceTestSuite) SetupTest() {
 	suite.pacients.CreatePacient(&entity.Pacient{
 		ID:     "47322c6f-5883-4596-a305-29be7395ddd1",
 		UserID: "0ae23a9d-c9f0-4088-8e64-3ad341c07821",
-		EmergencyContact: valueobject.EmergencyContact{
-			Name:         "foo",
-			MobileNumber: "5511999999999",
+		Data: valueobject.PacientData{
+			EmergencyContact: valueobject.EmergencyContact{
+				Name:         "foo",
+				MobileNumber: "5511999999999",
+			},
 		},
 		CreatedAt: suite.today,
 		UpdatedAt: suite.today,
@@ -135,9 +137,11 @@ func (suite *EmergencyServiceTestSuite) SetupTest() {
 	suite.pacients.CreatePacient(&entity.Pacient{
 		ID:     "28535166-c4a4-429a-8a8c-d26ea12ee132",
 		UserID: "5f1f0411-4d68-4b9a-a393-3671fd655a19",
-		EmergencyContact: valueobject.EmergencyContact{
-			Name:         "foo",
-			MobileNumber: "5511999999999",
+		Data: valueobject.PacientData{
+			EmergencyContact: valueobject.EmergencyContact{
+				Name:         "foo",
+				MobileNumber: "5511999999999",
+			},
 		},
 		CreatedAt: suite.today,
 		UpdatedAt: suite.today,
@@ -146,9 +150,11 @@ func (suite *EmergencyServiceTestSuite) SetupTest() {
 	suite.pacients.CreatePacient(&entity.Pacient{
 		ID:     "50e8fca5-30d8-4ff8-9782-1083d81bf1ea",
 		UserID: "9b55f726-e47c-4371-b7bd-3ce6e622b147",
-		EmergencyContact: valueobject.EmergencyContact{
-			Name:         "foo",
-			MobileNumber: "5511999999999",
+		Data: valueobject.PacientData{
+			EmergencyContact: valueobject.EmergencyContact{
+				Name:         "foo",
+				MobileNumber: "5511999999999",
+			},
 		},
 		CreatedAt: suite.today,
 		UpdatedAt: suite.today,

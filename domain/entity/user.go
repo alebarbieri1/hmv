@@ -106,6 +106,27 @@ func (u *User) HasProfileKind() bool { return u.ProfileKind != valueobject.Undef
 // IsAnalyst returns true if the User has an Analyst profile
 func (u *User) IsAnalyst() bool { return u.ProfileKind == valueobject.Analyst_ProfileKind }
 
+// NewPacient creates a new Pacient
+func (u *User) NewPacient() (*Pacient, error) {
+	now := time.Now()
+
+	s := &Pacient{
+		ID:     uuid.NewString(),
+		UserID: u.ID,
+		Data: valueobject.PacientData{
+			Name: u.Data.Name,
+		},
+		CreatedAt: now,
+		UpdatedAt: now,
+	}
+
+	if err := s.Validate(); err != nil {
+		return nil, err
+	}
+
+	return s, nil
+}
+
 // IsPacient returns true if the User has a Pacient profile
 func (u *User) IsPacient() bool { return u.ProfileKind == valueobject.Pacient_ProfileKind }
 

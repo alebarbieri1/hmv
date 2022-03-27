@@ -6,34 +6,15 @@ import (
 
 	ozzo "github.com/go-ozzo/ozzo-validation/v4"
 	"github.com/go-ozzo/ozzo-validation/v4/is"
-	"github.com/google/uuid"
 )
 
 // Pacient defines data about a pacient
 type Pacient struct {
-	ID               string
-	UserID           string
-	EmergencyContact valueobject.EmergencyContact
-	CreatedAt        time.Time
-	UpdatedAt        time.Time
-}
-
-// NewPacient creates a new Pacient
-func NewPacient(userID string) (*Pacient, error) {
-	now := time.Now()
-
-	s := &Pacient{
-		ID:        uuid.NewString(),
-		UserID:    userID,
-		CreatedAt: now,
-		UpdatedAt: now,
-	}
-
-	if err := s.Validate(); err != nil {
-		return nil, err
-	}
-
-	return s, nil
+	ID        string
+	UserID    string
+	Data      valueobject.PacientData
+	CreatedAt time.Time
+	UpdatedAt time.Time
 }
 
 // Validate validates a Pacient
@@ -48,12 +29,29 @@ func (p *Pacient) Validate() error {
 	)
 }
 
+// UpdateLocationData updates the pacient's emergency contact data
+func (p *Pacient) UpdateLocationData(data valueobject.LocationData) error {
+	if err := data.Validate(); err != nil {
+		return err
+	}
+	p.Data.Location = data
+	p.UpdatedAt = time.Now()
+	return nil
+}
+
 // UpdateEmergencyContact updates the pacient's emergency contact data
 func (p *Pacient) UpdateEmergencyContact(emergencyContact valueobject.EmergencyContact) error {
 	if err := emergencyContact.Validate(); err != nil {
 		return err
 	}
-	p.EmergencyContact = emergencyContact
+	p.Data.EmergencyContact = emergencyContact
+	p.UpdatedAt = time.Now()
+	return nil
+}
+
+// UpdateHealthData updates the pacient's emergency contact data
+func (p *Pacient) UpdateHealthData(data valueobject.HealthData) error {
+	p.Data.Health = data
 	p.UpdatedAt = time.Now()
 	return nil
 }
