@@ -31,7 +31,7 @@ type AnalystServiceTestSuite struct {
 func (suite *AnalystServiceTestSuite) SetupTest() {
 	suite.today = time.Date(2022, time.February, 22, 0, 0, 0, 0, time.UTC)
 
-	suite.analysts, _ = memory.NewAnalystsRepository()
+	suite.analysts = memory.NewAnalystsRepository()
 	suite.analysts.CreateAnalyst(&entity.Analyst{
 		ID:        "47322c6f-5883-4596-a305-29be7395ddd1",
 		UserID:    "0ae23a9d-c9f0-4088-8e64-3ad341c07821",
@@ -39,7 +39,7 @@ func (suite *AnalystServiceTestSuite) SetupTest() {
 		UpdatedAt: suite.today,
 	})
 
-	suite.users, _ = memory.NewUsersRepository()
+	suite.users = memory.NewUsersRepository()
 	suite.users.CreateUser(&entity.User{
 		ID:          "e01f33c3-074f-4f89-b4df-9708ba248599",
 		Username:    "undefined",
@@ -85,16 +85,14 @@ func (suite *AnalystServiceTestSuite) SetupTest() {
 		UpdatedAt:   suite.today,
 	})
 
-	suite.logger, _ = logging.NewMockLogger()
+	suite.logger = logging.NewNopLogger()
 
-	suite.analystService, _ = NewAnalystService(suite.analysts, suite.users, suite.logger)
+	suite.analystService = NewAnalystService(suite.analysts, suite.users, suite.logger)
 }
 
 func (suite *AnalystServiceTestSuite) TestNewAnalystService() {
 	suite.T().Run("Given a set of drivers, a new AnalystService should be created", func(t *testing.T) {
-		got, err := NewAnalystService(suite.analysts, suite.users, suite.logger)
-		assert.Equal(t, &AnalystService{analysts: suite.analysts, users: suite.users, logger: suite.logger}, got)
-		assert.Equal(t, false, err != nil)
+		assert.Equal(t, &AnalystService{analysts: suite.analysts, users: suite.users, logger: suite.logger}, NewAnalystService(suite.analysts, suite.users, suite.logger))
 	})
 }
 

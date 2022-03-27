@@ -25,18 +25,24 @@ func TestNewUser(t *testing.T) {
 			name: "Given an entity.User, a new User should be created",
 			args: args{
 				e: &entity.User{
-					ID:          "6fe98880-b181-4c1a-a17e-b6947af7f1c6",
-					Username:    "foo",
-					Password:    "bar",
+					ID:       "6fe98880-b181-4c1a-a17e-b6947af7f1c6",
+					Username: "foo",
+					Password: "bar",
+					Data: valueobject.UserData{
+						Name: "baz",
+					},
 					ProfileKind: valueobject.Pacient_ProfileKind,
 					CreatedAt:   today,
 					UpdatedAt:   today,
 				},
 			},
 			want: &User{
-				ID:          "6fe98880-b181-4c1a-a17e-b6947af7f1c6",
-				Username:    "foo",
-				Password:    "bar",
+				ID:       "6fe98880-b181-4c1a-a17e-b6947af7f1c6",
+				Username: "foo",
+				Password: "bar",
+				Data: valueobject.UserData{
+					Name: "baz",
+				},
 				ProfileKind: valueobject.Pacient_ProfileKind,
 				CreatedAt:   today,
 				UpdatedAt:   today,
@@ -56,6 +62,7 @@ func TestUser_toEntity(t *testing.T) {
 		ID          string
 		Username    string
 		Password    string
+		Data        valueobject.UserData
 		ProfileKind valueobject.ProfileKind
 		CreatedAt   time.Time
 		UpdatedAt   time.Time
@@ -71,17 +78,23 @@ func TestUser_toEntity(t *testing.T) {
 		{
 			name: "Given an entity.User, a new User should be created",
 			fields: fields{
-				ID:          "6fe98880-b181-4c1a-a17e-b6947af7f1c6",
-				Username:    "foo",
-				Password:    "bar",
+				ID:       "6fe98880-b181-4c1a-a17e-b6947af7f1c6",
+				Username: "foo",
+				Password: "bar",
+				Data: valueobject.UserData{
+					Name: "baz",
+				},
 				ProfileKind: valueobject.Analyst_ProfileKind,
 				CreatedAt:   today,
 				UpdatedAt:   today,
 			},
 			want: &entity.User{
-				ID:          "6fe98880-b181-4c1a-a17e-b6947af7f1c6",
-				Username:    "foo",
-				Password:    "bar",
+				ID:       "6fe98880-b181-4c1a-a17e-b6947af7f1c6",
+				Username: "foo",
+				Password: "bar",
+				Data: valueobject.UserData{
+					Name: "baz",
+				},
 				ProfileKind: valueobject.Analyst_ProfileKind,
 				CreatedAt:   today,
 				UpdatedAt:   today,
@@ -95,6 +108,7 @@ func TestUser_toEntity(t *testing.T) {
 				ID:          tt.fields.ID,
 				Username:    tt.fields.Username,
 				Password:    tt.fields.Password,
+				Data:        tt.fields.Data,
 				ProfileKind: tt.fields.ProfileKind,
 				CreatedAt:   tt.fields.CreatedAt,
 				UpdatedAt:   tt.fields.UpdatedAt,
@@ -122,9 +136,7 @@ func TestNewUsersRepository(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := NewUsersRepository()
-			assert.Equal(t, tt.want, got)
-			assert.Equal(t, tt.wantErr, err != nil)
+			assert.Equal(t, tt.want, NewUsersRepository())
 		})
 	}
 }
@@ -152,9 +164,12 @@ func TestUsersRepository_CreateUser(t *testing.T) {
 			fields: fields{
 				users: map[string]*User{
 					"6fe98880-b181-4c1a-a17e-b6947af7f1c6": {
-						ID:          "6fe98880-b181-4c1a-a17e-b6947af7f1c6",
-						Username:    "foo",
-						Password:    "bar",
+						ID:       "6fe98880-b181-4c1a-a17e-b6947af7f1c6",
+						Username: "foo",
+						Password: "bar",
+						Data: valueobject.UserData{
+							Name: "baz",
+						},
 						ProfileKind: valueobject.Rescuer_ProfileKind,
 						CreatedAt:   today,
 						UpdatedAt:   today,
@@ -163,9 +178,12 @@ func TestUsersRepository_CreateUser(t *testing.T) {
 			},
 			args: args{
 				user: &entity.User{
-					ID:          "ee7f37e4-c165-4a35-9109-41ced42ee1fc",
-					Username:    "foo",
-					Password:    "bar",
+					ID:       "ee7f37e4-c165-4a35-9109-41ced42ee1fc",
+					Username: "foo",
+					Password: "bar",
+					Data: valueobject.UserData{
+						Name: "baz",
+					},
 					ProfileKind: valueobject.Rescuer_ProfileKind,
 					CreatedAt:   today,
 					UpdatedAt:   today,
@@ -174,17 +192,23 @@ func TestUsersRepository_CreateUser(t *testing.T) {
 			wantErr: false,
 			wantUsers: map[string]*User{
 				"6fe98880-b181-4c1a-a17e-b6947af7f1c6": {
-					ID:          "6fe98880-b181-4c1a-a17e-b6947af7f1c6",
-					Username:    "foo",
-					Password:    "bar",
+					ID:       "6fe98880-b181-4c1a-a17e-b6947af7f1c6",
+					Username: "foo",
+					Password: "bar",
+					Data: valueobject.UserData{
+						Name: "baz",
+					},
 					ProfileKind: valueobject.Rescuer_ProfileKind,
 					CreatedAt:   today,
 					UpdatedAt:   today,
 				},
 				"ee7f37e4-c165-4a35-9109-41ced42ee1fc": {
-					ID:          "ee7f37e4-c165-4a35-9109-41ced42ee1fc",
-					Username:    "foo",
-					Password:    "bar",
+					ID:       "ee7f37e4-c165-4a35-9109-41ced42ee1fc",
+					Username: "foo",
+					Password: "bar",
+					Data: valueobject.UserData{
+						Name: "baz",
+					},
 					ProfileKind: valueobject.Rescuer_ProfileKind,
 					CreatedAt:   today,
 					UpdatedAt:   today,
@@ -196,9 +220,12 @@ func TestUsersRepository_CreateUser(t *testing.T) {
 			fields: fields{
 				users: map[string]*User{
 					"6fe98880-b181-4c1a-a17e-b6947af7f1c6": {
-						ID:          "6fe98880-b181-4c1a-a17e-b6947af7f1c6",
-						Username:    "foo",
-						Password:    "bar",
+						ID:       "6fe98880-b181-4c1a-a17e-b6947af7f1c6",
+						Username: "foo",
+						Password: "bar",
+						Data: valueobject.UserData{
+							Name: "baz",
+						},
 						ProfileKind: valueobject.Rescuer_ProfileKind,
 						CreatedAt:   today,
 						UpdatedAt:   today,
@@ -207,9 +234,12 @@ func TestUsersRepository_CreateUser(t *testing.T) {
 			},
 			args: args{
 				user: &entity.User{
-					ID:          "6fe98880-b181-4c1a-a17e-b6947af7f1c6",
-					Username:    "foo",
-					Password:    "bar",
+					ID:       "6fe98880-b181-4c1a-a17e-b6947af7f1c6",
+					Username: "foo",
+					Password: "bar",
+					Data: valueobject.UserData{
+						Name: "baz",
+					},
 					ProfileKind: valueobject.Rescuer_ProfileKind,
 					CreatedAt:   today,
 					UpdatedAt:   today,
@@ -218,9 +248,12 @@ func TestUsersRepository_CreateUser(t *testing.T) {
 			wantErr: true,
 			wantUsers: map[string]*User{
 				"6fe98880-b181-4c1a-a17e-b6947af7f1c6": {
-					ID:          "6fe98880-b181-4c1a-a17e-b6947af7f1c6",
-					Username:    "foo",
-					Password:    "bar",
+					ID:       "6fe98880-b181-4c1a-a17e-b6947af7f1c6",
+					Username: "foo",
+					Password: "bar",
+					Data: valueobject.UserData{
+						Name: "baz",
+					},
 					ProfileKind: valueobject.Rescuer_ProfileKind,
 					CreatedAt:   today,
 					UpdatedAt:   today,
@@ -266,9 +299,12 @@ func TestUsersRepository_FindUserByID(t *testing.T) {
 			fields: fields{
 				users: map[string]*User{
 					"6fe98880-b181-4c1a-a17e-b6947af7f1c6": {
-						ID:          "6fe98880-b181-4c1a-a17e-b6947af7f1c6",
-						Username:    "foo",
-						Password:    "bar",
+						ID:       "6fe98880-b181-4c1a-a17e-b6947af7f1c6",
+						Username: "foo",
+						Password: "bar",
+						Data: valueobject.UserData{
+							Name: "baz",
+						},
 						ProfileKind: valueobject.Undefined_ProfileKind,
 						CreatedAt:   today,
 						UpdatedAt:   today,
@@ -280,9 +316,12 @@ func TestUsersRepository_FindUserByID(t *testing.T) {
 			},
 			wantErr: false,
 			want: &entity.User{
-				ID:          "6fe98880-b181-4c1a-a17e-b6947af7f1c6",
-				Username:    "foo",
-				Password:    "bar",
+				ID:       "6fe98880-b181-4c1a-a17e-b6947af7f1c6",
+				Username: "foo",
+				Password: "bar",
+				Data: valueobject.UserData{
+					Name: "baz",
+				},
 				ProfileKind: valueobject.Undefined_ProfileKind,
 				CreatedAt:   today,
 				UpdatedAt:   today,
@@ -293,9 +332,12 @@ func TestUsersRepository_FindUserByID(t *testing.T) {
 			fields: fields{
 				users: map[string]*User{
 					"6fe98880-b181-4c1a-a17e-b6947af7f1c6": {
-						ID:          "6fe98880-b181-4c1a-a17e-b6947af7f1c6",
-						Username:    "foo",
-						Password:    "bar",
+						ID:       "6fe98880-b181-4c1a-a17e-b6947af7f1c6",
+						Username: "foo",
+						Password: "bar",
+						Data: valueobject.UserData{
+							Name: "baz",
+						},
 						ProfileKind: valueobject.Undefined_ProfileKind,
 						CreatedAt:   today,
 						UpdatedAt:   today,
@@ -346,9 +388,12 @@ func TestUsersRepository_FindUserByUsername(t *testing.T) {
 			fields: fields{
 				users: map[string]*User{
 					"6fe98880-b181-4c1a-a17e-b6947af7f1c6": {
-						ID:          "6fe98880-b181-4c1a-a17e-b6947af7f1c6",
-						Username:    "foo",
-						Password:    "bar",
+						ID:       "6fe98880-b181-4c1a-a17e-b6947af7f1c6",
+						Username: "foo",
+						Password: "bar",
+						Data: valueobject.UserData{
+							Name: "baz",
+						},
 						ProfileKind: valueobject.Undefined_ProfileKind,
 						CreatedAt:   today,
 						UpdatedAt:   today,
@@ -360,9 +405,12 @@ func TestUsersRepository_FindUserByUsername(t *testing.T) {
 			},
 			wantErr: false,
 			want: &entity.User{
-				ID:          "6fe98880-b181-4c1a-a17e-b6947af7f1c6",
-				Username:    "foo",
-				Password:    "bar",
+				ID:       "6fe98880-b181-4c1a-a17e-b6947af7f1c6",
+				Username: "foo",
+				Password: "bar",
+				Data: valueobject.UserData{
+					Name: "baz",
+				},
 				ProfileKind: valueobject.Undefined_ProfileKind,
 				CreatedAt:   today,
 				UpdatedAt:   today,
@@ -373,9 +421,12 @@ func TestUsersRepository_FindUserByUsername(t *testing.T) {
 			fields: fields{
 				users: map[string]*User{
 					"6fe98880-b181-4c1a-a17e-b6947af7f1c6": {
-						ID:          "6fe98880-b181-4c1a-a17e-b6947af7f1c6",
-						Username:    "foo",
-						Password:    "bar",
+						ID:       "6fe98880-b181-4c1a-a17e-b6947af7f1c6",
+						Username: "foo",
+						Password: "bar",
+						Data: valueobject.UserData{
+							Name: "baz",
+						},
 						ProfileKind: valueobject.Undefined_ProfileKind,
 						CreatedAt:   today,
 						UpdatedAt:   today,
@@ -421,9 +472,12 @@ func TestEmergenciesRepository_ListUsers(t *testing.T) {
 			fields: fields{
 				users: map[string]*User{
 					"6fe98880-b181-4c1a-a17e-b6947af7f1c6": {
-						ID:          "6fe98880-b181-4c1a-a17e-b6947af7f1c6",
-						Username:    "foo",
-						Password:    "bar",
+						ID:       "6fe98880-b181-4c1a-a17e-b6947af7f1c6",
+						Username: "foo",
+						Password: "bar",
+						Data: valueobject.UserData{
+							Name: "baz",
+						},
 						ProfileKind: valueobject.Undefined_ProfileKind,
 						CreatedAt:   today,
 						UpdatedAt:   today,
@@ -433,9 +487,12 @@ func TestEmergenciesRepository_ListUsers(t *testing.T) {
 			wantErr: false,
 			want: []*entity.User{
 				{
-					ID:          "6fe98880-b181-4c1a-a17e-b6947af7f1c6",
-					Username:    "foo",
-					Password:    "bar",
+					ID:       "6fe98880-b181-4c1a-a17e-b6947af7f1c6",
+					Username: "foo",
+					Password: "bar",
+					Data: valueobject.UserData{
+						Name: "baz",
+					},
 					ProfileKind: valueobject.Undefined_ProfileKind,
 					CreatedAt:   today,
 					UpdatedAt:   today,
@@ -480,9 +537,12 @@ func TestUsersRepository_UpdateUser(t *testing.T) {
 			fields: fields{
 				users: map[string]*User{
 					"6fe98880-b181-4c1a-a17e-b6947af7f1c6": {
-						ID:          "6fe98880-b181-4c1a-a17e-b6947af7f1c6",
-						Username:    "foo",
-						Password:    "bar",
+						ID:       "6fe98880-b181-4c1a-a17e-b6947af7f1c6",
+						Username: "foo",
+						Password: "bar",
+						Data: valueobject.UserData{
+							Name: "baz",
+						},
 						ProfileKind: valueobject.Undefined_ProfileKind,
 						CreatedAt:   today,
 						UpdatedAt:   today,
@@ -491,9 +551,12 @@ func TestUsersRepository_UpdateUser(t *testing.T) {
 			},
 			args: args{
 				user: &entity.User{
-					ID:          "6fe98880-b181-4c1a-a17e-b6947af7f1c6",
-					Username:    "foo",
-					Password:    "bar",
+					ID:       "6fe98880-b181-4c1a-a17e-b6947af7f1c6",
+					Username: "foo",
+					Password: "bar",
+					Data: valueobject.UserData{
+						Name: "baz",
+					},
 					ProfileKind: valueobject.Pacient_ProfileKind,
 					CreatedAt:   today,
 					UpdatedAt:   today,
@@ -502,9 +565,12 @@ func TestUsersRepository_UpdateUser(t *testing.T) {
 			wantErr: false,
 			wantUsers: map[string]*User{
 				"6fe98880-b181-4c1a-a17e-b6947af7f1c6": {
-					ID:          "6fe98880-b181-4c1a-a17e-b6947af7f1c6",
-					Username:    "foo",
-					Password:    "bar",
+					ID:       "6fe98880-b181-4c1a-a17e-b6947af7f1c6",
+					Username: "foo",
+					Password: "bar",
+					Data: valueobject.UserData{
+						Name: "baz",
+					},
 					ProfileKind: valueobject.Pacient_ProfileKind,
 					CreatedAt:   today,
 					UpdatedAt:   today,
@@ -516,9 +582,12 @@ func TestUsersRepository_UpdateUser(t *testing.T) {
 			fields: fields{
 				users: map[string]*User{
 					"6fe98880-b181-4c1a-a17e-b6947af7f1c6": {
-						ID:          "6fe98880-b181-4c1a-a17e-b6947af7f1c6",
-						Username:    "foo",
-						Password:    "bar",
+						ID:       "6fe98880-b181-4c1a-a17e-b6947af7f1c6",
+						Username: "foo",
+						Password: "bar",
+						Data: valueobject.UserData{
+							Name: "baz",
+						},
 						ProfileKind: valueobject.Undefined_ProfileKind,
 						CreatedAt:   today,
 						UpdatedAt:   today,
@@ -527,9 +596,12 @@ func TestUsersRepository_UpdateUser(t *testing.T) {
 			},
 			args: args{
 				user: &entity.User{
-					ID:          "ee7f37e4-c165-4a35-9109-41ced42ee1fc",
-					Username:    "foo",
-					Password:    "bar",
+					ID:       "ee7f37e4-c165-4a35-9109-41ced42ee1fc",
+					Username: "foo",
+					Password: "bar",
+					Data: valueobject.UserData{
+						Name: "baz",
+					},
 					ProfileKind: valueobject.Pacient_ProfileKind,
 					CreatedAt:   today,
 					UpdatedAt:   today,
@@ -538,9 +610,12 @@ func TestUsersRepository_UpdateUser(t *testing.T) {
 			wantErr: true,
 			wantUsers: map[string]*User{
 				"6fe98880-b181-4c1a-a17e-b6947af7f1c6": {
-					ID:          "6fe98880-b181-4c1a-a17e-b6947af7f1c6",
-					Username:    "foo",
-					Password:    "bar",
+					ID:       "6fe98880-b181-4c1a-a17e-b6947af7f1c6",
+					Username: "foo",
+					Password: "bar",
+					Data: valueobject.UserData{
+						Name: "baz",
+					},
 					ProfileKind: valueobject.Undefined_ProfileKind,
 					CreatedAt:   today,
 					UpdatedAt:   today,

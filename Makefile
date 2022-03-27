@@ -1,5 +1,8 @@
 check:
-	@go vet ./...	
+	@go vet ./...
+
+start:
+	@go run cmd/main.go
 
 tidy:
 	@go fmt ./...

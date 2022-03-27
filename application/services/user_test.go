@@ -31,7 +31,7 @@ type UserServiceTestSuite struct {
 func (suite *UserServiceTestSuite) SetupTest() {
 	suite.today = time.Date(2022, time.February, 22, 0, 0, 0, 0, time.UTC)
 
-	suite.users, _ = memory.NewUsersRepository()
+	suite.users = memory.NewUsersRepository()
 	suite.users.CreateUser(&entity.User{
 		ID:          "e01f33c3-074f-4f89-b4df-9708ba248599",
 		Username:    "undefined",
@@ -50,16 +50,14 @@ func (suite *UserServiceTestSuite) SetupTest() {
 		UpdatedAt:   suite.today,
 	})
 
-	suite.logger, _ = logging.NewMockLogger()
+	suite.logger = logging.NewNopLogger()
 
-	suite.userService, _ = NewUserService(suite.users, suite.logger)
+	suite.userService = NewUserService(suite.users, suite.logger)
 }
 
 func (suite *UserServiceTestSuite) TestNewUserService() {
 	suite.T().Run("Given a set of drivers, a new UserService should be created", func(t *testing.T) {
-		got, err := NewUserService(suite.users, suite.logger)
-		assert.Equal(t, &UserService{users: suite.users, logger: suite.logger}, got)
-		assert.Equal(t, false, err != nil)
+		assert.Equal(t, &UserService{users: suite.users, logger: suite.logger}, NewUserService(suite.users, suite.logger))
 	})
 }
 

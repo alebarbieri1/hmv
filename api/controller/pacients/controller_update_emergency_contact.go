@@ -2,6 +2,7 @@ package pacients
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
 
 	"flavioltonon/hmv/api/presenter"
@@ -33,7 +34,13 @@ func (c *Controller) updateEmergencyContact(w http.ResponseWriter, r *http.Reque
 	vars := mux.Vars(r)
 
 	updatedPacient, err := c.usecases.Pacients.UpdateEmergencyContact(user.ID, vars["pacient_id"], payload.toValueObject())
-	if err == application.ErrUserAlreadyIsAPacient {
+	if errors.Is(err, entity.ErrNotFound) {
+		c.drivers.Logger.Info(application.FailedToUpdatePacient, logging.Error(err))
+		c.drivers.Presenter.Present(w, response.BadRequest(application.FailedToUpdatePacient, err))
+		return
+	}
+
+	if errors.Is(err, application.ErrInvalidUserProfile) {
 		c.drivers.Logger.Info(application.FailedToUpdatePacient, logging.Error(err))
 		c.drivers.Presenter.Present(w, response.BadRequest(application.FailedToUpdatePacient, err))
 		return

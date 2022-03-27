@@ -34,4 +34,6 @@ func (c *Controller) SetRoutes(parent *mux.Router) {
 	parent.HandleFunc("", c.createPacient).Methods(http.MethodPost)
 	parent.HandleFunc("/{pacient_id}", c.findPacient).Methods(http.MethodGet)
 	parent.HandleFunc("/{pacient_id}/emergency-contacts", c.updateEmergencyContact).Methods(http.MethodPut)
+	parent.HandleFunc("/{pacient_id}/health", c.updateHealthData).Methods(http.MethodPut)
+	parent.HandleFunc("/{pacient_id}/location", c.updateLocationData).Methods(http.MethodPut)
 }

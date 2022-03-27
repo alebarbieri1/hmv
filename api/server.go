@@ -18,7 +18,7 @@ type Server struct {
 }
 
 func NewServer() (*Server, error) {
-	settings, err := settings.New()
+	settings, err := settings.FromFile("settings.yaml")
 	if err != nil {
 		return nil, err
 	}
@@ -28,15 +28,10 @@ func NewServer() (*Server, error) {
 		return nil, err
 	}
 
-	controller, err := controller.New(drivers)
-	if err != nil {
-		return nil, err
-	}
-
 	return &Server{
 		core: &http.Server{
 			Addr:    settings.Server.Address,
-			Handler: controller.NewRouter(),
+			Handler: controller.New(drivers).NewRouter(),
 		},
 		drivers:  drivers,
 		settings: settings,

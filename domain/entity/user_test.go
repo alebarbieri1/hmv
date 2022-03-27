@@ -482,6 +482,68 @@ func TestUser_IsAnalyst(t *testing.T) {
 	}
 }
 
+func TestNewPacient(t *testing.T) {
+	type fields struct {
+		ID          string
+		Data        valueobject.UserData
+		ProfileKind valueobject.ProfileKind
+	}
+
+	userID := uuid.NewString()
+
+	tests := []struct {
+		name    string
+		fields  fields
+		want    *Pacient
+		wantErr bool
+	}{
+		{
+			name: "If the User.ID is not set, an error should be returned",
+			fields: fields{
+				ID:          "",
+				ProfileKind: valueobject.Undefined_ProfileKind,
+			},
+			want:    nil,
+			wantErr: true,
+		},
+		{
+			name: "If the User has an ID, a new Pacient should be created",
+			fields: fields{
+				ID: userID,
+				Data: valueobject.UserData{
+					Name: "foo",
+				},
+				ProfileKind: valueobject.Undefined_ProfileKind,
+			},
+			want: &Pacient{
+				UserID: userID,
+				Data: valueobject.PacientData{
+					Name: "foo",
+				},
+			},
+			wantErr: false,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			user := &User{
+				ID:          tt.fields.ID,
+				Data:        tt.fields.Data,
+				ProfileKind: tt.fields.ProfileKind,
+			}
+
+			got, err := user.NewPacient()
+			assert.Equal(t, tt.wantErr, err != nil)
+
+			if err == nil {
+				assert.Equal(t, tt.want.UserID, got.UserID)
+				assert.Equal(t, tt.want.Data, got.Data)
+			}
+		})
+	}
+}
+
 func TestUser_IsPacient(t *testing.T) {
 	type fields struct {
 		ProfileKind valueobject.ProfileKind
@@ -552,6 +614,64 @@ func TestUser_IsRescuer(t *testing.T) {
 			}
 
 			assert.Equal(t, tt.want, u.IsRescuer())
+		})
+	}
+}
+
+func TestUser_SetUserData(t *testing.T) {
+	type fields struct {
+		Data valueobject.UserData
+	}
+
+	type args struct {
+		data valueobject.UserData
+	}
+
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		wantErr bool
+	}{
+		{
+			name: "Given a valid valueobject.UserData, User.SetUserData should return no errors",
+			fields: fields{
+				Data: valueobject.UserData{
+					Name: "baz",
+				},
+			},
+			args: args{
+				data: valueobject.UserData{
+					Name: "qux",
+				},
+			},
+			wantErr: false,
+		},
+		{
+			name: "Given an invalid valueobject.UserData, User.SetUserData should return an error",
+			fields: fields{
+				Data: valueobject.UserData{
+					Name: "baz",
+				},
+			},
+			args: args{
+				data: valueobject.UserData{
+					Name: "",
+				},
+			},
+			wantErr: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			u := &User{
+				Data: tt.fields.Data,
+			}
+
+			err := u.SetUserData(tt.args.data)
+
+			assert.Equal(t, tt.wantErr, err != nil)
 		})
 	}
 }

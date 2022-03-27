@@ -23,13 +23,13 @@ func NewEmergencyService(
 	pacients repositories.PacientsRepository,
 	users repositories.UsersRepository,
 	logger logging.Logger,
-) (*EmergencyService, error) {
+) *EmergencyService {
 	return &EmergencyService{
 		emergencies: emergencies,
 		pacients:    pacients,
 		users:       users,
 		logger:      logger,
-	}, nil
+	}
 }
 
 // CreateEmergency creates a new entity.Emergency

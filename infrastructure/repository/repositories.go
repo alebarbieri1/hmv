@@ -16,36 +16,11 @@ type Repositories struct {
 
 // NewRepositories creates a new Repositories
 func NewRepositories() (*Repositories, error) {
-	analysts, err := memory.NewAnalystsRepository()
-	if err != nil {
-		return nil, err
-	}
-
-	emergencies, err := memory.NewEmergenciesRepository()
-	if err != nil {
-		return nil, err
-	}
-
-	pacients, err := memory.NewPacientsRepository()
-	if err != nil {
-		return nil, err
-	}
-
-	rescuers, err := memory.NewRescuersRepository()
-	if err != nil {
-		return nil, err
-	}
-
-	users, err := memory.NewUsersRepository()
-	if err != nil {
-		return nil, err
-	}
-
 	return &Repositories{
-		Analysts:    analysts,
-		Emergencies: emergencies,
-		Pacients:    pacients,
-		Rescuers:    rescuers,
-		Users:       users,
+		Analysts:    memory.NewAnalystsRepository(),
+		Emergencies: memory.NewEmergenciesRepository(),
+		Pacients:    memory.NewPacientsRepository(),
+		Rescuers:    memory.NewRescuersRepository(),
+		Users:       memory.NewUsersRepository(),
 	}, nil
 }

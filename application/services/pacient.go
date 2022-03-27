@@ -21,8 +21,8 @@ func NewPacientService(
 	pacients repositories.PacientsRepository,
 	users repositories.UsersRepository,
 	logger logging.Logger,
-) (*PacientService, error) {
-	return &PacientService{pacients: pacients, users: users, logger: logger}, nil
+) *PacientService {
+	return &PacientService{pacients: pacients, users: users, logger: logger}
 }
 
 // CreatePacient creates a new entity.Pacient
@@ -60,7 +60,7 @@ func (s *PacientService) CreatePacient(userID string) (*entity.Pacient, error) {
 		return nil, application.ErrInternalError
 	}
 
-	pacient, err = entity.NewPacient(user.ID)
+	pacient, err = user.NewPacient()
 	if err != nil {
 		s.logger.Debug(application.FailedToCreatePacient, logging.Error(err))
 		return nil, err
@@ -93,8 +93,51 @@ func (s *PacientService) FindPacientByUserID(userID string) (*entity.Pacient, er
 }
 
 // UpdateEmergencyContact updates the EmergencyContact of a entity.Pacient with a given pacientID. This action can only
-// be performed by users with an Analyst_ProfileKind.
+// be performed by users with an Pacient_ProfileKind.
 func (s *PacientService) UpdateEmergencyContact(userID, pacientID string, emergencyContact valueobject.EmergencyContact) (*entity.Pacient, error) {
+	user, err := s.users.FindUserByID(userID)
+	if err != nil {
+		s.logger.Error(application.FailedToFindUser, err, logging.String("user_id", userID))
+		return nil, errors.WithMessage(application.FailedToFindUser, err)
+	}
+
+	if !user.IsPacient() {
+		s.logger.Info(application.FailedToUpdatePacient, logging.Error(application.ErrInvalidUserProfile), logging.String("user_id", userID))
+		return nil, application.ErrInvalidUserProfile
+	}
+
+	pacient, err := s.pacients.FindPacientByUserID(user.ID)
+	if err != nil {
+		s.logger.Error(application.FailedToFindPacient, err, logging.String("pacient_id", pacientID))
+		return nil, errors.WithMessage(application.FailedToFindPacient, err)
+	}
+
+	if pacient.ID != pacientID {
+		s.logger.Info(application.FailedToFindPacient,
+			logging.Error(entity.ErrNotFound),
+			logging.String("user_id", userID),
+			logging.String("pacient_id", pacientID),
+		)
+		return nil, errors.WithMessage(application.FailedToFindPacient, entity.ErrNotFound)
+	}
+
+	if err := pacient.UpdateEmergencyContact(emergencyContact); err != nil {
+		s.logger.Debug(application.FailedToUpdatePacient, logging.Error(err))
+		return nil, err
+	}
+
+	if err := s.pacients.UpdatePacient(pacient); err != nil {
+		s.logger.Error(application.FailedToUpdatePacient, err)
+		return nil, application.ErrInternalError
+	}
+
+	s.logger.Debug(application.PacientUpdated, logging.String("pacient_id", pacient.ID))
+	return pacient, nil
+}
+
+// UpdateHealthData updates the HealthData of a entity.Pacient with a given pacientID. This action can only
+// be performed by users with an Pacient_ProfileKind.
+func (s *PacientService) UpdateHealthData(userID, pacientID string, healthData valueobject.HealthData) (*entity.Pacient, error) {
 	user, err := s.users.FindUserByID(userID)
 	if err != nil {
 		s.logger.Error(application.FailedToFindUser, err, logging.String("user_id", userID))
@@ -121,7 +164,50 @@ func (s *PacientService) UpdateEmergencyContact(userID, pacientID string, emerge
 		return nil, errors.WithMessage(application.FailedToFindPacient, entity.ErrNotFound)
 	}
 
-	if err := pacient.UpdateEmergencyContact(emergencyContact); err != nil {
+	if err := pacient.UpdateHealthData(healthData); err != nil {
+		s.logger.Debug(application.FailedToUpdatePacient, logging.Error(err))
+		return nil, err
+	}
+
+	if err := s.pacients.UpdatePacient(pacient); err != nil {
+		s.logger.Error(application.FailedToUpdatePacient, err)
+		return nil, application.ErrInternalError
+	}
+
+	s.logger.Debug(application.PacientUpdated, logging.String("pacient_id", pacient.ID))
+	return pacient, nil
+}
+
+// UpdateLocationData updates the LocationData of a entity.Pacient with a given pacientID. This action can only
+// be performed by users with an Pacient_ProfileKind.
+func (s *PacientService) UpdateLocationData(userID, pacientID string, locationData valueobject.LocationData) (*entity.Pacient, error) {
+	user, err := s.users.FindUserByID(userID)
+	if err != nil {
+		s.logger.Error(application.FailedToFindUser, err, logging.String("user_id", userID))
+		return nil, errors.WithMessage(application.FailedToFindUser, err)
+	}
+
+	if !user.IsPacient() {
+		s.logger.Info(application.FailedToUpdateEmergency, logging.Error(application.ErrInvalidUserProfile), logging.String("user_id", userID))
+		return nil, application.ErrInvalidUserProfile
+	}
+
+	pacient, err := s.pacients.FindPacientByUserID(user.ID)
+	if err != nil {
+		s.logger.Error(application.FailedToFindPacient, err, logging.String("pacient_id", pacientID))
+		return nil, errors.WithMessage(application.FailedToFindPacient, err)
+	}
+
+	if pacient.ID != pacientID {
+		s.logger.Info(application.FailedToFindPacient,
+			logging.Error(entity.ErrNotFound),
+			logging.String("user_id", userID),
+			logging.String("pacient_id", pacientID),
+		)
+		return nil, errors.WithMessage(application.FailedToFindPacient, entity.ErrNotFound)
+	}
+
+	if err := pacient.UpdateLocationData(locationData); err != nil {
 		s.logger.Debug(application.FailedToUpdatePacient, logging.Error(err))
 		return nil, err
 	}

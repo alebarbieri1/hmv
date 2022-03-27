@@ -34,7 +34,7 @@ func (suite *EmergencyServiceTestSuite) SetupTest() {
 
 	_true := true
 
-	suite.emergencies, _ = memory.NewEmergenciesRepository()
+	suite.emergencies = memory.NewEmergenciesRepository()
 	suite.emergencies.CreateEmergency(&entity.Emergency{
 		ID:        "d08de3ca-e09f-4ba9-bee1-e0c12c1c560c",
 		PacientID: "47322c6f-5883-4596-a305-29be7395ddd1",
@@ -120,13 +120,15 @@ func (suite *EmergencyServiceTestSuite) SetupTest() {
 		Status:     valueobject.Finished_EmergencyStatus,
 	})
 
-	suite.pacients, _ = memory.NewPacientsRepository()
+	suite.pacients = memory.NewPacientsRepository()
 	suite.pacients.CreatePacient(&entity.Pacient{
 		ID:     "47322c6f-5883-4596-a305-29be7395ddd1",
 		UserID: "0ae23a9d-c9f0-4088-8e64-3ad341c07821",
-		EmergencyContact: valueobject.EmergencyContact{
-			Name:         "foo",
-			MobileNumber: "5511999999999",
+		Data: valueobject.PacientData{
+			EmergencyContact: valueobject.EmergencyContact{
+				Name:         "foo",
+				MobileNumber: "5511999999999",
+			},
 		},
 		CreatedAt: suite.today,
 		UpdatedAt: suite.today,
@@ -135,9 +137,11 @@ func (suite *EmergencyServiceTestSuite) SetupTest() {
 	suite.pacients.CreatePacient(&entity.Pacient{
 		ID:     "28535166-c4a4-429a-8a8c-d26ea12ee132",
 		UserID: "5f1f0411-4d68-4b9a-a393-3671fd655a19",
-		EmergencyContact: valueobject.EmergencyContact{
-			Name:         "foo",
-			MobileNumber: "5511999999999",
+		Data: valueobject.PacientData{
+			EmergencyContact: valueobject.EmergencyContact{
+				Name:         "foo",
+				MobileNumber: "5511999999999",
+			},
 		},
 		CreatedAt: suite.today,
 		UpdatedAt: suite.today,
@@ -146,15 +150,17 @@ func (suite *EmergencyServiceTestSuite) SetupTest() {
 	suite.pacients.CreatePacient(&entity.Pacient{
 		ID:     "50e8fca5-30d8-4ff8-9782-1083d81bf1ea",
 		UserID: "9b55f726-e47c-4371-b7bd-3ce6e622b147",
-		EmergencyContact: valueobject.EmergencyContact{
-			Name:         "foo",
-			MobileNumber: "5511999999999",
+		Data: valueobject.PacientData{
+			EmergencyContact: valueobject.EmergencyContact{
+				Name:         "foo",
+				MobileNumber: "5511999999999",
+			},
 		},
 		CreatedAt: suite.today,
 		UpdatedAt: suite.today,
 	})
 
-	suite.users, _ = memory.NewUsersRepository()
+	suite.users = memory.NewUsersRepository()
 	suite.users.CreateUser(&entity.User{
 		ID:          "e01f33c3-074f-4f89-b4df-9708ba248599",
 		Username:    "undefined",
@@ -218,14 +224,13 @@ func (suite *EmergencyServiceTestSuite) SetupTest() {
 		UpdatedAt:   suite.today,
 	})
 
-	suite.logger, _ = logging.NewMockLogger()
+	suite.logger = logging.NewNopLogger()
 
-	suite.emergencyService, _ = NewEmergencyService(suite.emergencies, suite.pacients, suite.users, suite.logger)
+	suite.emergencyService = NewEmergencyService(suite.emergencies, suite.pacients, suite.users, suite.logger)
 }
 
 func (suite *EmergencyServiceTestSuite) TestNewEmergencyService() {
 	suite.T().Run("Given a set of drivers, a new EmergencyService should be created", func(t *testing.T) {
-		got, err := NewEmergencyService(suite.emergencies, suite.pacients, suite.users, suite.logger)
 		assert.Equal(t,
 			&EmergencyService{
 				emergencies: suite.emergencies,
@@ -233,9 +238,8 @@ func (suite *EmergencyServiceTestSuite) TestNewEmergencyService() {
 				users:       suite.users,
 				logger:      suite.logger,
 			},
-			got,
+			NewEmergencyService(suite.emergencies, suite.pacients, suite.users, suite.logger),
 		)
-		assert.Equal(t, false, err != nil)
 	})
 }
 

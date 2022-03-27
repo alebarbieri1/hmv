@@ -1,0 +1,5 @@
+server:
+  address: ":1234"
+  development_environment: false
+logging:
+  development_environment: true

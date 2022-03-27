@@ -1,49 +1,18 @@
 package logging
 
-import (
-	"fmt"
-	"strconv"
-)
-
+// Logger is an application logger that allows the logging of structured data
 type Logger interface {
+	// Debug logs at debug level
 	Debug(message string, fields ...field)
+
+	// Info logs at info level
 	Info(message string, fields ...field)
+
+	// Error logs at error level
 	Error(message string, err error, fields ...field)
 }
 
-type field struct {
-	Name  string
-	Value interface{}
-}
-
-func String(name, value string) field {
-	return field{
-		Name:  name,
-		Value: value,
-	}
-}
-
-func Stringer(name string, value fmt.Stringer) field {
-	return field{
-		Name:  name,
-		Value: value.String(),
-	}
-}
-
-func Int(name string, value int) field {
-	return field{
-		Name:  name,
-		Value: strconv.Itoa(value),
-	}
-}
-
-func Error(value error) field {
-	return field{
-		Name:  "error",
-		Value: value.Error(),
-	}
-}
-
+// Settings are logging settings that can be used to create customizable Loggers
 type Settings struct {
-	DevelopmentMode bool
+	DevelopmentEnvironment bool
 }

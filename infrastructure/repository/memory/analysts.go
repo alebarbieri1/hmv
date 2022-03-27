@@ -41,8 +41,8 @@ type AnalystsRepository struct {
 }
 
 // NewAnalystsRepository creates a new AnalystsRepository
-func NewAnalystsRepository() (*AnalystsRepository, error) {
-	return &AnalystsRepository{analysts: make(map[string]*Analyst)}, nil
+func NewAnalystsRepository() *AnalystsRepository {
+	return &AnalystsRepository{analysts: make(map[string]*Analyst)}
 }
 
 // CreateAnalyst stores an entity.Analyst into the repository. If an Analyst with the same ID already

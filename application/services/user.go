@@ -14,8 +14,8 @@ type UserService struct {
 }
 
 // NewUserService creates a new UserService
-func NewUserService(repository repositories.UsersRepository, logger logging.Logger) (*UserService, error) {
-	return &UserService{users: repository, logger: logger}, nil
+func NewUserService(repository repositories.UsersRepository, logger logging.Logger) *UserService {
+	return &UserService{users: repository, logger: logger}
 }
 
 // CreateUser creates a new entity.User with a given username and password. If the username has already been taken,

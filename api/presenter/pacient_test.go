@@ -14,6 +14,8 @@ func TestNewPacient(t *testing.T) {
 		e *entity.Pacient
 	}
 
+	date := time.Date(2022, time.January, 25, 0, 0, 0, 0, time.UTC)
+
 	tests := []struct {
 		name string
 		args args
@@ -23,22 +25,58 @@ func TestNewPacient(t *testing.T) {
 			name: "Given a Pacient, a valid presentation should be returned",
 			args: args{
 				e: &entity.Pacient{
-					ID:     "foo",
-					UserID: "bar",
-					EmergencyContact: valueobject.EmergencyContact{
-						Name:         "baz",
-						MobileNumber: "qux",
+					ID:     "1",
+					UserID: "2",
+					Data: valueobject.PacientData{
+						Name:      "foo",
+						BirthDate: date,
+						Location: valueobject.LocationData{
+							State:   "bar",
+							City:    "baz",
+							Address: "qux",
+							ZipCode: "3",
+						},
+						EmergencyContact: valueobject.EmergencyContact{
+							Name:         "foo",
+							MobileNumber: "bar",
+						},
+						Health: valueobject.HealthData{
+							AllergicToMedicationDescription:          "foo1",
+							ContinuousUseMedicationDescription:       "foo2",
+							DiagnosedDiseaseDescription:              "foo3",
+							HistoryOfHeartDiseaseDescription:         "foo4",
+							SmokingBehaviorDescription:               "foo5",
+							PhysicalActivityDescription:              "foo6",
+							AlcoholicBeveragesConsumptionDescription: "foo7",
+						},
 					},
-					CreatedAt: time.Date(2022, time.January, 25, 0, 0, 0, 0, time.UTC),
-					UpdatedAt: time.Date(2022, time.January, 25, 0, 0, 0, 0, time.UTC),
+					CreatedAt: date,
+					UpdatedAt: date,
 				},
 			},
 			want: &Pacient{
-				ID:     "foo",
-				UserID: "bar",
+				ID:        "1",
+				UserID:    "2",
+				Name:      "foo",
+				BirthDate: "25/01/2022 - 00:00:00h",
+				Location: &LocationData{
+					State:   "bar",
+					City:    "baz",
+					Address: "qux",
+					ZipCode: "3",
+				},
 				EmergencyContact: &EmergencyContact{
-					Name:         "baz",
-					MobileNumber: "qux",
+					Name:         "foo",
+					MobileNumber: "bar",
+				},
+				Health: &HealthData{
+					AllergicToMedicationDescription:          "foo1",
+					ContinuousUseMedicationDescription:       "foo2",
+					DiagnosedDiseaseDescription:              "foo3",
+					HistoryOfHeartDiseaseDescription:         "foo4",
+					SmokingBehaviorDescription:               "foo5",
+					PhysicalActivityDescription:              "foo6",
+					AlcoholicBeveragesConsumptionDescription: "foo7",
 				},
 				CreatedAt: "25/01/2022 - 00:00:00h",
 				UpdatedAt: "25/01/2022 - 00:00:00h",
