@@ -21,7 +21,7 @@ func (c *Controller) listEmergencies(w http.ResponseWriter, r *http.Request) {
 	var emergencies []*entity.Emergency
 
 	switch {
-	case user.IsAnalyst():
+	case user.IsAnalyst(), user.IsRescuer():
 		s := r.URL.Query().Get("status")
 
 		if status := valueobject.NewEmergencyStatusFromString(s); status == valueobject.Undefined_EmergencyStatus {
