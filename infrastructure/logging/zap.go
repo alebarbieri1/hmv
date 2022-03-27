@@ -15,7 +15,7 @@ type ZapLogger struct {
 func NewZapLogger(settings *Settings) (Logger, error) {
 	newLogger := zap.NewProduction
 
-	if settings.DevelopmentMode {
+	if settings.DevelopmentEnvironment {
 		newLogger = zap.NewDevelopment
 	}
 

@@ -14,5 +14,5 @@ type Logger interface {
 
 // Settings are logging settings that can be used to create customizable Loggers
 type Settings struct {
-	DevelopmentMode bool
+	DevelopmentEnvironment bool
 }

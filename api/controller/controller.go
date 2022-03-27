@@ -86,6 +86,7 @@ func New(drivers *drivers.Drivers) *Controller {
 	}
 }
 
+// NewRouter creates a new http.Handler with the controller routes
 func (c *Controller) NewRouter() http.Handler {
 	router := mux.NewRouter()
 	c.analysts.SetRoutes(router.PathPrefix("/analysts").Subrouter())

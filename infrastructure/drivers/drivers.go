@@ -24,7 +24,7 @@ func New(settings *settings.Settings) (*Drivers, error) {
 		return nil, err
 	}
 
-	if settings.Server.DevelopmentMode {
+	if settings.Server.DevelopmentEnvironment {
 		repositories.Users.CreateUser(&entity.User{
 			ID:       "af3ecfbc-0e18-4448-875a-d64744a1f5cd",
 			Username: "paciente@teste.com",
@@ -87,7 +87,9 @@ func New(settings *settings.Settings) (*Drivers, error) {
 		})
 	}
 
-	logger, err := logging.NewZapLogger(settings.Logging)
+	logger, err := logging.NewZapLogger(&logging.Settings{
+		DevelopmentEnvironment: settings.Logging.DevelopmentEnvironment,
+	})
 	if err != nil {
 		return nil, err
 	}

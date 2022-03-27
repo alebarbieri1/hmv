@@ -18,7 +18,7 @@ type Server struct {
 }
 
 func NewServer() (*Server, error) {
-	settings, err := settings.New()
+	settings, err := settings.FromFile("settings.yaml")
 	if err != nil {
 		return nil, err
 	}
