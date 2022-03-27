@@ -41,7 +41,7 @@ func (suite *AuthenticationServiceTestSuite) SetupTest() {
 		UpdatedAt:   suite.today,
 	})
 
-	suite.logger, _ = logging.NewNopLogger()
+	suite.logger = logging.NewNopLogger()
 
 	suite.authenticationService, _ = NewAuthenticationService(suite.users, suite.logger)
 }

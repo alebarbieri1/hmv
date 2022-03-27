@@ -50,7 +50,7 @@ func (suite *UserServiceTestSuite) SetupTest() {
 		UpdatedAt:   suite.today,
 	})
 
-	suite.logger, _ = logging.NewNopLogger()
+	suite.logger = logging.NewNopLogger()
 
 	suite.userService, _ = NewUserService(suite.users, suite.logger)
 }

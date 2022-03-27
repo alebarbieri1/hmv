@@ -85,7 +85,7 @@ func (suite *AnalystServiceTestSuite) SetupTest() {
 		UpdatedAt:   suite.today,
 	})
 
-	suite.logger, _ = logging.NewNopLogger()
+	suite.logger = logging.NewNopLogger()
 
 	suite.analystService, _ = NewAnalystService(suite.analysts, suite.users, suite.logger)
 }

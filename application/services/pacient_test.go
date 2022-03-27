@@ -89,7 +89,7 @@ func (suite *PacientServiceTestSuite) SetupTest() {
 		UpdatedAt:   suite.today,
 	})
 
-	suite.logger, _ = logging.NewNopLogger()
+	suite.logger = logging.NewNopLogger()
 
 	suite.pacientService, _ = NewPacientService(suite.pacients, suite.users, suite.logger)
 }

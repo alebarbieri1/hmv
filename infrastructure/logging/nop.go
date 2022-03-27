@@ -4,7 +4,7 @@ package logging
 type NopLogger struct{}
 
 // NewNopLogger creates a new NopLogger
-func NewNopLogger() (Logger, error) { return new(NopLogger), nil }
+func NewNopLogger() Logger { return new(NopLogger) }
 
 // Debug logs at debug level
 func (l *NopLogger) Debug(message string, fields ...field) {}
