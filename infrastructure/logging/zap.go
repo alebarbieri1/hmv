@@ -46,7 +46,7 @@ func toZapFields(fields []field) []zap.Field {
 	zapFields := make([]zap.Field, 0, len(fields))
 
 	for _, field := range fields {
-		zapFields = append(zapFields, zap.Any(field.Name, field.Value))
+		zapFields = append(zapFields, zap.String(field.Name, field.Value))
 	}
 
 	return zapFields
