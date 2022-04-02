@@ -31,3 +31,5 @@ Para rodar os testes unitários da aplicação, basta executar o [comando Make](
 ## Testando as APIs:
 
 Para poder testar as APIs da aplicação, você pode importar a [collection do projeto](https://www.getpostman.com/collections/ab992d09a3eb6ff74a44) no Postman (no link, em formato JSON).
+
+Endereço da API na AWS: https://iojekrmlq3.execute-api.us-east-1.amazonaws.com/prod
